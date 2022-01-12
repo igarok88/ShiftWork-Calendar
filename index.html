@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Calendar</title>
+		<link rel="stylesheet" href="app.css" />
+	</head>
+
+	<body class="light">
+		<div class="container">
+			<div class="calendar">
+				<div class="calendar-body">
+					<div class="calendar-week-day calendar-column"></div>
+					<div class="calendar-days calendar-column"></div>
+					<div class="calendar-a calendar-column"></div>
+					<div class="calendar-b calendar-column"></div>
+					<div class="calendar-v calendar-column"></div>
+					<div class="calendar-g calendar-column"></div>
+					<div class="calendar-d calendar-column"></div>
+					<div class="calendar-e calendar-column"></div>
+				</div>
+				<div class="calendar-nav">
+					<div class="month-list"></div>
+					<div class="month-picker">
+						<span class="arrow" id="prev-month">
+							<pre><</pre>
+						</span>
+						<span class="month-name" id="month-picker">February</span>
+						<span class="arrow" id="next-month">
+							<pre>></pre>
+						</span>
+					</div>
+
+					<div class="year-picker">
+						<span class="arrow" id="prev-year">
+							<pre><</pre>
+						</span>
+						<span id="year">2021</span>
+						<span class="arrow" id="next-year">
+							<pre>></pre>
+						</span>
+					</div>
+				</div>
+				<div class="calendar-footer">
+					<div class="toggle">
+						<span>Dark Mode</span>
+						<div class="dark-mode-switch">
+							<div class="dark-mode-switch-ident"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="app.js"></script>
+	</body>
+</html>
