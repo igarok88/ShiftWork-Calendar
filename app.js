@@ -3,7 +3,7 @@ let calendar = document.querySelector(".calendar");
 
 const day_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const calendar_name = [" ", "День", "А", "Б", "В", "Г", "Д", "Е"];
+const calendar_name = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
 
 const month_names = [
 	"January",
@@ -25,84 +25,91 @@ let calendar_v = calendar.querySelector(".calendar-v");
 let calendar_g = calendar.querySelector(".calendar-g");
 let calendar_d = calendar.querySelector(".calendar-d");
 let calendar_e = calendar.querySelector(".calendar-e");
+
+let calendar_count_a = document.querySelector(".calendar-count-a");
+let calendar_count_b = document.querySelector(".calendar-count-b");
+let calendar_count_v = document.querySelector(".calendar-count-v");
+let calendar_count_g = document.querySelector(".calendar-count-g");
+let calendar_count_d = document.querySelector(".calendar-count-d");
+
 let calendar_column = calendar.querySelectorAll(".calendar-column");
-let arrForCount = [];
+
 const root = [
 	"23",
 	"23",
 	"23",
-	"-",
-	"-",
+	"",
+	"",
 	"15",
 	"15",
 	"15",
-	"-",
-	"-",
+	"",
+	"",
 	"7",
 	"7",
 	"7",
-	"-",
-	"-",
+	"",
+	"",
 	"23",
 	"23",
 	"23",
-	"-",
-	"-",
+	"",
+	"",
 	"15",
 	"15",
 	"15",
-	"-",
-	"-",
+	"",
+	"",
 	"7",
 	"7",
 	"7",
-	"-",
-	"-",
+	"",
+	"",
 	"23",
 	"23",
 	"23",
-	"-",
-	"-",
+	"",
+	"",
 	"15",
 	"15",
 	"15",
-	"-",
-	"-",
+	"",
+	"",
 	"7",
 	"7",
 	"7",
-	"-",
-	"-",
+	"",
+	"",
 	"23",
 	"23",
 	"23",
-	"-",
-	"-",
+	"",
+	"",
 	"15",
 	"15",
 	"15",
-	"-",
-	"-",
+	"",
+	"",
 	"7",
 	"7",
 	"7",
-	"-",
-	"-",
+	"",
+	"",
 	"23",
 	"23",
 	"23",
-	"-",
-	"-",
+	"",
+	"",
 	"15",
 	"15",
 	"15",
-	"-",
-	"-",
+	"",
+	"",
 	"7",
 	"7",
 	"7",
-	"-",
-	"-",
+	"",
+	"",
 ];
 
 isLeapYear = (year) => {
@@ -173,7 +180,23 @@ generateCalendar = (month, year) => {
 	month_picker.innerHTML = curr_month;
 	calendar_header_year.innerHTML = year;
 
-	for (let i = 0; i <= days_of_month[month]; i++) {
+	let arrForCount_a = [];
+	let arrForCount_b = [];
+	let arrForCount_v = [];
+	let arrForCount_g = [];
+	let arrForCount_d = [];
+
+	const setWidthFooter = () => {
+		let calendar_nav = calendar.querySelector(".calendar-nav");
+		calendar_nav.style.width = body.offsetWidth + "px";
+		calendar_nav.style.position = "fixed";
+	};
+
+	window.addEventListener(`resize`, () => {
+		setWidthFooter();
+	});
+
+	for (let i = 0; i < days_of_month[month]; i++) {
 		let i_day = new Date(year, month, i);
 
 		//заполняем поля с датой
@@ -193,9 +216,7 @@ generateCalendar = (month, year) => {
 			header_day.style.width = header_day.offsetWidth + "px";
 			header_day.style.position = "fixed";
 
-			let calendar_nav = calendar.querySelector(".calendar-nav");
-			calendar_nav.style.width = calendar_nav.offsetWidth + "px";
-			calendar_nav.style.position = "fixed";
+			setWidthFooter();
 		}
 
 		//заполняем поля для дней недели
@@ -212,7 +233,8 @@ generateCalendar = (month, year) => {
 		calendar_week_day.appendChild(day_week);
 
 		//заполняем поля смен
-		const fillDay = (shift, key) => {
+
+		const fillDay = (shift, key, calendar_count, arrForCount) => {
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
 			//вешаем класс curr-date на сегодняшнюю дату
@@ -238,26 +260,30 @@ generateCalendar = (month, year) => {
 				shift.appendChild(day);
 			}
 
-			// if (root[i] == "23" || root[i] == "15" || root[i] == "7") {
-			// 	arrForCount.push(root[i]);
-			// } else {
-			// 	console.log("не ок");
-			// }
-			// console.log(arrForCount);
+			//считаем количество смен в месяце
+			if (
+				root[residual + i + key] == "23" ||
+				root[residual + i + key] == "15" ||
+				root[residual + i + key] == "7"
+			) {
+				arrForCount.push(root[residual + i + key]);
+			}
+
 			if (i == days_of_month[month] - 1) {
 				let header_day = shift.querySelector(".calendar-header-day");
 				header_day.style.width = header_day.offsetWidth + "px";
 				header_day.style.position = "fixed";
-
-				// day.innerHTML = arrForCount.length;
-				// shift.appendChild(day);
+				if (calendar_count) {
+					calendar_count.innerHTML = arrForCount.length;
+				}
 			}
 		};
-		fillDay(calendar_a, 15);
-		fillDay(calendar_b, 21);
-		fillDay(calendar_v, 27);
-		fillDay(calendar_g, 18);
-		fillDay(calendar_d, 24);
+
+		fillDay(calendar_a, 15, calendar_count_a, arrForCount_a);
+		fillDay(calendar_b, 21, calendar_count_b, arrForCount_b);
+		fillDay(calendar_v, 27, calendar_count_v, arrForCount_v);
+		fillDay(calendar_g, 18, calendar_count_g, arrForCount_g);
+		fillDay(calendar_d, 24, calendar_count_d, arrForCount_d);
 		fillDay(calendar_e);
 
 		//вешаем класс curr-date на сегодняшнюю дату
@@ -325,6 +351,7 @@ document.querySelector("#prev-month").onclick = () => {
 	console.log(curr_month.value);
 	if (curr_month.value == 0) {
 		curr_month.value = 11;
+		--curr_year.value;
 	} else {
 		--curr_month.value;
 	}
@@ -333,6 +360,7 @@ document.querySelector("#prev-month").onclick = () => {
 document.querySelector("#next-month").onclick = () => {
 	if (curr_month.value == 11) {
 		curr_month.value = 0;
+		++curr_year.value;
 	} else {
 		++curr_month.value;
 	}
@@ -354,3 +382,32 @@ dark_mode_toggle.onclick = () => {
 	body.classList.toggle("light");
 	body.classList.toggle("dark");
 };
+
+//Burger menu
+const burger = document.querySelector(".header__burger");
+const headerMenu = document.querySelector(".header__menu");
+const burgerWrapper = document.querySelector(".header__burger-wrapper");
+
+//получаем ширину скроллбара
+let div = document.createElement("div");
+div.style.overflowY = "scroll";
+div.style.width = "50px";
+div.style.height = "50px";
+// мы должны вставить элемент в документ, иначе размеры будут равны 0
+document.body.append(div);
+let scrollWidth = div.offsetWidth - div.clientWidth;
+div.remove();
+
+const docHeight = document.documentElement.scrollHeight;
+const winHeight = document.documentElement.clientHeight;
+
+burger.addEventListener("click", () => {
+	burger.classList.toggle("active");
+	headerMenu.classList.toggle("active");
+	body.classList.toggle("lock");
+	if (docHeight > winHeight && burger.className.includes("active")) {
+		body.style.paddingRight = scrollWidth + "px";
+	} else {
+		body.style.paddingRight = 0;
+	}
+});
