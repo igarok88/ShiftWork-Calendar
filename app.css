@@ -48,10 +48,13 @@
 html,
 body {
 	height: 100vh;
-
 	font-family: var(--font-family);
-	/* background-color: var(--bg-body); */
+	background-color: var(--bg-body);
 }
+ul {
+	list-style: none;
+}
+
 body.lock {
 	overflow: hidden;
 }
@@ -93,7 +96,9 @@ body.lock {
 }
 
 .calendar-day,
-.calendar-header-day {
+.calendar-header-day,
+.right-click-menu-header div,
+.right-click-menu-item {
 	min-height: 30px;
 	display: flex;
 	align-items: center;
@@ -102,7 +107,9 @@ body.lock {
 	border-radius: 4px;
 	margin: 3px;
 }
-.calendar-day {
+.calendar-day,
+.right-click-menu-header div,
+.right-click-menu-item {
 	background-color: var(--bg-div);
 	animation: to-top 2s forwards;
 	cursor: pointer;
@@ -135,14 +142,14 @@ body.lock {
 	margin: 3px 0;
 	border-radius: 0;
 }
+
+.calendar-day-off {
+	background-color: var(--red);
+}
 .curr-date {
 	background-color: var(--blue);
 	color: var(--white);
 }
-.calendar-day-off {
-	background-color: var(--red);
-}
-
 .calendar-nav {
 	position: relative;
 	display: flex;
@@ -305,33 +312,24 @@ body.lock {
 	}
 }
 
-.header__menu {
-}
-
-body.lock {
-	overflow: hidden;
-}
-body {
-	background-color: var(--bg-body);
-}
-
 .header__burger-wrapper {
-	width: 150px;
-	height: 150px;
+	width: 50px;
+	height: 42px;
 	position: fixed;
-	top: -92px;
-	left: -72px;
+	top: 5px;
+	left: 4px;
 	z-index: 3;
 	background-color: rgb(68, 52, 126);
-	border-radius: 50%;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgb(68, 52, 126);
 }
 .header__burger {
 	display: block;
 	width: 30px;
 	height: 20px;
 	position: fixed;
-	top: 13px;
-	left: 13px;
+	top: 15px;
+	left: 14px;
 	z-index: 4;
 }
 .header__burger span {
@@ -379,11 +377,11 @@ body {
 .header__menu.active {
 	left: 0;
 }
-.header__menu li {
+/* .header__menu li {
 	display: block;
 	margin: 40px 0 40px;
 	padding: 0;
-}
+} */
 
 .header__burger.active span {
 	-webkit-transform: scale(0);
@@ -401,4 +399,88 @@ body {
 	-ms-transform: rotate(-45deg);
 	transform: rotate(-45deg);
 	bottom: 9px;
+}
+
+.right-click-menu-close {
+	display: block;
+	width: 30px;
+	height: 20px;
+	position: absolute;
+	top: 15px;
+	left: 14px;
+	z-index: 5;
+}
+
+.right-click-menu-close:before,
+.right-click-menu-close:after {
+	content: "";
+	background-color: #fff;
+	position: absolute;
+	width: 100%;
+	height: 2px;
+	left: 0;
+	-webkit-transition: all 0.3s ease 0s;
+	-o-transition: all 0.3s ease 0s;
+	transition: all 0.3s ease 0s;
+}
+.right-click-menu-close:before {
+	top: 0;
+}
+.right-click-menu-close:after {
+	bottom: 0;
+}
+.right-click-menu {
+	position: fixed;
+	bottom: -100%;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgb(68, 52, 126);
+	-webkit-transition: all 0.3s ease 0s;
+	-o-transition: all 0.3s ease 0s;
+	transition: all 0.3s ease 0s;
+	overflow: auto;
+	z-index: 4;
+}
+.right-click-menu.active {
+	bottom: 0;
+}
+
+.right-click-menu-close:before {
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+	top: 9px;
+}
+.right-click-menu-close:after {
+	-webkit-transform: rotate(-45deg);
+	-ms-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	bottom: 9px;
+}
+
+.right-click-menu-header {
+	margin: 6px 0px 0px 0px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.right-click-menu-header div {
+	padding: 7px;
+}
+
+.right-click-menu ul {
+	display: flex;
+	flex-direction: column;
+	/* align-items: center; */
+}
+.right-click-menu li::first-child {
+	margin: 40px 0px 0px 0px;
+}
+.right-click-menu li {
+	padding: 15px;
+	margin: 3px;
+}
+.right-click-menu-item {
+	justify-content: start;
 }

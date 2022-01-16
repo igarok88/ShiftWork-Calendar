@@ -1,9 +1,27 @@
 const body = document.querySelector("body");
-let calendar = document.querySelector(".calendar");
+const calendar = document.querySelector(".calendar");
 
-const day_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const day_names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const calendar_name = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
+
+const rightClickMenuItemNames = [
+	'"23" Смена с 23-00',
+	'"7" Смена с 07-00',
+	'"15" Смена с 15-00',
+	'"У" Учеба/Тренировка',
+	'"Э" Экзамен',
+	'"Д" Доработка',
+	'"О" Отгулы',
+	'"&nbsp;&nbsp;" Выходной',
+	'"З" Заметка',
+];
+
+const rightClickMenuItems = calendar.querySelectorAll(".right-click-menu-item");
+
+rightClickMenuItems.forEach((item, index) => {
+	item.innerHTML = rightClickMenuItemNames[index];
+});
 
 const month_names = [
 	"January",
@@ -128,6 +146,12 @@ generateCalendar = (month, year) => {
 	let calendar_days = calendar.querySelector(".calendar-days");
 	let calendar_header_year = calendar.querySelector("#year");
 
+	let arrForCount_a = [];
+	let arrForCount_b = [];
+	let arrForCount_v = [];
+	let arrForCount_g = [];
+	let arrForCount_d = [];
+
 	let days_of_month = [
 		31,
 		getFebDays(year),
@@ -180,12 +204,6 @@ generateCalendar = (month, year) => {
 	month_picker.innerHTML = curr_month;
 	calendar_header_year.innerHTML = year;
 
-	let arrForCount_a = [];
-	let arrForCount_b = [];
-	let arrForCount_v = [];
-	let arrForCount_g = [];
-	let arrForCount_d = [];
-
 	const setWidthFooter = () => {
 		let calendar_nav = calendar.querySelector(".calendar-nav");
 		calendar_nav.style.width = body.offsetWidth + "px";
@@ -197,14 +215,14 @@ generateCalendar = (month, year) => {
 	});
 
 	for (let i = 0; i < days_of_month[month]; i++) {
-		let i_day = new Date(year, month, i);
+		let i_day = new Date(year, month, i + 1);
 
 		//заполняем поля с датой
 		let day = document.createElement("div");
 		day.classList.add("calendar-day");
 		day.innerHTML = i + 1;
 		if (
-			day_names[i_day.getDay()] == day_names[5] ||
+			day_names[i_day.getDay()] == day_names[0] ||
 			day_names[i_day.getDay()] == day_names[6]
 		) {
 			day.classList.add("calendar-day-off");
@@ -215,8 +233,6 @@ generateCalendar = (month, year) => {
 			let header_day = calendar_days.querySelector(".calendar-header-day");
 			header_day.style.width = header_day.offsetWidth + "px";
 			header_day.style.position = "fixed";
-
-			setWidthFooter();
 		}
 
 		//заполняем поля для дней недели
@@ -224,7 +240,7 @@ generateCalendar = (month, year) => {
 		let day_week = document.createElement("div");
 		day_week.classList.add("calendar-day");
 		if (
-			day_names[i_day.getDay()] == day_names[5] ||
+			day_names[i_day.getDay()] == day_names[0] ||
 			day_names[i_day.getDay()] == day_names[6]
 		) {
 			day_week.classList.add("calendar-day-off");
@@ -237,6 +253,7 @@ generateCalendar = (month, year) => {
 		const fillDay = (shift, key, calendar_count, arrForCount) => {
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
+			day.classList.add("calendar-context-menu");
 			//вешаем класс curr-date на сегодняшнюю дату
 			if (
 				i + 1 === currDate.getDate() &&
@@ -247,7 +264,7 @@ generateCalendar = (month, year) => {
 			}
 			//вешаем класс calendar-day-off на выходной
 			if (
-				day_names[i_day.getDay()] == day_names[5] ||
+				day_names[i_day.getDay()] == day_names[0] ||
 				day_names[i_day.getDay()] == day_names[6]
 			) {
 				day.classList.add("calendar-day-off");
@@ -260,11 +277,13 @@ generateCalendar = (month, year) => {
 				shift.appendChild(day);
 			}
 
+			let indexForDay = residual + i + key;
+
 			//считаем количество смен в месяце
 			if (
-				root[residual + i + key] == "23" ||
-				root[residual + i + key] == "15" ||
-				root[residual + i + key] == "7"
+				root[indexForDay] == "23" ||
+				root[indexForDay] == "15" ||
+				root[indexForDay] == "7"
 			) {
 				arrForCount.push(root[residual + i + key]);
 			}
@@ -276,6 +295,7 @@ generateCalendar = (month, year) => {
 				if (calendar_count) {
 					calendar_count.innerHTML = arrForCount.length;
 				}
+				setWidthFooter();
 			}
 		};
 
@@ -348,7 +368,6 @@ let curr_year = { value: currDate.getFullYear() };
 generateCalendar(curr_month.value, curr_year.value);
 
 document.querySelector("#prev-month").onclick = () => {
-	console.log(curr_month.value);
 	if (curr_month.value == 0) {
 		curr_month.value = 11;
 		--curr_year.value;
@@ -411,3 +430,108 @@ burger.addEventListener("click", () => {
 		body.style.paddingRight = 0;
 	}
 });
+
+//Контекстное меню
+const calendarBody = document.querySelector(".calendar-body");
+const rightClickMenu = document.querySelector(".right-click-menu");
+const rightClickMenuHeaderShift = rightClickMenu.querySelector(
+	".right-click-menu-header__shift"
+);
+const rightClickMenuHeaderDay = rightClickMenu.querySelector(
+	".right-click-menu-header__day"
+);
+const rightClickMenuHeaderMonth = rightClickMenu.querySelector(
+	".right-click-menu-header__month"
+);
+const rightClickMenuHeaderYear = rightClickMenu.querySelector(
+	".right-click-menu-header__year"
+);
+const rightClickMenuHeaderDayWeek = rightClickMenu.querySelector(
+	".right-click-menu-header__day-week"
+);
+
+const getZero = (num) => {
+	if (num >= 0 && num < 10) {
+		return `0${num}`;
+	} else {
+		return num;
+	}
+};
+
+calendarBody.addEventListener("contextmenu", (e) => {
+	let targetItem = e.target;
+
+	if (targetItem.closest(".calendar-context-menu")) {
+		e.preventDefault();
+		rightClickMenu.classList.add("active");
+		body.classList.add("lock");
+		//заполняем даты
+		//Объяснение :
+		// element.parentNode.children→ Возвращает братьев element, включая этот элемент.
+		// Array.from→ Приводит конструктор childrenк Arrayобъекту
+		// indexOf→ Вы можете подать заявку indexOf, потому что теперь у вас есть Arrayобъект.
+		let day = Array.from(targetItem.parentNode.children).indexOf(targetItem);
+		rightClickMenuHeaderDay.innerHTML = getZero(day);
+
+		let month = curr_month.value + 1;
+		rightClickMenuHeaderMonth.innerHTML = getZero(month);
+
+		rightClickMenuHeaderYear.innerHTML = curr_year.value;
+
+		//заполняем название смены в контекстном меню
+		let shift = targetItem.parentElement.firstChild.innerText;
+		rightClickMenuHeaderShift.innerHTML = `"${shift}"`;
+
+		//заполняем поле дней недели
+		let dayWeek = new Date(curr_year.value, curr_month.value, day).getDay();
+		rightClickMenuHeaderDayWeek.innerHTML = day_names[dayWeek];
+	}
+});
+
+rightClickMenu.addEventListener("click", (e) => {
+	let targetItem = e.target;
+	if (targetItem.closest(".close-menu")) {
+		rightClickMenu.classList.remove("active");
+		body.classList.remove("lock");
+	}
+});
+
+//останавливаем клик, который удаляет класс active
+rightClickMenu.addEventListener(
+	"click",
+	(event) => {
+		event.stopPropagation();
+	},
+	false
+);
+
+// document.querySelector("#l1").addEventListener(
+// 	"click",
+// 	() => {
+// 		alert("Выпрямись и убери руку от лица!");
+// 	},
+// 	false
+// );
+// document.querySelector("#l2").addEventListener(
+// 	"click",
+// 	() => {
+// 		alert("Никогда не спрашивай совета у черных квадратов");
+// 	},
+// 	false
+// );
+// document.querySelector("#l3").addEventListener(
+// 	"click",
+// 	() => {
+// 		alert("42");
+// 	},
+// 	false
+// );
+// document.querySelector("#l4").addEventListener(
+// 	"click",
+// 	() => {
+// 		alert(
+// 			"Вжух! Теперь ты крутой программист! Иди и сделай контекстное меню на своём сайте"
+// 		);
+// 	},
+// 	false
+// );
