@@ -98,7 +98,9 @@ body.lock {
 .calendar-day,
 .calendar-header-day,
 .right-click-menu-header div,
-.right-click-menu-item {
+.right-click-menu-item__btn,
+.right-click-menu-item__desc,
+.right-click-menu-item__color {
 	min-height: 30px;
 	display: flex;
 	align-items: center;
@@ -109,7 +111,9 @@ body.lock {
 }
 .calendar-day,
 .right-click-menu-header div,
-.right-click-menu-item {
+.right-click-menu-item__btn,
+.right-click-menu-item__desc,
+.right-click-menu-item__color {
 	background-color: var(--bg-div);
 	animation: to-top 2s forwards;
 	cursor: pointer;
@@ -377,11 +381,6 @@ body.lock {
 .header__menu.active {
 	left: 0;
 }
-/* .header__menu li {
-	display: block;
-	margin: 40px 0 40px;
-	padding: 0;
-} */
 
 .header__burger.active span {
 	-webkit-transform: scale(0);
@@ -470,17 +469,115 @@ body.lock {
 }
 
 .right-click-menu ul {
-	display: flex;
-	flex-direction: column;
+	/* display: flex;
+	flex-direction: column; */
 	/* align-items: center; */
 }
 .right-click-menu li::first-child {
 	margin: 40px 0px 0px 0px;
 }
 .right-click-menu li {
-	padding: 15px;
+	/* padding: 15px; */
+	min-height: 50px;
 	margin: 3px;
 }
 .right-click-menu-item {
-	justify-content: start;
+	position: relative;
+	display: grid;
+	grid-template-rows: 1fr;
+	grid-template-columns: 1fr 4fr 1fr;
+	gap: 0px 0px;
+}
+.right-click-menu-item__btn {
+	justify-content: flex-start;
+}
+
+.right-click-menu-item__value,
+.right-click-menu-item__name {
+	display: flex;
+	justify-content: center;
+	padding: 15px;
+	width: 60px;
+}
+.right-click-menu-item__name {
+	width: 100%;
+	justify-content: flex-start;
+}
+/* Color picker */
+.right-click-menu-item__color input {
+	cursor: pointer;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+}
+.clr-field button {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+.clr-color {
+	display: none;
+}
+.clr-preview {
+	position: absolute;
+	top: 210px;
+	width: 70px;
+	height: 24px;
+	border-radius: 12px;
+}
+.clr-preview:after,
+.clr-preview:before {
+	border-radius: 12px;
+}
+
+.clr-swatches button {
+	width: 25px;
+	height: 25px;
+}
+.clr-picker {
+	width: 260px;
+}
+.right-click-menu-item__desc {
+	position: relative;
+}
+.right-click-menu-item__desc-arrow {
+	font-size: 31px;
+	font-weight: 600;
+	color: var(--color-txt);
+	margin-top: -4px;
+	/* border-radius: 50%; */
+	cursor: pointer;
+	transition: all 0.5s ease-in-out;
+}
+.right-click-menu-item__desc-arrow.active {
+	/* margin-top: -2px; */
+	transform: rotate(90deg);
+}
+.right-click-menu-item__desc-text-area {
+	position: absolute;
+	z-index: 100;
+	width: 300px;
+	height: 200px;
+	z-index: 10;
+	top: 0;
+	left: 0;
+	background-color: #fff;
+}
+.right-click-menu-item__desc-text-area textarea {
+	/* border-radius: 4px;
+	position: absolute;
+	margin: 55px 0px 0px 0px;
+	left: 0;
+	right: 0;
+	top: 0;
+	/* width: 300px; */
+	height: 200px;
+	display: none;
+	z-index: 100;
+	background-color: #fff;
+	width: 100%;
+	height: 100%;
+}
+.right-click-menu-item__desc-text-area.active textarea {
+	display: grid;
 }

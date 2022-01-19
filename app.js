@@ -5,24 +5,6 @@ const day_names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const calendar_name = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
 
-const rightClickMenuItemNames = [
-	'"23" Смена с 23-00',
-	'"7" Смена с 07-00',
-	'"15" Смена с 15-00',
-	'"У" Учеба/Тренировка',
-	'"Э" Экзамен',
-	'"Д" Доработка',
-	'"О" Отгулы',
-	'"&nbsp;&nbsp;" Выходной',
-	'"З" Заметка',
-];
-
-const rightClickMenuItems = calendar.querySelectorAll(".right-click-menu-item");
-
-rightClickMenuItems.forEach((item, index) => {
-	item.innerHTML = rightClickMenuItemNames[index];
-});
-
 const month_names = [
 	"January",
 	"February",
@@ -450,6 +432,94 @@ const rightClickMenuHeaderDayWeek = rightClickMenu.querySelector(
 	".right-click-menu-header__day-week"
 );
 
+let rightClickMenuItemNames = {
+	23: {
+		title: "Смена с 23-00",
+		desc: "",
+		color: "",
+	},
+	7: {
+		title: "Смена с 07-00",
+		desc: "",
+		color: "",
+	},
+	15: {
+		title: "Смена с 15-00",
+		desc: "",
+		color: "",
+	},
+	У: {
+		title: "Учеба/Тренировка",
+		desc: "",
+		color: "#e76f51",
+	},
+	Э: {
+		title: "Экзамен",
+		desc: "",
+		color: "#d62828",
+	},
+	Д: {
+		title: "Доработка",
+		desc: "",
+		color: "#00b4d880",
+	},
+	О: {
+		title: "Отгулы",
+		desc: "",
+		color: "#2a9d8f",
+	},
+	"&nbsp": {
+		title: "Выходной",
+		desc: "",
+		color: "",
+	},
+	З: {
+		title: "Заметка",
+		desc: "",
+		color: "#e9c46a",
+	},
+};
+
+const rightClickMenuItems = calendar.querySelector(".right-click-menu ul");
+
+//верстка элементов контекстного меню
+const entries = Object.entries(rightClickMenuItemNames);
+
+for (const [key, val] of entries) {
+	let li = document.createElement("li");
+	li.classList.add("right-click-menu-item");
+
+	let desc = document.createElement("div");
+	desc.classList.add("right-click-menu-item__desc");
+	desc.innerHTML =
+		'<div class="right-click-menu-item__desc-arrow"><pre>&gt;</pre></div>';
+	li.appendChild(desc);
+
+	let btn = document.createElement("div");
+	btn.classList.add("close-menu");
+	btn.classList.add("right-click-menu-item__btn");
+	li.appendChild(btn);
+
+	let btnValue = document.createElement("div");
+	btnValue.classList.add("right-click-menu-item__value");
+	btnValue.setAttribute("data-value", key);
+	btnValue.innerHTML = `"${key}"`;
+	btn.appendChild(btnValue);
+
+	let btnName = document.createElement("div");
+	btnName.classList.add("right-click-menu-item__name");
+	btnName.setAttribute("data-value", key);
+	btnName.innerHTML = val.title;
+	btn.appendChild(btnName);
+
+	let color = document.createElement("div");
+	color.classList.add("right-click-menu-item__color");
+	color.innerHTML = `<input type="text" data-coloris value='${val.color}'/>`;
+	li.appendChild(color);
+
+	rightClickMenuItems.appendChild(li);
+}
+
 const getZero = (num) => {
 	if (num >= 0 && num < 10) {
 		return `0${num}`;
@@ -457,12 +527,12 @@ const getZero = (num) => {
 		return num;
 	}
 };
-
+let targetItemInContextMenu;
 calendarBody.addEventListener("contextmenu", (e) => {
-	let targetItem = e.target;
-
-	if (targetItem.closest(".calendar-context-menu")) {
+	targetItemInContextMenu = e.target;
+	if (targetItemInContextMenu.closest(".calendar-context-menu")) {
 		e.preventDefault();
+		// console.log(targetItemInContextMenu);
 		rightClickMenu.classList.add("active");
 		body.classList.add("lock");
 		//заполняем даты
@@ -470,7 +540,9 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		// element.parentNode.children→ Возвращает братьев element, включая этот элемент.
 		// Array.from→ Приводит конструктор childrenк Arrayобъекту
 		// indexOf→ Вы можете подать заявку indexOf, потому что теперь у вас есть Arrayобъект.
-		let day = Array.from(targetItem.parentNode.children).indexOf(targetItem);
+		let day = Array.from(targetItemInContextMenu.parentNode.children).indexOf(
+			targetItemInContextMenu
+		);
 		rightClickMenuHeaderDay.innerHTML = getZero(day);
 
 		let month = curr_month.value + 1;
@@ -479,7 +551,7 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		rightClickMenuHeaderYear.innerHTML = curr_year.value;
 
 		//заполняем название смены в контекстном меню
-		let shift = targetItem.parentElement.firstChild.innerText;
+		let shift = targetItemInContextMenu.parentElement.firstChild.innerText;
 		rightClickMenuHeaderShift.innerHTML = `"${shift}"`;
 
 		//заполняем поле дней недели
@@ -488,50 +560,54 @@ calendarBody.addEventListener("contextmenu", (e) => {
 	}
 });
 
+let targetInRightClickMenuItems;
+rightClickMenuItems.addEventListener("click", (e) => {
+	let target = e.target;
+	targetInRightClickMenuItems = target;
+	if (target.closest(".right-click-menu-item__btn")) {
+		//получаем букву и всставляем в таблицу
+		targetItemInContextMenu.innerHTML = target.getAttribute("data-value");
+
+		//получаем цвет и устанавливаем в таблицу
+		let sibling = target.closest(".right-click-menu-item__btn").nextSibling;
+
+		let input = sibling.querySelector("input");
+
+		targetItemInContextMenu.style.backgroundColor = input.value;
+		targetItemInContextMenu.style.borderRadius = "4px";
+		targetItemInContextMenu.style.margin = "3px";
+	}
+	if (target.closest(".right-click-menu-item__color input")) {
+		target.addEventListener("change", () => {
+			let color = target.value;
+			target.setAttribute("value", color);
+		});
+	}
+
+	//Описание в контекстном меню
+	if (target.closest(".right-click-menu-item__desc")) {
+		let desc = target.closest(".right-click-menu-item__desc");
+		let arrow = desc.querySelector(".right-click-menu-item__desc-arrow");
+		arrow.classList.toggle("active");
+
+		if (arrow.closest(".right-click-menu-item__desc-arrow.active")) {
+			let div = document.createElement("div");
+			div.classList.add("right-click-menu-item__desc-text-area");
+			let textarea = document.createElement("textarea");
+			textarea.setAttribute("name", "text");
+			div.appendChild(textarea);
+			desc.appendChild(div);
+		} else {
+			arrow.nextSibling.remove();
+		}
+	}
+});
+
 rightClickMenu.addEventListener("click", (e) => {
 	let targetItem = e.target;
+	// console.log(targetItem);
 	if (targetItem.closest(".close-menu")) {
 		rightClickMenu.classList.remove("active");
 		body.classList.remove("lock");
 	}
 });
-
-//останавливаем клик, который удаляет класс active
-rightClickMenu.addEventListener(
-	"click",
-	(event) => {
-		event.stopPropagation();
-	},
-	false
-);
-
-// document.querySelector("#l1").addEventListener(
-// 	"click",
-// 	() => {
-// 		alert("Выпрямись и убери руку от лица!");
-// 	},
-// 	false
-// );
-// document.querySelector("#l2").addEventListener(
-// 	"click",
-// 	() => {
-// 		alert("Никогда не спрашивай совета у черных квадратов");
-// 	},
-// 	false
-// );
-// document.querySelector("#l3").addEventListener(
-// 	"click",
-// 	() => {
-// 		alert("42");
-// 	},
-// 	false
-// );
-// document.querySelector("#l4").addEventListener(
-// 	"click",
-// 	() => {
-// 		alert(
-// 			"Вжух! Теперь ты крутой программист! Иди и сделай контекстное меню на своём сайте"
-// 		);
-// 	},
-// 	false
-// );
