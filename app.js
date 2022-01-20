@@ -517,7 +517,13 @@ for (const [key, val] of entries) {
 	color.innerHTML = `<input type="text" data-coloris value='${val.color}'/>`;
 	li.appendChild(color);
 
+	let liForTextArea = document.createElement("li");
+	liForTextArea.classList.add("right-click-menu-item");
+	liForTextArea.classList.add("right-click-menu-item__desc-text-area");
+	liForTextArea.innerHTML = `<textarea  name="text" placeholder="Введите текст"></textarea><div class="right-click-menu-item__desc-text-area-btn"><span>✔</span></div>`;
+
 	rightClickMenuItems.appendChild(li);
+	rightClickMenuItems.appendChild(liForTextArea);
 }
 
 const getZero = (num) => {
@@ -560,10 +566,8 @@ calendarBody.addEventListener("contextmenu", (e) => {
 	}
 });
 
-let targetInRightClickMenuItems;
 rightClickMenuItems.addEventListener("click", (e) => {
 	let target = e.target;
-	targetInRightClickMenuItems = target;
 	if (target.closest(".right-click-menu-item__btn")) {
 		//получаем букву и всставляем в таблицу
 		targetItemInContextMenu.innerHTML = target.getAttribute("data-value");
@@ -584,22 +588,19 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		});
 	}
 
-	//Описание в контекстном меню
+	//открываем textarea в контекстном меню
 	if (target.closest(".right-click-menu-item__desc")) {
+		let rightClickMenuItem = target.closest(".right-click-menu-item");
 		let desc = target.closest(".right-click-menu-item__desc");
 		let arrow = desc.querySelector(".right-click-menu-item__desc-arrow");
+
 		arrow.classList.toggle("active");
 
-		if (arrow.closest(".right-click-menu-item__desc-arrow.active")) {
-			let div = document.createElement("div");
-			div.classList.add("right-click-menu-item__desc-text-area");
-			let textarea = document.createElement("textarea");
-			textarea.setAttribute("name", "text");
-			div.appendChild(textarea);
-			desc.appendChild(div);
-		} else {
-			arrow.nextSibling.remove();
-		}
+		let divTextArea = rightClickMenuItem.nextSibling;
+		let textarea = divTextArea.querySelector("textarea");
+
+		divTextArea.classList.toggle("active");
+		textarea.focus({ preventScroll: false });
 	}
 });
 
