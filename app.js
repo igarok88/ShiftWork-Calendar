@@ -34,6 +34,12 @@ let calendar_count_d = document.querySelector(".calendar-count-d");
 
 let calendar_column = calendar.querySelectorAll(".calendar-column");
 
+let arrForUserNotes;
+
+!localStorage.userNotes
+	? (arrForUserNotes = [])
+	: (arrForUserNotes = JSON.parse(localStorage.getItem("userNotes")));
+
 const root = [
 	"23",
 	"23",
@@ -191,13 +197,18 @@ generateCalendar = (month, year) => {
 		calendar_nav.style.width = body.offsetWidth + "px";
 		calendar_nav.style.position = "fixed";
 	};
+	const setWidthHeaderDay = () => {
+		header_day.style.width = header_day.offsetWidth + "px";
+	};
 
 	window.addEventListener(`resize`, () => {
 		setWidthFooter();
+		setWidthHeaderDay();
 	});
 
 	for (let i = 0; i < days_of_month[month]; i++) {
 		let i_day = new Date(year, month, i + 1);
+		// console.log(i_day);
 
 		//заполняем поля с датой
 		let day = document.createElement("div");
@@ -227,12 +238,12 @@ generateCalendar = (month, year) => {
 		) {
 			day_week.classList.add("calendar-day-off");
 		}
-		day_week.innerHTML = day_names[i_day.getDay()];
+		day_week.innerHTML = day_names[i_day.getDay()]; 
 		calendar_week_day.appendChild(day_week);
 
 		//заполняем поля смен
 
-		const fillDay = (shift, key, calendar_count, arrForCount) => {
+		const fillDay = (shift, key, calendar_count, arrForCount, nameShift) => {
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
@@ -251,6 +262,8 @@ generateCalendar = (month, year) => {
 			) {
 				day.classList.add("calendar-day-off");
 			}
+
+			//заполняем колонку смен
 			if (key) {
 				day.innerHTML = root[residual + i + key];
 				shift.appendChild(day);
@@ -274,18 +287,38 @@ generateCalendar = (month, year) => {
 				let header_day = shift.querySelector(".calendar-header-day");
 				header_day.style.width = header_day.offsetWidth + "px";
 				header_day.style.position = "fixed";
+				// setWidthHeaderDay();
+
 				if (calendar_count) {
 					calendar_count.innerHTML = arrForCount.length;
 				}
 				setWidthFooter();
 			}
+
+			// ищем совпадение в localStorage и заполняем соответствующие ячейки
+			if (arrForUserNotes.length > 0) {
+				arrForUserNotes.forEach((item) => {
+					let date = JSON.parse(item.date);
+					let d = new Date(date);
+					if (
+						i + 2 === d.getDate() &&
+						year === d.getFullYear() &&
+						month === d.getMonth() &&
+						item.shift == nameShift
+					) {
+						day.innerHTML = item.keyNote;
+						day.setAttribute("data-desc", item.desc);
+						day.style.backgroundColor = item.color;
+					}
+				});
+			}
 		};
 
-		fillDay(calendar_a, 15, calendar_count_a, arrForCount_a);
-		fillDay(calendar_b, 21, calendar_count_b, arrForCount_b);
-		fillDay(calendar_v, 27, calendar_count_v, arrForCount_v);
-		fillDay(calendar_g, 18, calendar_count_g, arrForCount_g);
-		fillDay(calendar_d, 24, calendar_count_d, arrForCount_d);
+		fillDay(calendar_a, 15, calendar_count_a, arrForCount_a, calendar_name[2]);
+		fillDay(calendar_b, 21, calendar_count_b, arrForCount_b, calendar_name[3]);
+		fillDay(calendar_v, 27, calendar_count_v, arrForCount_v, calendar_name[4]);
+		fillDay(calendar_g, 18, calendar_count_g, arrForCount_g, calendar_name[5]);
+		fillDay(calendar_d, 24, calendar_count_d, arrForCount_d, calendar_name[6]);
 		fillDay(calendar_e);
 
 		//вешаем класс curr-date на сегодняшнюю дату
@@ -534,18 +567,24 @@ const getZero = (num) => {
 	}
 };
 let targetItemInContextMenu;
+let selectedDate;
+let selectedShift;
+let selectedItemInContextMenu;
+let selectedColorInContextMenu;
+let selectedTextarea;
+let textareaValue;
+
 calendarBody.addEventListener("contextmenu", (e) => {
 	targetItemInContextMenu = e.target;
 	if (targetItemInContextMenu.closest(".calendar-context-menu")) {
 		e.preventDefault();
-		// console.log(targetItemInContextMenu);
 		rightClickMenu.classList.add("active");
 		body.classList.add("lock");
 		//заполняем даты
 		//Объяснение :
 		// element.parentNode.children→ Возвращает братьев element, включая этот элемент.
-		// Array.from→ Приводит конструктор childrenк Arrayобъекту
-		// indexOf→ Вы можете подать заявку indexOf, потому что теперь у вас есть Arrayобъект.
+		// Array.from→ Приводит конструктор children к Array объекту
+		// indexOf→ Вы можете подать заявку indexOf, потому что теперь у вас есть Array объект.
 		let day = Array.from(targetItemInContextMenu.parentNode.children).indexOf(
 			targetItemInContextMenu
 		);
@@ -563,14 +602,33 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		//заполняем поле дней недели
 		let dayWeek = new Date(curr_year.value, curr_month.value, day).getDay();
 		rightClickMenuHeaderDayWeek.innerHTML = day_names[dayWeek];
+
+		selectedDate = JSON.stringify(
+			new Date(curr_year.value, curr_month.value, day + 1)
+		);
+		selectedShift = shift;
 	}
 });
+function UserNotes(date, shift, color, desc, key) {
+	(this.date = date),
+		(this.shift = shift),
+		(this.color = color),
+		(this.desc = desc.value),
+		(this.keyNote = key);
+}
+
+const updateLocalStorage = (name, data) => {
+	localStorage.setItem(name, JSON.stringify(data));
+};
 
 rightClickMenuItems.addEventListener("click", (e) => {
 	let target = e.target;
+
 	if (target.closest(".right-click-menu-item__btn")) {
-		//получаем букву и всставляем в таблицу
+		//получаем букву и вставляем в таблицу
 		targetItemInContextMenu.innerHTML = target.getAttribute("data-value");
+
+		selectedItemInContextMenu = target.getAttribute("data-value");
 
 		//получаем цвет и устанавливаем в таблицу
 		let sibling = target.closest(".right-click-menu-item__btn").nextSibling;
@@ -578,9 +636,81 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		let input = sibling.querySelector("input");
 
 		targetItemInContextMenu.style.backgroundColor = input.value;
-		targetItemInContextMenu.style.borderRadius = "4px";
-		targetItemInContextMenu.style.margin = "3px";
+		// targetItemInContextMenu.style.borderRadius = "4px";
+		// targetItemInContextMenu.style.marginRight = "3px";
+		// targetItemInContextMenu.style.marginLeft = "3px";
+		// targetItemInContextMenu.style.marginTop = "1px";
+		// targetItemInContextMenu.style.marginBottom = "1px";
+
+		selectedColorInContextMenu = input.value;
+
+		//забираем данные с textarea
+		let rightClickMenuItem = target.closest(".right-click-menu-item");
+		let divTextArea = rightClickMenuItem.nextSibling;
+		let textarea = divTextArea.querySelector("textarea");
+		selectedTextarea = textarea;
+		targetItemInContextMenu.setAttribute("data-desc", selectedTextarea.value);
+
+		if (!selectedTextarea) {
+			selectedTextarea = "";
+		}
+
+		//убираем классы active и очищаем формы  textarea
+
+		let arrows = rightClickMenuItems.querySelectorAll(
+			".right-click-menu-item__desc-arrow"
+		);
+		arrows.forEach((item) => {
+			item.classList.remove("active");
+		});
+
+		let divTextAreas = rightClickMenuItems.querySelectorAll(
+			".right-click-menu-item__desc-text-area"
+		);
+		divTextAreas.forEach((item) => {
+			item.classList.remove("active");
+		});
+
+		let textareas = rightClickMenuItems.querySelectorAll("textarea");
+		textareas.forEach((item) => {
+			item.value = "";
+		});
+
+		//создание объекта с выбранными данными из контекстного меню и сохраняем в массив
+		arrForUserNotes.push(
+			new UserNotes(
+				selectedDate,
+				selectedShift,
+				selectedColorInContextMenu,
+				selectedTextarea,
+				selectedItemInContextMenu
+			)
+		);
+		// если на одной и той же дате и одной и той же смене нажимаем второй раз, то старые данные удаляются, новые записываются
+		const filterArr = (arr) => {
+			let arr1 = [],
+				arr2 = [],
+				repetition = [],
+				remainder = [],
+				result;
+			for (let i = 0; i < arr.length; i++) {
+				if (arr[i].date == selectedDate && arr[i].shift == selectedShift) {
+					repetition.push(arr[i]);
+					arr1 = [repetition.shift()];
+				} else {
+					remainder.push(arr[i]);
+					arr2 = remainder;
+				}
+			}
+			result = arr1.concat(arr2);
+			arrForUserNotes = result.slice();
+		};
+		filterArr(arrForUserNotes);
+
+		updateLocalStorage("userNotes", arrForUserNotes);
+		//при клике на btn добавить атрибут с данными из textarea к ячейке в таблице
 	}
+
 	if (target.closest(".right-click-menu-item__color input")) {
 		target.addEventListener("change", () => {
 			let color = target.value;
@@ -598,15 +728,31 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 		let divTextArea = rightClickMenuItem.nextSibling;
 		let textarea = divTextArea.querySelector("textarea");
+		selectedTextarea = textarea;
 
 		divTextArea.classList.toggle("active");
 		textarea.focus({ preventScroll: false });
+	}
+
+	if (target.closest(".right-click-menu-item__desc-text-area-btn")) {
+		let rightClickMenuItem = target.closest(".right-click-menu-item");
+
+		let prevSiblingRightClickMenuItem = rightClickMenuItem.previousSibling;
+
+		let arrow = prevSiblingRightClickMenuItem.querySelector(
+			".right-click-menu-item__desc-arrow"
+		);
+
+		arrow.classList.toggle("active");
+
+		let divTextArea = prevSiblingRightClickMenuItem.nextSibling;
+
+		divTextArea.classList.toggle("active");
 	}
 });
 
 rightClickMenu.addEventListener("click", (e) => {
 	let targetItem = e.target;
-	// console.log(targetItem);
 	if (targetItem.closest(".close-menu")) {
 		rightClickMenu.classList.remove("active");
 		body.classList.remove("lock");

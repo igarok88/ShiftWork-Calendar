@@ -109,7 +109,7 @@ body.lock {
 	justify-content: center;
 	position: relative;
 	border-radius: 4px;
-	margin: 1px 3px;
+	margin: 3px;
 }
 .calendar-day,
 .right-click-menu-header div,
@@ -315,6 +315,7 @@ body.lock {
 	0% {
 		opacity: 0;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -471,6 +472,9 @@ body.lock {
 .right-click-menu-header div {
 	padding: 7px;
 }
+.right-click-menu ul {
+	margin-top: 5px;
+}
 .right-click-menu li::first-child {
 	margin-top: 40px;
 }
@@ -554,13 +558,13 @@ body.lock {
 
 .right-click-menu-item__desc-text-area {
 	position: relative;
-	top: -63px;
+	top: -59px;
 	transition: all 0.3s ease 0s;
 	display: grid;
 	grid-template-columns: 5fr 1fr;
 	overflow: hidden;
-	/* opacity: 0; */
-	/* visibility: hidden; */
+	opacity: 0;
+	visibility: hidden;
 	height: 0;
 }
 .right-click-menu-item__desc-text-area.active {
