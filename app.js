@@ -1,11 +1,11 @@
 const body = document.querySelector("body");
 const calendar = document.querySelector(".calendar");
 
-const day_names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const calendar_name = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
+const calendarName = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
 
-const month_names = [
+const monthNames = [
 	"January",
 	"February",
 	"March",
@@ -19,26 +19,28 @@ const month_names = [
 	"November",
 	"December",
 ];
-let calendar_a = calendar.querySelector(".calendar-a");
-let calendar_b = calendar.querySelector(".calendar-b");
-let calendar_v = calendar.querySelector(".calendar-v");
-let calendar_g = calendar.querySelector(".calendar-g");
-let calendar_d = calendar.querySelector(".calendar-d");
-let calendar_e = calendar.querySelector(".calendar-e");
+let calendarA = calendar.querySelector(".calendar-a");
+let calendarB = calendar.querySelector(".calendar-b");
+let calendarV = calendar.querySelector(".calendar-v");
+let calendarG = calendar.querySelector(".calendar-g");
+let calendarD = calendar.querySelector(".calendar-d");
+let calendarE = calendar.querySelector(".calendar-e");
 
-let calendar_count_a = document.querySelector(".calendar-count-a");
-let calendar_count_b = document.querySelector(".calendar-count-b");
-let calendar_count_v = document.querySelector(".calendar-count-v");
-let calendar_count_g = document.querySelector(".calendar-count-g");
-let calendar_count_d = document.querySelector(".calendar-count-d");
+let calendarCountA = document.querySelector(".calendar-count-a");
+let calendarCountB = document.querySelector(".calendar-count-b");
+let calendarCountV = document.querySelector(".calendar-count-v");
+let calendarCountG = document.querySelector(".calendar-count-g");
+let calendarCountD = document.querySelector(".calendar-count-d");
 
-let calendar_column = calendar.querySelectorAll(".calendar-column");
+let calendarColumn = calendar.querySelectorAll(".calendar-column");
 
 let arrForUserNotes;
 
-!localStorage.userNotes
-	? (arrForUserNotes = [])
-	: (arrForUserNotes = JSON.parse(localStorage.getItem("userNotes")));
+if (!localStorage.userNotes) {
+	arrForUserNotes = [];
+} else {
+	arrForUserNotes = JSON.parse(localStorage.getItem("userNotes"));
+}
 
 const root = [
 	"23",
@@ -118,29 +120,29 @@ const root = [
 	"",
 ];
 
-isLeapYear = (year) => {
+const isLeapYear = (year) => {
 	return (
 		(year % 4 === 0 && year % 100 !== 0 && year % 400 !== 0) ||
 		(year % 100 === 0 && year % 400 === 0)
 	);
 };
 
-getFebDays = (year) => {
+const getFebDays = (year) => {
 	return isLeapYear(year) ? 29 : 28;
 };
 
-generateCalendar = (month, year) => {
-	let calendar_week_day = calendar.querySelector(".calendar-week-day");
-	let calendar_days = calendar.querySelector(".calendar-days");
-	let calendar_header_year = calendar.querySelector("#year");
+const generateCalendar = (month, year) => {
+	let calendarWeekDay = calendar.querySelector(".calendar-week-day");
+	let calendarDays = calendar.querySelector(".calendar-days");
+	let calendarHeaderYear = calendar.querySelector("#year");
 
-	let arrForCount_a = [];
-	let arrForCount_b = [];
-	let arrForCount_v = [];
-	let arrForCount_g = [];
-	let arrForCount_d = [];
+	let arrForCountA = [];
+	let arrForCountB = [];
+	let arrForCountV = [];
+	let arrForCountG = [];
+	let arrForCountD = [];
 
-	let days_of_month = [
+	let daysOfMonth = [
 		31,
 		getFebDays(year),
 		31,
@@ -155,28 +157,32 @@ generateCalendar = (month, year) => {
 		31,
 	];
 
-	calendar_column.forEach((column, index) => {
+	calendarColumn.forEach((column, index) => {
 		column.innerHTML = "";
 		let day = document.createElement("div");
 		day.classList.add("calendar-header-day");
-		day.innerHTML = calendar_name[index];
+		day.innerHTML = calendarName[index];
 		column.appendChild(day);
 	});
 
 	// если аргумент не задан, то получаем текущий месяц
-	if (!month) month = currDate.getMonth();
+	if (!month) {
+		month = currDate.getMonth();
+	}
 
 	// если аргумент не задан, то получаем текущий год
-	if (!year) year = currDate.getFullYear();
+	if (!year) {
+		year = currDate.getFullYear();
+	}
 
 	//получаем первый день месяца
-	let first_day = new Date(year, month, 1);
+	let firstDay = new Date(year, month, 1);
 
 	/////////////////////////////
 
 	var dayNewYear = new Date(2022, 0, 1);
 
-	var diff = first_day - dayNewYear;
+	var diff = firstDay - dayNewYear;
 
 	var dayOne = 86400000;
 	//  1000 * 60 * 60 * 24;
@@ -188,17 +194,17 @@ generateCalendar = (month, year) => {
 	var residual = dayYear % lenShift;
 
 	//получаем имя текущего месяца
-	let curr_month = `${month_names[month]}`;
-	month_picker.innerHTML = curr_month;
-	calendar_header_year.innerHTML = year;
+	let currMonth = `${monthNames[month]}`;
+	monthPicker.innerHTML = currMonth;
+	calendarHeaderYear.innerHTML = year;
 
 	const setWidthFooter = () => {
-		let calendar_nav = calendar.querySelector(".calendar-nav");
-		calendar_nav.style.width = body.offsetWidth + "px";
-		calendar_nav.style.position = "fixed";
+		let calendarNav = calendar.querySelector(".calendar-nav");
+		calendarNav.style.width = body.offsetWidth + "px";
+		calendarNav.style.position = "fixed";
 	};
 	const setWidthHeaderDay = () => {
-		header_day.style.width = header_day.offsetWidth + "px";
+		// headerDay.style.width = headerDay.offsetWidth + "px";
 	};
 
 	window.addEventListener(`resize`, () => {
@@ -206,44 +212,44 @@ generateCalendar = (month, year) => {
 		setWidthHeaderDay();
 	});
 
-	for (let i = 0; i < days_of_month[month]; i++) {
-		let i_day = new Date(year, month, i + 1);
-		// console.log(i_day);
+	for (let i = 0; i < daysOfMonth[month]; i++) {
+		let iDay = new Date(year, month, i + 1);
+		// console.log(iDay);
 
 		//заполняем поля с датой
 		let day = document.createElement("div");
 		day.classList.add("calendar-day");
 		day.innerHTML = i + 1;
 		if (
-			day_names[i_day.getDay()] == day_names[0] ||
-			day_names[i_day.getDay()] == day_names[6]
+			dayNames[iDay.getDay()] == dayNames[0] ||
+			dayNames[iDay.getDay()] == dayNames[6]
 		) {
 			day.classList.add("calendar-day-off");
 		}
-		calendar_days.appendChild(day);
+		calendarDays.appendChild(day);
 
-		if (i == days_of_month[month] - 1) {
-			let header_day = calendar_days.querySelector(".calendar-header-day");
-			header_day.style.width = header_day.offsetWidth + "px";
-			header_day.style.position = "fixed";
+		if (i == daysOfMonth[month] - 1) {
+			let headerDay = calendarDays.querySelector(".calendar-header-day");
+			headerDay.style.width = headerDay.offsetWidth + "px";
+			headerDay.style.position = "fixed";
 		}
 
 		//заполняем поля для дней недели
 
-		let day_week = document.createElement("div");
-		day_week.classList.add("calendar-day");
+		let dayWeek = document.createElement("div");
+		dayWeek.classList.add("calendar-day");
 		if (
-			day_names[i_day.getDay()] == day_names[0] ||
-			day_names[i_day.getDay()] == day_names[6]
+			dayNames[iDay.getDay()] == dayNames[0] ||
+			dayNames[iDay.getDay()] == dayNames[6]
 		) {
-			day_week.classList.add("calendar-day-off");
+			dayWeek.classList.add("calendar-day-off");
 		}
-		day_week.innerHTML = day_names[i_day.getDay()]; 
-		calendar_week_day.appendChild(day_week);
+		dayWeek.innerHTML = dayNames[iDay.getDay()];
+		calendarWeekDay.appendChild(dayWeek);
 
 		//заполняем поля смен
 
-		const fillDay = (shift, key, calendar_count, arrForCount, nameShift) => {
+		const fillDay = (shift, key, calendarCount, arrForCount, nameShift) => {
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
@@ -257,8 +263,8 @@ generateCalendar = (month, year) => {
 			}
 			//вешаем класс calendar-day-off на выходной
 			if (
-				day_names[i_day.getDay()] == day_names[0] ||
-				day_names[i_day.getDay()] == day_names[6]
+				dayNames[iDay.getDay()] == dayNames[0] ||
+				dayNames[iDay.getDay()] == dayNames[6]
 			) {
 				day.classList.add("calendar-day-off");
 			}
@@ -283,14 +289,14 @@ generateCalendar = (month, year) => {
 				arrForCount.push(root[residual + i + key]);
 			}
 
-			if (i == days_of_month[month] - 1) {
-				let header_day = shift.querySelector(".calendar-header-day");
-				header_day.style.width = header_day.offsetWidth + "px";
-				header_day.style.position = "fixed";
+			if (i == daysOfMonth[month] - 1) {
+				let headerDay = shift.querySelector(".calendar-header-day");
+				headerDay.style.width = headerDay.offsetWidth + "px";
+				headerDay.style.position = "fixed";
 				// setWidthHeaderDay();
 
-				if (calendar_count) {
-					calendar_count.innerHTML = arrForCount.length;
+				if (calendarCount) {
+					calendarCount.innerHTML = arrForCount.length;
 				}
 				setWidthFooter();
 			}
@@ -314,12 +320,12 @@ generateCalendar = (month, year) => {
 			}
 		};
 
-		fillDay(calendar_a, 15, calendar_count_a, arrForCount_a, calendar_name[2]);
-		fillDay(calendar_b, 21, calendar_count_b, arrForCount_b, calendar_name[3]);
-		fillDay(calendar_v, 27, calendar_count_v, arrForCount_v, calendar_name[4]);
-		fillDay(calendar_g, 18, calendar_count_g, arrForCount_g, calendar_name[5]);
-		fillDay(calendar_d, 24, calendar_count_d, arrForCount_d, calendar_name[6]);
-		fillDay(calendar_e);
+		fillDay(calendarA, 15, calendarCountA, arrForCountA, calendarName[2]);
+		fillDay(calendarB, 21, calendarCountB, arrForCountB, calendarName[3]);
+		fillDay(calendarV, 27, calendarCountV, arrForCountV, calendarName[4]);
+		fillDay(calendarG, 18, calendarCountG, arrForCountG, calendarName[5]);
+		fillDay(calendarD, 24, calendarCountD, arrForCountD, calendarName[6]);
+		fillDay(calendarE);
 
 		//вешаем класс curr-date на сегодняшнюю дату
 		if (
@@ -328,34 +334,34 @@ generateCalendar = (month, year) => {
 			month === currDate.getMonth()
 		) {
 			day.classList.add("curr-date");
-			day_week.classList.add("curr-date");
+			dayWeek.classList.add("curr-date");
 		}
 	}
 };
 
-let month_list = calendar.querySelector(".month-list");
+let monthList = calendar.querySelector(".month-list");
 
-month_names.forEach((e, index) => {
+monthNames.forEach((e, index) => {
 	let month = document.createElement("div");
 	month.innerHTML = `<div data-month="${index}">${e}</div>`;
 	month.querySelector("div").onclick = () => {
-		month_list.classList.remove("show");
+		monthList.classList.remove("show");
 		body.classList.remove("lock");
 		body.style.paddingRight = 0;
-		curr_month.value = index;
-		generateCalendar(index, curr_year.value);
+		currMonth.value = index;
+		generateCalendar(index, currYear.value);
 	};
-	month_list.appendChild(month);
+	monthList.appendChild(month);
 });
 
-let month_picker = calendar.querySelector("#month-picker");
+let monthPicker = calendar.querySelector("#month-picker");
 
-month_picker.onclick = () => {
-	month_list.classList.add("show");
+monthPicker.onclick = () => {
+	monthList.classList.add("show");
 	body.classList.add("lock");
 
-	let header_day = calendar.querySelectorAll(".calendar-header-day");
-	header_day.forEach((item) => {
+	let headerDay = calendar.querySelectorAll(".calendar-header-day");
+	headerDay.forEach((item) => {
 		item.style.position = "static";
 	});
 
@@ -370,7 +376,7 @@ month_picker.onclick = () => {
 	div.remove();
 	const docHeight = document.documentElement.scrollHeight;
 	const winHeight = document.documentElement.clientHeight;
-	if (docHeight > winHeight && month_list.className.includes("show")) {
+	if (docHeight > winHeight && monthList.className.includes("show")) {
 		body.style.paddingRight = scrollWidth + "px";
 	} else {
 		body.style.paddingRight = 0;
@@ -378,41 +384,41 @@ month_picker.onclick = () => {
 };
 
 let currDate = new Date();
-let curr_month = { value: currDate.getMonth() };
-let curr_year = { value: currDate.getFullYear() };
-generateCalendar(curr_month.value, curr_year.value);
+let currMonth = { value: currDate.getMonth() };
+let currYear = { value: currDate.getFullYear() };
+generateCalendar(currMonth.value, currYear.value);
 
 document.querySelector("#prev-month").onclick = () => {
-	if (curr_month.value == 0) {
-		curr_month.value = 11;
-		--curr_year.value;
+	if (currMonth.value == 0) {
+		currMonth.value = 11;
+		--currYear.value;
 	} else {
-		--curr_month.value;
+		--currMonth.value;
 	}
-	generateCalendar(curr_month.value, curr_year.value);
+	generateCalendar(currMonth.value, currYear.value);
 };
 document.querySelector("#next-month").onclick = () => {
-	if (curr_month.value == 11) {
-		curr_month.value = 0;
-		++curr_year.value;
+	if (currMonth.value == 11) {
+		currMonth.value = 0;
+		++currYear.value;
 	} else {
-		++curr_month.value;
+		++currMonth.value;
 	}
-	generateCalendar(curr_month.value, curr_year.value);
+	generateCalendar(currMonth.value, currYear.value);
 };
 
 document.querySelector("#prev-year").onclick = () => {
-	--curr_year.value;
-	generateCalendar(curr_month.value, curr_year.value);
+	--currYear.value;
+	generateCalendar(currMonth.value, currYear.value);
 };
 document.querySelector("#next-year").onclick = () => {
-	++curr_year.value;
-	generateCalendar(curr_month.value, curr_year.value);
+	++currYear.value;
+	generateCalendar(currMonth.value, currYear.value);
 };
 
-let dark_mode_toggle = document.querySelector(".dark-mode-switch");
+let darkModeToggle = document.querySelector(".dark-mode-switch");
 
-dark_mode_toggle.onclick = () => {
+darkModeToggle.onclick = () => {
 	body.classList.toggle("light");
 	body.classList.toggle("dark");
 };
@@ -553,7 +559,12 @@ for (const [key, val] of entries) {
 	let liForTextArea = document.createElement("li");
 	liForTextArea.classList.add("right-click-menu-item");
 	liForTextArea.classList.add("right-click-menu-item__desc-text-area");
-	liForTextArea.innerHTML = `<textarea  name="text" placeholder="Введите текст"></textarea><div class="right-click-menu-item__desc-text-area-btn"><span>✔</span></div>`;
+	liForTextArea.innerHTML = `
+			<textarea  name="text" placeholder="Введите текст"></textarea>
+			<div class="right-click-menu-item__desc-text-area-btn">
+				<span>✔</span>
+			</div>
+		`;
 
 	rightClickMenuItems.appendChild(li);
 	rightClickMenuItems.appendChild(liForTextArea);
@@ -590,21 +601,21 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		);
 		rightClickMenuHeaderDay.innerHTML = getZero(day);
 
-		let month = curr_month.value + 1;
+		let month = currMonth.value + 1;
 		rightClickMenuHeaderMonth.innerHTML = getZero(month);
 
-		rightClickMenuHeaderYear.innerHTML = curr_year.value;
+		rightClickMenuHeaderYear.innerHTML = currYear.value;
 
 		//заполняем название смены в контекстном меню
 		let shift = targetItemInContextMenu.parentElement.firstChild.innerText;
 		rightClickMenuHeaderShift.innerHTML = `"${shift}"`;
 
 		//заполняем поле дней недели
-		let dayWeek = new Date(curr_year.value, curr_month.value, day).getDay();
-		rightClickMenuHeaderDayWeek.innerHTML = day_names[dayWeek];
+		let dayWeek = new Date(currYear.value, currMonth.value, day).getDay();
+		rightClickMenuHeaderDayWeek.innerHTML = dayNames[dayWeek];
 
 		selectedDate = JSON.stringify(
-			new Date(curr_year.value, curr_month.value, day + 1)
+			new Date(currYear.value, currMonth.value, day + 1)
 		);
 		selectedShift = shift;
 	}
@@ -686,7 +697,8 @@ rightClickMenuItems.addEventListener("click", (e) => {
 				selectedItemInContextMenu
 			)
 		);
-		// если на одной и той же дате и одной и той же смене нажимаем второй раз, то старые данные удаляются, новые записываются
+		// если на одной и той же дате и одной и той же смене нажимаем второй раз,
+		//то старые данные удаляются, новые записываются
 		const filterArr = (arr) => {
 			let arr1 = [],
 				arr2 = [],
