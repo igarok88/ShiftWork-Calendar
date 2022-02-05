@@ -43,6 +43,9 @@
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
+	user-select: none;
+	outline: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 html,
@@ -204,9 +207,6 @@ body.lock {
 	visibility: visible;
 	pointer-events: visible;
 	transition: all 0.5s ease-in-out;
-}
-
-.month-list > div {
 }
 
 .month-list > div > div {
@@ -581,4 +581,63 @@ body.lock {
 .right-click-menu-item__desc-text-area-btn span {
 	font-size: 30px;
 	margin-top: -7px;
+}
+.desc {
+	border: 4px solid rgb(55, 98, 163);
+}
+.popup {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1050;
+	display: none;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background-color: rgba(0, 0, 0, 0.5);
+	align-items: center;
+	justify-content: center;
+}
+
+.popup.show {
+	display: flex;
+}
+
+.popup.hide {
+	display: none;
+}
+
+.popup__window {
+	position: relative;
+	min-width: 300px;
+	margin: 10px;
+}
+
+.popup__content {
+	padding: 20px;
+	background-color: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 15px;
+	max-height: 80vh;
+	overflow-y: auto;
+	color: var(--color-txt);
+	background-color: var(--bg-main);
+}
+.popup__content h2 {
+	font-size: 13px;
+	color: var(--bg-second);
+	font-weight: normal;
+	margin-bottom: 10px;
+}
+.popup__close {
+	position: absolute;
+	top: 8px;
+	right: 14px;
+	font-size: 30px;
+	color: var(--color-txt);
+	opacity: 0.5;
+	font-weight: 700;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
 }

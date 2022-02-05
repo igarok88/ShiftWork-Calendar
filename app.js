@@ -165,15 +165,15 @@ const generateCalendar = (month, year) => {
 		column.appendChild(day);
 	});
 
-	// если аргумент не задан, то получаем текущий месяц
-	if (!month) {
-		month = currDate.getMonth();
-	}
+	// // если аргумент не задан, то получаем текущий месяц
+	// if (!month) {
+	// 	month = currDate.getMonth();
+	// }
 
-	// если аргумент не задан, то получаем текущий год
-	if (!year) {
-		year = currDate.getFullYear();
-	}
+	// // если аргумент не задан, то получаем текущий год
+	// if (!year) {
+	// 	year = currDate.getFullYear();
+	// }
 
 	//получаем первый день месяца
 	let firstDay = new Date(year, month, 1);
@@ -214,7 +214,6 @@ const generateCalendar = (month, year) => {
 
 	for (let i = 0; i < daysOfMonth[month]; i++) {
 		let iDay = new Date(year, month, i + 1);
-		// console.log(iDay);
 
 		//заполняем поля с датой
 		let day = document.createElement("div");
@@ -313,11 +312,19 @@ const generateCalendar = (month, year) => {
 						item.shift == nameShift
 					) {
 						day.innerHTML = item.keyNote;
-						day.setAttribute("data-desc", item.desc);
+						if (item.desc) {
+							day.setAttribute("data-desc", item.desc);
+							day.classList.add("desc");
+						}
+
 						day.style.backgroundColor = item.color;
 					}
 				});
 			}
+			// let attrDataDesc = calendar.querySelectorAll("[data-desc]");
+			// if (attrDataDesc) {
+			// 	console.log(attrDataDesc);
+			// }
 		};
 
 		fillDay(calendarA, 15, calendarCountA, arrForCountA, calendarName[2]);
@@ -553,7 +560,7 @@ for (const [key, val] of entries) {
 
 	let color = document.createElement("div");
 	color.classList.add("right-click-menu-item__color");
-	color.innerHTML = `<input type="text" data-coloris value='${val.color}'/>`;
+	color.innerHTML = `<input readonly type="text" data-coloris value='${val.color}'/>`;
 	li.appendChild(color);
 
 	let liForTextArea = document.createElement("li");
@@ -582,8 +589,8 @@ let selectedDate;
 let selectedShift;
 let selectedItemInContextMenu;
 let selectedColorInContextMenu;
-let selectedTextarea;
-let textareaValue;
+let selectedTextareaValue;
+// let textareaValue;
 
 calendarBody.addEventListener("contextmenu", (e) => {
 	targetItemInContextMenu = e.target;
@@ -624,7 +631,7 @@ function UserNotes(date, shift, color, desc, key) {
 	(this.date = date),
 		(this.shift = shift),
 		(this.color = color),
-		(this.desc = desc.value),
+		(this.desc = desc),
 		(this.keyNote = key);
 }
 
@@ -658,9 +665,10 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		//забираем данные с textarea
 		let rightClickMenuItem = target.closest(".right-click-menu-item");
 		let divTextArea = rightClickMenuItem.nextSibling;
-		let textarea = divTextArea.querySelector("textarea");
-		selectedTextarea = textarea;
-		targetItemInContextMenu.setAttribute("data-desc", selectedTextarea.value);
+		let selectedTextarea = divTextArea.querySelector("textarea");
+		selectedTextareaValue = selectedTextarea.value;
+
+		targetItemInContextMenu.setAttribute("data-desc", selectedTextareaValue);
 
 		if (!selectedTextarea) {
 			selectedTextarea = "";
@@ -686,14 +694,13 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		textareas.forEach((item) => {
 			item.value = "";
 		});
-
 		//создание объекта с выбранными данными из контекстного меню и сохраняем в массив
 		arrForUserNotes.push(
 			new UserNotes(
 				selectedDate,
 				selectedShift,
 				selectedColorInContextMenu,
-				selectedTextarea,
+				selectedTextareaValue,
 				selectedItemInContextMenu
 			)
 		);
@@ -740,8 +747,9 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 		let divTextArea = rightClickMenuItem.nextSibling;
 		let textarea = divTextArea.querySelector("textarea");
-		selectedTextarea = textarea;
-
+		// console.log(textarea.value);
+		selectedTextareaValue = textarea.value;
+		//////////////////////////////
 		divTextArea.classList.toggle("active");
 		textarea.focus({ preventScroll: false });
 	}
@@ -768,5 +776,47 @@ rightClickMenu.addEventListener("click", (e) => {
 	if (targetItem.closest(".close-menu")) {
 		rightClickMenu.classList.remove("active");
 		body.classList.remove("lock");
+	}
+});
+
+//popup
+const btns = document.querySelectorAll(".desc");
+const popup = document.querySelector(".popup");
+const popupCloseBtn = document.querySelector(".popup__close");
+
+function popupOpen(e) {
+	let descValue = e.target.getAttribute("data-desc");
+	let popupDesc = popup.querySelector(".popup__desc");
+	// popupContent.innerHTML = "";
+	popupDesc.innerHTML = descValue;
+
+	console.log(popupDesc);
+	console.log(descValue);
+	popup.classList.remove("hide");
+	popup.classList.add("show");
+	document.body.style.overflow = "hidden";
+}
+
+btns.forEach((btn) => {
+	btn.addEventListener("click", popupOpen);
+});
+
+function popupClose() {
+	popup.classList.remove("show");
+	popup.classList.add("hide");
+	document.body.style.overflow = "";
+}
+
+popupCloseBtn.addEventListener("click", popupClose);
+
+popup.addEventListener("click", (e) => {
+	if (e.target == popup) {
+		popupClose();
+	}
+});
+
+document.addEventListener("keydown", (e) => {
+	if (e.keyCode == 27 && popup.classList.contains("show")) {
+		popupClose();
 	}
 });
