@@ -113,7 +113,7 @@ body.lock {
 .right-click-menu-item__desc,
 .right-click-menu-item__color,
 .right-click-menu-item__desc-text-area textarea,
-.right-click-menu-item__desc-text-area-btn,
+/* .right-click-menu-item__desc-text-area-btn, */
 .right-click-menu__todo {
 	min-height: 30px;
 	display: flex;
@@ -129,7 +129,7 @@ body.lock {
 .right-click-menu-item__desc,
 .right-click-menu-item__color,
 .right-click-menu-item__desc-text-area textarea,
-.right-click-menu-item__desc-text-area-btn,
+/* .right-click-menu-item__desc-text-area-btn, */
 .right-click-menu__todo {
 	background-color: var(--bg-div);
 	animation: to-top 2s forwards;
@@ -566,32 +566,34 @@ body.lock {
 	transform: rotate(90deg);
 }
 
-.right-click-menu-item__desc-text-area {
+.right-click-menu__todo {
 	position: relative;
 	top: -59px;
 	transition: all 0.3s ease 0s;
-	display: grid;
 	grid-template-columns: 5fr 1fr;
 	overflow: hidden;
 	opacity: 0;
 	visibility: hidden;
 	height: 0;
+	display: none;
 }
-.right-click-menu-item__desc-text-area.active {
+.right-click-menu__todo.active {
+	display: flex;
+
 	top: 0;
 	opacity: 1;
 	visibility: visible;
-	height: 50px;
+	min-height: 350px;
 }
-.right-click-menu-item__desc-text-area textarea {
+/* .right-click-menu-item__desc-text-area textarea {
 	resize: none;
 	padding: 10px;
 	overflow: hidden;
-}
-.right-click-menu-item__desc-text-area-btn span {
+} */
+/* .right-click-menu-item__desc-text-area-btn span {
 	font-size: 30px;
 	margin-top: -7px;
-}
+} */
 .desc {
 	border: 4px solid rgb(55, 98, 163);
 }
@@ -654,6 +656,7 @@ body.lock {
 
 /* todo */
 .right-click-menu__todo {
+	display: flex;
 	flex-direction: column;
 	margin: 6px;
 }
@@ -699,10 +702,10 @@ body.lock {
 	top: 14px;
 	left: calc(50% - 10px);
 }
-#add-task-btn .cross:before {
+.add-task-btn .cross:before {
 	transform: rotate(0deg);
 }
-#add-task-btn .cross:after {
+.add-task-btn .cross:after {
 	transform: rotate(90deg);
 }
 .btn-delete {

@@ -5,7 +5,20 @@ const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const calendarName = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
 
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const monthNames = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
+];
 let calendarA = calendar.querySelector(".calendar-a");
 let calendarB = calendar.querySelector(".calendar-b");
 let calendarV = calendar.querySelector(".calendar-v");
@@ -108,7 +121,10 @@ const root = [
 ];
 
 const isLeapYear = (year) => {
-	return (year % 4 === 0 && year % 100 !== 0 && year % 400 !== 0) || (year % 100 === 0 && year % 400 === 0);
+	return (
+		(year % 4 === 0 && year % 100 !== 0 && year % 400 !== 0) ||
+		(year % 100 === 0 && year % 400 === 0)
+	);
 };
 
 const getFebDays = (year) => {
@@ -136,7 +152,20 @@ const generateCalendar = (month, year) => {
 	let arrForCountG = [];
 	let arrForCountD = [];
 
-	let daysOfMonth = [31, getFebDays(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+	let daysOfMonth = [
+		31,
+		getFebDays(year),
+		31,
+		30,
+		31,
+		30,
+		31,
+		31,
+		30,
+		31,
+		30,
+		31,
+	];
 
 	calendarColumn.forEach((column, index) => {
 		column.innerHTML = "";
@@ -190,7 +219,10 @@ const generateCalendar = (month, year) => {
 		let day = document.createElement("div");
 		day.classList.add("calendar-day");
 		day.innerHTML = i + 1;
-		if (dayNames[iDay.getDay()] == dayNames[0] || dayNames[iDay.getDay()] == dayNames[6]) {
+		if (
+			dayNames[iDay.getDay()] == dayNames[0] ||
+			dayNames[iDay.getDay()] == dayNames[6]
+		) {
 			day.classList.add("calendar-day-off");
 		}
 		calendarDays.appendChild(day);
@@ -205,7 +237,10 @@ const generateCalendar = (month, year) => {
 
 		let dayWeek = document.createElement("div");
 		dayWeek.classList.add("calendar-day");
-		if (dayNames[iDay.getDay()] == dayNames[0] || dayNames[iDay.getDay()] == dayNames[6]) {
+		if (
+			dayNames[iDay.getDay()] == dayNames[0] ||
+			dayNames[iDay.getDay()] == dayNames[6]
+		) {
 			dayWeek.classList.add("calendar-day-off");
 		}
 		dayWeek.innerHTML = dayNames[iDay.getDay()];
@@ -218,11 +253,18 @@ const generateCalendar = (month, year) => {
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
 			//вешаем класс curr-date на сегодняшнюю дату
-			if (i + 1 === currDate.getDate() && year === currDate.getFullYear() && month === currDate.getMonth()) {
+			if (
+				i + 1 === currDate.getDate() &&
+				year === currDate.getFullYear() &&
+				month === currDate.getMonth()
+			) {
 				day.classList.add("curr-date");
 			}
 			//вешаем класс calendar-day-off на выходной
-			if (dayNames[iDay.getDay()] == dayNames[0] || dayNames[iDay.getDay()] == dayNames[6]) {
+			if (
+				dayNames[iDay.getDay()] == dayNames[0] ||
+				dayNames[iDay.getDay()] == dayNames[6]
+			) {
 				day.classList.add("calendar-day-off");
 			}
 
@@ -238,7 +280,11 @@ const generateCalendar = (month, year) => {
 			let indexForDay = residual + i + key;
 
 			//считаем количество смен в месяце
-			if (root[indexForDay] == "23" || root[indexForDay] == "15" || root[indexForDay] == "7") {
+			if (
+				root[indexForDay] == "23" ||
+				root[indexForDay] == "15" ||
+				root[indexForDay] == "7"
+			) {
 				arrForCount.push(root[residual + i + key]);
 			}
 
@@ -259,10 +305,15 @@ const generateCalendar = (month, year) => {
 				arrForUserNotes.forEach((item) => {
 					let date = JSON.parse(item.date);
 					let d = new Date(date);
-					if (i + 2 === d.getDate() && year === d.getFullYear() && month === d.getMonth() && item.shift == nameShift) {
+					if (
+						i + 2 === d.getDate() &&
+						year === d.getFullYear() &&
+						month === d.getMonth() &&
+						item.shift == nameShift
+					) {
 						day.innerHTML = item.keyNote;
 						if (item.desc) {
-							day.setAttribute("data-desc", item.desc);
+							day.setAttribute("data-desc", JSON.stringify(item.desc));
 							day.classList.add("desc");
 						}
 
@@ -280,7 +331,11 @@ const generateCalendar = (month, year) => {
 		fillDay(calendarE);
 
 		//вешаем класс curr-date на сегодняшнюю дату
-		if (i + 1 === currDate.getDate() && year === currDate.getFullYear() && month === currDate.getMonth()) {
+		if (
+			i + 1 === currDate.getDate() &&
+			year === currDate.getFullYear() &&
+			month === currDate.getMonth()
+		) {
 			day.classList.add("curr-date");
 			dayWeek.classList.add("curr-date");
 		}
@@ -393,11 +448,21 @@ burger.addEventListener("click", () => {
 //Контекстное меню
 const calendarBody = document.querySelector(".calendar-body");
 const rightClickMenu = document.querySelector(".right-click-menu");
-const rightClickMenuHeaderShift = rightClickMenu.querySelector(".right-click-menu-header__shift");
-const rightClickMenuHeaderDay = rightClickMenu.querySelector(".right-click-menu-header__day");
-const rightClickMenuHeaderMonth = rightClickMenu.querySelector(".right-click-menu-header__month");
-const rightClickMenuHeaderYear = rightClickMenu.querySelector(".right-click-menu-header__year");
-const rightClickMenuHeaderDayWeek = rightClickMenu.querySelector(".right-click-menu-header__day-week");
+const rightClickMenuHeaderShift = rightClickMenu.querySelector(
+	".right-click-menu-header__shift"
+);
+const rightClickMenuHeaderDay = rightClickMenu.querySelector(
+	".right-click-menu-header__day"
+);
+const rightClickMenuHeaderMonth = rightClickMenu.querySelector(
+	".right-click-menu-header__month"
+);
+const rightClickMenuHeaderYear = rightClickMenu.querySelector(
+	".right-click-menu-header__year"
+);
+const rightClickMenuHeaderDayWeek = rightClickMenu.querySelector(
+	".right-click-menu-header__day-week"
+);
 
 let rightClickMenuItemNames = {
 	23: {
@@ -458,7 +523,8 @@ for (const [key, val] of entries) {
 
 	let desc = document.createElement("div");
 	desc.classList.add("right-click-menu-item__desc");
-	desc.innerHTML = '<div class="right-click-menu-item__desc-arrow"><pre>&gt;</pre></div>';
+	desc.innerHTML =
+		'<div class="right-click-menu-item__desc-arrow"><pre>&gt;</pre></div>';
 	li.appendChild(desc);
 
 	let btn = document.createElement("div");
@@ -483,17 +549,28 @@ for (const [key, val] of entries) {
 	color.innerHTML = `<input readonly type="text" data-coloris value='${val.color}'/>`;
 	li.appendChild(color);
 
-	let liForTextArea = document.createElement("li");
-	liForTextArea.classList.add("right-click-menu-item");
-	liForTextArea.classList.add("right-click-menu-item__desc-text-area");
-	liForTextArea.innerHTML = `
-			<textarea  name="text" placeholder="Введите текст"></textarea>
-			<div class="right-click-menu-item__desc-text-area-btn"><span>✔</span></div>
-			
-		`;
+	let liForTodo = document.createElement("li");
+	liForTodo.classList.add("right-click-menu-item");
+	liForTodo.classList.add("right-click-menu__todo");
+	liForTodo.innerHTML = `
+		<h2>Задачи на день:</h2>
+		
+		<ul class="right-click-menu__todos-wrapper">
+		</ul>
+		
+		<div class="right-click-menu__add-todo-wrapper right-click-menu-item">
+			<div></div>
+			<div class="input-wrapper">
+				<input placeholder="Новый пункт" type="text" class="new-description-task" />
+			</div>
+			<div class="button-wrapper add-task-btn" >
+				<span class="cross"></span>
+			</div>
+		</div>
+	`;
 
 	rightClickMenuItems.appendChild(li);
-	rightClickMenuItems.appendChild(liForTextArea);
+	rightClickMenuItems.appendChild(liForTodo);
 }
 
 const getZero = (num) => {
@@ -508,10 +585,11 @@ let selectedDate;
 let selectedShift;
 let selectedItemInContextMenu;
 let selectedColorInContextMenu;
-let selectedTextareaValue;
+let selectedTodo;
 
 calendarBody.addEventListener("contextmenu", (e) => {
 	targetItemInContextMenu = e.target;
+	let shift;
 	if (targetItemInContextMenu.closest(".calendar-context-menu")) {
 		e.preventDefault();
 		rightClickMenu.classList.add("active");
@@ -521,7 +599,9 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		// element.parentNode.children→ Возвращает братьев element, включая этот элемент.
 		// Array.from→ Приводит конструктор children к Array объекту
 		// indexOf→ Вы можете подать заявку indexOf, потому что теперь у вас есть Array объект.
-		let day = Array.from(targetItemInContextMenu.parentNode.children).indexOf(targetItemInContextMenu);
+		let day = Array.from(targetItemInContextMenu.parentNode.children).indexOf(
+			targetItemInContextMenu
+		);
 		rightClickMenuHeaderDay.innerHTML = getZero(day);
 
 		let month = currMonth.value + 1;
@@ -530,19 +610,25 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		rightClickMenuHeaderYear.innerHTML = currYear.value;
 
 		//заполняем название смены в контекстном меню
-		let shift = targetItemInContextMenu.parentElement.firstChild.innerText;
+		shift = targetItemInContextMenu.parentElement.firstChild.innerText;
 		rightClickMenuHeaderShift.innerHTML = `"${shift}"`;
 
 		//заполняем поле дней недели
 		let dayWeek = new Date(currYear.value, currMonth.value, day).getDay();
 		rightClickMenuHeaderDayWeek.innerHTML = dayNames[dayWeek];
 
-		selectedDate = JSON.stringify(new Date(currYear.value, currMonth.value, day + 1));
+		selectedDate = JSON.stringify(
+			new Date(currYear.value, currMonth.value, day + 1)
+		);
 		selectedShift = shift;
 	}
 });
 function UserNotes(date, shift, color, desc, key) {
-	(this.date = date), (this.shift = shift), (this.color = color), (this.desc = desc), (this.keyNote = key);
+	(this.date = date),
+		(this.shift = shift),
+		(this.color = color),
+		(this.desc = desc),
+		(this.keyNote = key);
 }
 
 const updateLocalStorage = (name, data) => {
@@ -572,36 +658,25 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 		selectedColorInContextMenu = input.value;
 
-		//забираем данные с textarea
-		let rightClickMenuItem = target.closest(".right-click-menu-item");
-		let divTextArea = rightClickMenuItem.nextSibling;
-		let selectedTextarea = divTextArea.querySelector("textarea");
-		selectedTextareaValue = selectedTextarea.value;
-
-		targetItemInContextMenu.setAttribute("data-desc", selectedTextareaValue);
-
-		if (!selectedTextarea) {
-			selectedTextarea = "";
-		}
-
 		//убираем классы active и очищаем формы  textarea
 
-		let arrows = rightClickMenuItems.querySelectorAll(".right-click-menu-item__desc-arrow");
+		let arrows = rightClickMenuItems.querySelectorAll(
+			".right-click-menu-item__desc-arrow"
+		);
 		arrows.forEach((item) => {
 			item.classList.remove("active");
 		});
 
-		let divTextAreas = rightClickMenuItems.querySelectorAll(".right-click-menu-item__desc-text-area");
-		divTextAreas.forEach((item) => {
-			item.classList.remove("active");
-		});
-
-		let textareas = rightClickMenuItems.querySelectorAll("textarea");
-		textareas.forEach((item) => {
-			item.value = "";
-		});
 		//создание объекта с выбранными данными из контекстного меню и сохраняем в массив
-		arrForUserNotes.push(new UserNotes(selectedDate, selectedShift, selectedColorInContextMenu, selectedTextareaValue, selectedItemInContextMenu));
+		arrForUserNotes.push(
+			new UserNotes(
+				selectedDate,
+				selectedShift,
+				selectedColorInContextMenu,
+				selectedTodo,
+				selectedItemInContextMenu
+			)
+		);
 		// если на одной и той же дате и одной и той же смене нажимаем второй раз,
 		//то старые данные удаляются, новые записываются
 		const filterArr = (arr) => {
@@ -635,7 +710,7 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		});
 	}
 
-	//открываем textarea в контекстном меню
+	//открываем todo в контекстном меню
 	if (target.closest(".right-click-menu-item__desc")) {
 		let rightClickMenuItem = target.closest(".right-click-menu-item");
 		let desc = target.closest(".right-click-menu-item__desc");
@@ -643,25 +718,113 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 		arrow.classList.toggle("active");
 
-		let divTextArea = rightClickMenuItem.nextSibling;
-		let textarea = divTextArea.querySelector("textarea");
-		selectedTextareaValue = textarea.value;
-		divTextArea.classList.toggle("active");
-		textarea.focus({ preventScroll: false });
-	}
+		let divTodo = rightClickMenuItem.nextSibling;
+		divTodo.classList.toggle("active");
 
-	if (target.closest(".right-click-menu-item__desc-text-area-btn")) {
-		let rightClickMenuItem = target.closest(".right-click-menu-item");
+		let addTaskBtn = divTodo.querySelector(".add-task-btn");
+		let inputTodo = divTodo.querySelector(".new-description-task");
+		let todosWrapper = divTodo.querySelector(
+			".right-click-menu__todos-wrapper"
+		);
+		let tasks = [];
+		let todoItemElems = [];
 
-		let prevSiblingRightClickMenuItem = rightClickMenuItem.previousSibling;
+		// находим куда надо вставить todo из localstorage
+		if (arrForUserNotes.length > 0) {
+			arrForUserNotes.forEach((item) => {
+				if (selectedDate == item.date && selectedShift == item.shift) {
+					let rightClickMenuItemValue = rightClickMenuItems.querySelectorAll(
+						".right-click-menu-item__value"
+					);
 
-		let arrow = prevSiblingRightClickMenuItem.querySelector(".right-click-menu-item__desc-arrow");
+					rightClickMenuItemValue.forEach((menuItem) => {
+						if (menuItem.getAttribute("data-value") == item.keyNote) {
+							let rightClickMenuItem = menuItem.parentNode.parentNode;
+							let todo = rightClickMenuItem.nextSibling;
+							let target = todo.querySelector(
+								".right-click-menu__todos-wrapper"
+							);
+							todosWrapper = target;
+							console.log(todosWrapper);
+						}
+					});
 
-		arrow.classList.toggle("active");
+					if (item.desc) {
+						tasks = item.desc.slice();
+					}
+				}
+			});
+		}
 
-		let divTextArea = prevSiblingRightClickMenuItem.nextSibling;
+		function Task(description) {
+			this.description = description;
+			this.completed = false;
+		}
 
-		divTextArea.classList.toggle("active");
+		const filterTasks = () => {
+			const activeTasks =
+				tasks.length && tasks.filter((item) => item.completed == false);
+			const completedTasks =
+				tasks.length && tasks.filter((item) => item.completed == true);
+			tasks = [...activeTasks, ...completedTasks];
+		};
+
+		const fillHtmlList = () => {
+			todosWrapper.innerHTML = "";
+			if (tasks.length > 0) {
+				filterTasks();
+				tasks.forEach((item, index) => {
+					todosWrapper.innerHTML += `
+						<li class="todo-item right-click-menu-item ${item.completed ? "checked" : ""}">
+							<div class="custom-checkbox">
+								<input 
+									class="btn-complete" 
+									type="checkbox" 
+									id="${index}" 
+									${item.completed ? "checked" : ""}
+								/>
+								<label for="${index}"></label>
+							</div>
+							<div class="description" contenteditable="true">${item.description}</div>
+							<div class="btn-delete">
+									<span class="cross"></span>
+							</div>
+						</li>
+						`;
+				});
+				todoItemElems = divTodo.querySelectorAll(".todo-item");
+				todoItemElems.forEach((item, index) => {
+					let checkbox = item.querySelector(".custom-checkbox label");
+
+					checkbox.addEventListener("click", () => {
+						tasks[index].completed = !tasks[index].completed;
+						if (tasks[index].completed) {
+							todoItemElems[index].classList.add("checked");
+						} else {
+							todoItemElems[index].classList.remove("checked");
+						}
+						fillHtmlList();
+					});
+
+					let btnDel = item.querySelector(".btn-delete");
+					btnDel.addEventListener("click", () => {
+						tasks.splice(index, 1);
+						fillHtmlList();
+					});
+				});
+			}
+		};
+
+		fillHtmlList();
+
+		addTaskBtn.addEventListener("click", () => {
+			if (inputTodo.value) {
+				tasks.push(new Task(inputTodo.value));
+				selectedTodo = tasks;
+			}
+			fillHtmlList();
+			inputTodo.value = "";
+		});
 	}
 });
 
@@ -716,115 +879,109 @@ document.addEventListener("keydown", (e) => {
 	}
 });
 
-const addTaskBtn = document.querySelector("#add-task-btn");
-const deskTaskInput = document.querySelector("#description-task");
-const todosWrapper = document.querySelector(".right-click-menu__todos-wrapper");
+//todo
 
-let tasks;
-!localStorage.tasks ? (tasks = []) : (tasks = JSON.parse(localStorage.getItem("tasks")));
+// let addTaskBtn;
+// let deskTaskInput;
+// let todosWrapper;
 
-let todoItemElems = [];
-function Task(description) {
-	this.description = description;
-	this.completed = false;
-}
+// let tasks ;
+// !localStorage.tasks
+// 	? (tasks = [])
+// 	: (tasks = JSON.parse(localStorage.getItem("tasks")));
 
-const createTemplate = (task, index) => {
-	return `
-			<li class="todo-item right-click-menu-item ${task.completed ? "checked" : ""}">        
-        		<div class="custom-checkbox">
-              		<input onclick="completeTask(${index})" class="btn-complete" type="checkbox" id="${index}" ${task.completed ? "checked" : ""}/>
-            		<label for="${index}"></label>
-        		</div>
-          		<div class="description" contenteditable="true">${task.description}</div>
-				<div onclick="deleteTask(${index})" class="btn-delete"><span class="cross"></span></div>
-        	</li>
-		`;
-};
+// let todoItemElems = [];
+// function Task(description) {
+// 	this.description = description;
+// 	this.completed = false;
+// }
 
-const filterTasks = () => {
-	const activeTasks = tasks.length && tasks.filter((item) => item.completed == false);
-	const completedTasks = tasks.length && tasks.filter((item) => item.completed == true);
-	tasks = [...activeTasks, ...completedTasks];
-};
+// const createTemplate = (task, index) => {
+// return `
+// 		<li class="todo-item right-click-menu-item ${task.completed ? "checked" : ""}">
+//     		<div class="custom-checkbox">
+//           		<input onclick="completeTask(${index})"
+// 				   class="btn-complete" type="checkbox" id="${index}" ${
+// 	task.completed ? "checked" : ""
+// }/>
+//         		<label for="${index}"></label>
+//     		</div>
+//       		<div class="description" contenteditable="true">${
+// 							task.description
+// 						}</div>
+// 			<div onclick="deleteTask(${index})" class="btn-delete"><span class="cross"></span></div>
+//     	</li>
+// 		`;
+// };
 
-const fillHtmlList = () => {
-	todosWrapper.innerHTML = "";
-	if (tasks.length > 0) {
-		filterTasks();
-		tasks.forEach((item, index) => {
-			todosWrapper.innerHTML += createTemplate(item, index);
-		});
-		todoItemElems = document.querySelectorAll(".todo-item");
-	}
-};
+// const filterTasks = () => {
+// 	const activeTasks =
+// 		tasks.length && tasks.filter((item) => item.completed == false);
+// 	const completedTasks =
+// 		tasks.length && tasks.filter((item) => item.completed == true);
+// 	tasks = [...activeTasks, ...completedTasks];
+// };
 
-fillHtmlList();
+// const fillHtmlList = () => {
+// 	todosWrapper.innerHTML = "";
+// 	if (tasks.length > 0) {
+// 		filterTasks();
+// 		tasks.forEach((item, index) => {
+// 			todosWrapper.innerHTML += createTemplate(item, index);
+// 		});
+// 		todoItemElems = document.querySelectorAll(".todo-item");
+// 	}
+// };
 
-const updateLocal = () => {
-	localStorage.setItem("tasks", JSON.stringify(tasks));
-};
+// fillHtmlList();
 
-const completeTask = (index) => {
-	tasks[index].completed = !tasks[index].completed;
-	if (tasks[index].completed) {
-		todoItemElems[index].classList.add("checked");
-	} else {
-		todoItemElems[index].classList.remove("checked");
-	}
-	updateLocal();
-	fillHtmlList();
-};
+// const updateLocal = () => {
+// 	localStorage.setItem("tasks", JSON.stringify(tasks));
+// };
 
-addTaskBtn.addEventListener("click", () => {
-	if (deskTaskInput.value) {
-		tasks.push(new Task(deskTaskInput.value));
-	}
+// const completeTask = (index) => {
+// 	tasks[index].completed = !tasks[index].completed;
+// 	if (tasks[index].completed) {
+// 		todoItemElems[index].classList.add("checked");
+// 	} else {
+// 		todoItemElems[index].classList.remove("checked");
+// 	}
+// 	updateLocal();
+// 	fillHtmlList();
+// };
 
-	updateLocal();
-	fillHtmlList();
-	deskTaskInput.value = "";
-});
+// const deleteTask = (index) => {
+// 	tasks.splice(index, 1);
+// 	updateLocal();
+// 	fillHtmlList();
+// };
 
-document.addEventListener("keydown", (e) => {
-	if (e.keyCode == 13 && deskTaskInput.value) {
-		tasks.push(new Task(deskTaskInput.value));
+// addTaskBtn.addEventListener("click", () => {
+// 	if (deskTaskInput.value) {
+// 		tasks.push(new Task(deskTaskInput.value));
+// 	}
 
-		updateLocal();
-		fillHtmlList();
-		deskTaskInput.value = "";
-	}
-});
-
-document.addEventListener("click", (e) => {
-	if (!e.target.closest(".input-wrapper") && deskTaskInput.value) {
-		tasks.push(new Task(deskTaskInput.value));
-
-		updateLocal();
-		fillHtmlList();
-		deskTaskInput.value = "";
-	}
-});
-
-const deleteTask = (index) => {
-	tasks.splice(index, 1);
-	updateLocal();
-	fillHtmlList();
-};
-
-// const descriptionToDo = document.querySelectorAll(".description");
-
-// descriptionToDo.forEach((item) => {
-//   item.addEventListener("click", (e) => {
-//     let target = e.target;
-//     let btnDel = target.nextElementSibling;
-//     if (target) {
-//       btnDel.classList.add("show");
-//       console.log(btnDel);
-//     } else {
-//       btnDel.classList.add("hide");
-//     }
-//   });
+// 	updateLocal();
+// 	fillHtmlList();
+// 	deskTaskInput.value = "";
 // });
 
-// console.log(descriptionToDo);
+// document.addEventListener("keydown", (e) => {
+// 	if (e.keyCode == 13 && deskTaskInput.value) {
+// 		tasks.push(new Task(deskTaskInput.value));
+
+// 		updateLocal();
+// 		fillHtmlList();
+// 		deskTaskInput.value = "";
+// 	}
+// });
+
+// document.addEventListener("click", (e) => {
+// 	if (!e.target.closest(".input-wrapper") && deskTaskInput.value) {
+// 		tasks.push(new Task(deskTaskInput.value));
+
+// 		updateLocal();
+// 		fillHtmlList();
+// 		deskTaskInput.value = "";
+// 	}
+// });
