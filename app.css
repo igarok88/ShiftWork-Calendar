@@ -712,7 +712,7 @@ body.lock {
 	position: relative;
 }
 .show {
-	display: block;
+	display: grid;
 }
 .hide {
 	display: none;

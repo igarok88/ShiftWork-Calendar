@@ -1,10 +1,7 @@
 const body = document.querySelector("body");
 const calendar = document.querySelector(".calendar");
-
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
 const calendarName = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
-
 const monthNames = [
 	"January",
 	"February",
@@ -19,29 +16,6 @@ const monthNames = [
 	"November",
 	"December",
 ];
-let calendarA = calendar.querySelector(".calendar-a");
-let calendarB = calendar.querySelector(".calendar-b");
-let calendarV = calendar.querySelector(".calendar-v");
-let calendarG = calendar.querySelector(".calendar-g");
-let calendarD = calendar.querySelector(".calendar-d");
-let calendarE = calendar.querySelector(".calendar-e");
-
-let calendarCountA = document.querySelector(".calendar-count-a");
-let calendarCountB = document.querySelector(".calendar-count-b");
-let calendarCountV = document.querySelector(".calendar-count-v");
-let calendarCountG = document.querySelector(".calendar-count-g");
-let calendarCountD = document.querySelector(".calendar-count-d");
-
-let calendarColumn = calendar.querySelectorAll(".calendar-column");
-
-let arrForUserNotes;
-
-if (!localStorage.userNotes) {
-	arrForUserNotes = [];
-} else {
-	arrForUserNotes = JSON.parse(localStorage.getItem("userNotes"));
-}
-
 const root = [
 	"23",
 	"23",
@@ -119,6 +93,25 @@ const root = [
 	"",
 	"",
 ];
+let calendarA = calendar.querySelector(".calendar-a");
+let calendarB = calendar.querySelector(".calendar-b");
+let calendarV = calendar.querySelector(".calendar-v");
+let calendarG = calendar.querySelector(".calendar-g");
+let calendarD = calendar.querySelector(".calendar-d");
+let calendarE = calendar.querySelector(".calendar-e");
+let calendarCountA = document.querySelector(".calendar-count-a");
+let calendarCountB = document.querySelector(".calendar-count-b");
+let calendarCountV = document.querySelector(".calendar-count-v");
+let calendarCountG = document.querySelector(".calendar-count-g");
+let calendarCountD = document.querySelector(".calendar-count-d");
+let calendarColumn = calendar.querySelectorAll(".calendar-column");
+let arrForUserNotes;
+
+if (!localStorage.userNotes) {
+	arrForUserNotes = [];
+} else {
+	arrForUserNotes = JSON.parse(localStorage.getItem("userNotes"));
+}
 
 const isLeapYear = (year) => {
 	return (
@@ -516,8 +509,8 @@ const rightClickMenuItems = calendar.querySelector(".right-click-menu ul");
 
 //верстка элементов контекстного меню
 const entries = Object.entries(rightClickMenuItemNames);
-
-for (const [key, val] of entries) {
+let key, val;
+for ([key, val] of entries) {
 	let li = document.createElement("li");
 	li.classList.add("right-click-menu-item");
 
@@ -585,10 +578,104 @@ let selectedDate;
 let selectedShift;
 let selectedItemInContextMenu;
 let selectedColorInContextMenu;
-let selectedTodo;
+let selectedTodoValue;
+let currentTodo;
+let addTaskBtn;
+let inputTodo;
+let todosWrapper;
+let tasks = [];
+let todoItemElems = [];
+
+//all arrow, todos, todos wrapper
+let todosWrappers = document.querySelectorAll(
+	".right-click-menu__todos-wrapper"
+);
+let allTodos = document.querySelectorAll(".right-click-menu__todo");
+let arrows = rightClickMenuItems.querySelectorAll(
+	".right-click-menu-item__desc-arrow"
+);
+
+//убираем классы active и очищаем todos wrapper
+const removeActiveArrowsTodos = () => {
+	arrows.forEach((item) => {
+		item.classList.remove("active");
+	});
+
+	allTodos.forEach((item) => {
+		item.classList.remove("active");
+	});
+};
+const clearAllTodosWrappers = () => {
+	todosWrappers.forEach((item) => {
+		item.innerHTML = "";
+	});
+};
+
+function Task(description) {
+	this.description = description;
+	this.completed = false;
+}
+
+const filterTasks = () => {
+	const activeTasks =
+		tasks.length && tasks.filter((item) => item.completed == false);
+	const completedTasks =
+		tasks.length && tasks.filter((item) => item.completed == true);
+	tasks = [...activeTasks, ...completedTasks];
+};
+
+const fillHtmlList = () => {
+	todosWrapper.innerHTML = "";
+	if (tasks.length > 0) {
+		filterTasks();
+		tasks.forEach((item, index) => {
+			todosWrapper.innerHTML += `
+				<li class="todo-item right-click-menu-item ${item.completed ? "checked" : ""}">
+					<div class="custom-checkbox">
+						<input 
+							class="btn-complete" 
+							type="checkbox" 
+							id="${index}" 
+							${item.completed ? "checked" : ""}
+						/>
+						<label for="${index}"></label>
+					</div>
+					<div class="description" contenteditable="true">${item.description}</div>
+					<div class="btn-delete">
+							<span class="cross"></span>
+					</div>
+				</li>
+				`;
+		});
+		todoItemElems = currentTodo.querySelectorAll(".todo-item");
+		todoItemElems.forEach((item, index) => {
+			let checkbox = item.querySelector(".custom-checkbox label");
+
+			checkbox.addEventListener("click", () => {
+				tasks[index].completed = !tasks[index].completed;
+				if (tasks[index].completed) {
+					todoItemElems[index].classList.add("checked");
+				} else {
+					todoItemElems[index].classList.remove("checked");
+				}
+				// filterTasks();
+				fillHtmlList();
+			});
+
+			let btnDel = item.querySelector(".btn-delete");
+			btnDel.addEventListener("click", () => {
+				tasks.splice(index, 1);
+				selectedTodoValue = tasks;
+				fillHtmlList();
+			});
+		});
+	}
+};
 
 calendarBody.addEventListener("contextmenu", (e) => {
+	tasks = [];
 	targetItemInContextMenu = e.target;
+	//заполняем шапку в контекстном меню
 	let shift;
 	if (targetItemInContextMenu.closest(".calendar-context-menu")) {
 		e.preventDefault();
@@ -622,6 +709,48 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		);
 		selectedShift = shift;
 	}
+
+	// находим куда надо вставить todo из localstorage
+	if (arrForUserNotes.length > 0) {
+		arrForUserNotes.forEach((item) => {
+			if (selectedDate == item.date && selectedShift == item.shift) {
+				let rightClickMenuItemValue = rightClickMenuItems.querySelectorAll(
+					".right-click-menu-item__value"
+				);
+				// console.log(selectedDate);
+				// console.log(item.date);
+				// console.log(selectedShift);
+				// console.log(item.shift);
+
+				rightClickMenuItemValue.forEach((menuItem) => {
+					if (menuItem.getAttribute("data-value") == item.keyNote) {
+						let rightClickMenuItem = menuItem.parentNode.parentNode;
+						currentTodo = rightClickMenuItem.nextSibling;
+						todosWrapper = currentTodo.querySelector(
+							".right-click-menu__todos-wrapper"
+						);
+						todosWrapper.innerHTML = "";
+						inputTodo = currentTodo.querySelector(".new-description-task");
+						addTaskBtn = currentTodo.querySelector(".add-task-btn");
+
+						// console.log(todosWrapper);
+						// console.log(inputTodo);
+						// console.log(addTaskBtn);
+					}
+				});
+
+				if (item.desc) {
+					tasks = item.desc.slice();
+					fillHtmlList();
+				} else {
+					// todosWrappers.forEach((item) => {
+					// 	item.innerHTML = "";
+					// 	console.log(item);
+					// });
+				}
+			}
+		});
+	}
 });
 function UserNotes(date, shift, color, desc, key) {
 	(this.date = date),
@@ -645,27 +774,31 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		selectedItemInContextMenu = target.getAttribute("data-value");
 
 		//получаем цвет и устанавливаем в таблицу
-		let sibling = target.closest(".right-click-menu-item__btn").nextSibling;
+		let divColor = target.closest(".right-click-menu-item__btn").nextSibling;
 
-		let input = sibling.querySelector("input");
+		let inputColor = divColor.querySelector("input");
 
-		targetItemInContextMenu.style.backgroundColor = input.value;
+		targetItemInContextMenu.style.backgroundColor = inputColor.value;
 		// targetItemInContextMenu.style.borderRadius = "4px";
 		// targetItemInContextMenu.style.marginRight = "3px";
 		// targetItemInContextMenu.style.marginLeft = "3px";
 		// targetItemInContextMenu.style.marginTop = "1px";
 		// targetItemInContextMenu.style.marginBottom = "1px";
 
-		selectedColorInContextMenu = input.value;
+		selectedColorInContextMenu = inputColor.value;
 
-		//убираем классы active и очищаем формы  textarea
-
-		let arrows = rightClickMenuItems.querySelectorAll(
-			".right-click-menu-item__desc-arrow"
-		);
-		arrows.forEach((item) => {
-			item.classList.remove("active");
-		});
+		// let currentMenuItem = target.closest(".right-click-menu-item");
+		// currentTodo = currentMenuItem.nextSibling;
+		// console.log(currentTodo);
+		// todosWrapper = currentTodo.querySelector(
+		// 	".right-click-menu__todos-wrapper"
+		// );
+		// console.log(todosWrapper);
+		// if (!todosWrapper) {
+		// 	console.log("ok");
+		// 	// tasks = [];
+		// 	// selectedTodoValue = tasks;
+		// }
 
 		//создание объекта с выбранными данными из контекстного меню и сохраняем в массив
 		arrForUserNotes.push(
@@ -673,7 +806,7 @@ rightClickMenuItems.addEventListener("click", (e) => {
 				selectedDate,
 				selectedShift,
 				selectedColorInContextMenu,
-				selectedTodo,
+				selectedTodoValue,
 				selectedItemInContextMenu
 			)
 		);
@@ -700,7 +833,9 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		filterArr(arrForUserNotes);
 
 		updateLocalStorage("userNotes", arrForUserNotes);
-		//при клике на btn добавить атрибут с данными из textarea к ячейке в таблице
+
+		removeActiveArrowsTodos();
+		clearAllTodosWrappers();
 	}
 
 	if (target.closest(".right-click-menu-item__color input")) {
@@ -712,120 +847,34 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 	//открываем todo в контекстном меню
 	if (target.closest(".right-click-menu-item__desc")) {
+		removeActiveArrowsTodos();
+
 		let rightClickMenuItem = target.closest(".right-click-menu-item");
-		let desc = target.closest(".right-click-menu-item__desc");
-		let arrow = desc.querySelector(".right-click-menu-item__desc-arrow");
+		let arrow = rightClickMenuItem.querySelector(
+			".right-click-menu-item__desc-arrow"
+		);
 
 		arrow.classList.toggle("active");
 
-		let divTodo = rightClickMenuItem.nextSibling;
-		divTodo.classList.toggle("active");
+		currentTodo = rightClickMenuItem.nextSibling;
+		currentTodo.classList.toggle("active");
 
-		let addTaskBtn = divTodo.querySelector(".add-task-btn");
-		let inputTodo = divTodo.querySelector(".new-description-task");
-		let todosWrapper = divTodo.querySelector(
+		addTaskBtn = currentTodo.querySelector(".add-task-btn");
+		inputTodo = currentTodo.querySelector(".new-description-task");
+		todosWrapper = currentTodo.querySelector(
 			".right-click-menu__todos-wrapper"
 		);
-		let tasks = [];
-		let todoItemElems = [];
-
-		// находим куда надо вставить todo из localstorage
-		if (arrForUserNotes.length > 0) {
-			arrForUserNotes.forEach((item) => {
-				if (selectedDate == item.date && selectedShift == item.shift) {
-					let rightClickMenuItemValue = rightClickMenuItems.querySelectorAll(
-						".right-click-menu-item__value"
-					);
-
-					rightClickMenuItemValue.forEach((menuItem) => {
-						if (menuItem.getAttribute("data-value") == item.keyNote) {
-							let rightClickMenuItem = menuItem.parentNode.parentNode;
-							let todo = rightClickMenuItem.nextSibling;
-							let target = todo.querySelector(
-								".right-click-menu__todos-wrapper"
-							);
-							todosWrapper = target;
-							console.log(todosWrapper);
-						}
-					});
-
-					if (item.desc) {
-						tasks = item.desc.slice();
-					}
-				}
-			});
-		}
-
-		function Task(description) {
-			this.description = description;
-			this.completed = false;
-		}
-
-		const filterTasks = () => {
-			const activeTasks =
-				tasks.length && tasks.filter((item) => item.completed == false);
-			const completedTasks =
-				tasks.length && tasks.filter((item) => item.completed == true);
-			tasks = [...activeTasks, ...completedTasks];
-		};
-
-		const fillHtmlList = () => {
-			todosWrapper.innerHTML = "";
-			if (tasks.length > 0) {
-				filterTasks();
-				tasks.forEach((item, index) => {
-					todosWrapper.innerHTML += `
-						<li class="todo-item right-click-menu-item ${item.completed ? "checked" : ""}">
-							<div class="custom-checkbox">
-								<input 
-									class="btn-complete" 
-									type="checkbox" 
-									id="${index}" 
-									${item.completed ? "checked" : ""}
-								/>
-								<label for="${index}"></label>
-							</div>
-							<div class="description" contenteditable="true">${item.description}</div>
-							<div class="btn-delete">
-									<span class="cross"></span>
-							</div>
-						</li>
-						`;
-				});
-				todoItemElems = divTodo.querySelectorAll(".todo-item");
-				todoItemElems.forEach((item, index) => {
-					let checkbox = item.querySelector(".custom-checkbox label");
-
-					checkbox.addEventListener("click", () => {
-						tasks[index].completed = !tasks[index].completed;
-						if (tasks[index].completed) {
-							todoItemElems[index].classList.add("checked");
-						} else {
-							todoItemElems[index].classList.remove("checked");
-						}
-						fillHtmlList();
-					});
-
-					let btnDel = item.querySelector(".btn-delete");
-					btnDel.addEventListener("click", () => {
-						tasks.splice(index, 1);
-						fillHtmlList();
-					});
-				});
-			}
-		};
-
-		fillHtmlList();
-
-		addTaskBtn.addEventListener("click", () => {
-			if (inputTodo.value) {
-				tasks.push(new Task(inputTodo.value));
-				selectedTodo = tasks;
-			}
-			fillHtmlList();
-			inputTodo.value = "";
-		});
 	}
+
+	inputTodo.value = "";
+	addTaskBtn.addEventListener("click", () => {
+		if (inputTodo.value) {
+			tasks.push(new Task(inputTodo.value));
+			selectedTodoValue = tasks;
+		}
+		fillHtmlList();
+		inputTodo.value = "";
+	});
 });
 
 rightClickMenu.addEventListener("click", (e) => {
@@ -833,6 +882,9 @@ rightClickMenu.addEventListener("click", (e) => {
 	if (targetItem.closest(".close-menu")) {
 		rightClickMenu.classList.remove("active");
 		body.classList.remove("lock");
+
+		removeActiveArrowsTodos();
+		clearAllTodosWrappers();
 	}
 });
 
@@ -878,110 +930,3 @@ document.addEventListener("keydown", (e) => {
 		popupClose();
 	}
 });
-
-//todo
-
-// let addTaskBtn;
-// let deskTaskInput;
-// let todosWrapper;
-
-// let tasks ;
-// !localStorage.tasks
-// 	? (tasks = [])
-// 	: (tasks = JSON.parse(localStorage.getItem("tasks")));
-
-// let todoItemElems = [];
-// function Task(description) {
-// 	this.description = description;
-// 	this.completed = false;
-// }
-
-// const createTemplate = (task, index) => {
-// return `
-// 		<li class="todo-item right-click-menu-item ${task.completed ? "checked" : ""}">
-//     		<div class="custom-checkbox">
-//           		<input onclick="completeTask(${index})"
-// 				   class="btn-complete" type="checkbox" id="${index}" ${
-// 	task.completed ? "checked" : ""
-// }/>
-//         		<label for="${index}"></label>
-//     		</div>
-//       		<div class="description" contenteditable="true">${
-// 							task.description
-// 						}</div>
-// 			<div onclick="deleteTask(${index})" class="btn-delete"><span class="cross"></span></div>
-//     	</li>
-// 		`;
-// };
-
-// const filterTasks = () => {
-// 	const activeTasks =
-// 		tasks.length && tasks.filter((item) => item.completed == false);
-// 	const completedTasks =
-// 		tasks.length && tasks.filter((item) => item.completed == true);
-// 	tasks = [...activeTasks, ...completedTasks];
-// };
-
-// const fillHtmlList = () => {
-// 	todosWrapper.innerHTML = "";
-// 	if (tasks.length > 0) {
-// 		filterTasks();
-// 		tasks.forEach((item, index) => {
-// 			todosWrapper.innerHTML += createTemplate(item, index);
-// 		});
-// 		todoItemElems = document.querySelectorAll(".todo-item");
-// 	}
-// };
-
-// fillHtmlList();
-
-// const updateLocal = () => {
-// 	localStorage.setItem("tasks", JSON.stringify(tasks));
-// };
-
-// const completeTask = (index) => {
-// 	tasks[index].completed = !tasks[index].completed;
-// 	if (tasks[index].completed) {
-// 		todoItemElems[index].classList.add("checked");
-// 	} else {
-// 		todoItemElems[index].classList.remove("checked");
-// 	}
-// 	updateLocal();
-// 	fillHtmlList();
-// };
-
-// const deleteTask = (index) => {
-// 	tasks.splice(index, 1);
-// 	updateLocal();
-// 	fillHtmlList();
-// };
-
-// addTaskBtn.addEventListener("click", () => {
-// 	if (deskTaskInput.value) {
-// 		tasks.push(new Task(deskTaskInput.value));
-// 	}
-
-// 	updateLocal();
-// 	fillHtmlList();
-// 	deskTaskInput.value = "";
-// });
-
-// document.addEventListener("keydown", (e) => {
-// 	if (e.keyCode == 13 && deskTaskInput.value) {
-// 		tasks.push(new Task(deskTaskInput.value));
-
-// 		updateLocal();
-// 		fillHtmlList();
-// 		deskTaskInput.value = "";
-// 	}
-// });
-
-// document.addEventListener("click", (e) => {
-// 	if (!e.target.closest(".input-wrapper") && deskTaskInput.value) {
-// 		tasks.push(new Task(deskTaskInput.value));
-
-// 		updateLocal();
-// 		fillHtmlList();
-// 		deskTaskInput.value = "";
-// 	}
-// });
