@@ -253,6 +253,7 @@ const generateCalendar = (month, year) => {
 			) {
 				day.classList.add("curr-date");
 			}
+
 			//вешаем класс calendar-day-off на выходной
 			if (
 				dayNames[iDay.getDay()] == dayNames[0] ||
