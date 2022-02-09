@@ -29,15 +29,15 @@
 				</header>
 				<div class="right-click">
 					<div class="right-click-menu">
-						<div class="right-click-menu-close close-menu"></div>
-						<div class="right-click-menu-header">
-							<div class="right-click-menu-header__day-week"></div>
-							<div class="right-click-menu-header__date">
-								<span class="right-click-menu-header__day"></span>.
-								<span class="right-click-menu-header__month"></span>.
-								<span class="right-click-menu-header__year"></span>
+						<div class="menu-close close-menu"></div>
+						<div class="menu-header">
+							<div class="menu-header__day-week"></div>
+							<div class="menu-header__date">
+								<span class="menu-header__day"></span>.
+								<span class="menu-header__month"></span>.
+								<span class="menu-header__year"></span>
 							</div>
-							<div class="right-click-menu-header__shift"></div>
+							<div class="menu-header__shift"></div>
 						</div>
 						<ul></ul>
 					</div>
@@ -90,8 +90,36 @@
 			<div class="popup__window">
 				<div class="popup__close">&times;</div>
 				<div class="popup__content">
-					<h2>Description:</h2>
-					<div class="popup__desc"></div>
+					<li class="right-click-menu-item right-click-menu__todo active">
+						<div class="menu-header">
+							<div class="menu-header__day-week"></div>
+							<div class="menu-header__date">
+								<span class="menu-header__day"></span>.
+								<span class="menu-header__month"></span>.
+								<span class="menu-header__year"></span>
+							</div>
+							<div class="menu-header__shift"></div>
+						</div>
+						<h2>Задачи на день:</h2>
+
+						<ul class="right-click-menu__todos-wrapper"></ul>
+
+						<div
+							class="right-click-menu__add-todo-wrapper right-click-menu-item"
+						>
+							<div></div>
+							<div class="input-wrapper">
+								<input
+									placeholder="Новый пункт"
+									type="text"
+									class="new-description-task"
+								/>
+							</div>
+							<div class="button-wrapper add-task-btn">
+								<span class="cross"></span>
+							</div>
+						</div>
+					</li>
 				</div>
 			</div>
 		</div>

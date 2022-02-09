@@ -113,6 +113,14 @@ if (!localStorage.userNotes) {
 	arrForUserNotes = JSON.parse(localStorage.getItem("userNotes"));
 }
 
+const getZero = (num) => {
+	if (num >= 0 && num < 10) {
+		return `0${num}`;
+	} else {
+		return num;
+	}
+};
+
 const isLeapYear = (year) => {
 	return (
 		(year % 4 === 0 && year % 100 !== 0 && year % 400 !== 0) ||
@@ -311,6 +319,9 @@ const generateCalendar = (month, year) => {
 							day.classList.add("desc");
 						}
 
+						day.setAttribute("data-key-note", item.keyNote);
+						day.setAttribute("data-shift", item.shift);
+						day.setAttribute("data-color", item.color);
 						day.style.backgroundColor = item.color;
 					}
 				});
@@ -442,21 +453,6 @@ burger.addEventListener("click", () => {
 //Контекстное меню
 const calendarBody = document.querySelector(".calendar-body");
 const rightClickMenu = document.querySelector(".right-click-menu");
-const rightClickMenuHeaderShift = rightClickMenu.querySelector(
-	".right-click-menu-header__shift"
-);
-const rightClickMenuHeaderDay = rightClickMenu.querySelector(
-	".right-click-menu-header__day"
-);
-const rightClickMenuHeaderMonth = rightClickMenu.querySelector(
-	".right-click-menu-header__month"
-);
-const rightClickMenuHeaderYear = rightClickMenu.querySelector(
-	".right-click-menu-header__year"
-);
-const rightClickMenuHeaderDayWeek = rightClickMenu.querySelector(
-	".right-click-menu-header__day-week"
-);
 
 let rightClickMenuItemNames = {
 	23: {
@@ -567,19 +563,16 @@ for ([key, val] of entries) {
 	rightClickMenuItems.appendChild(liForTodo);
 }
 
-const getZero = (num) => {
-	if (num >= 0 && num < 10) {
-		return `0${num}`;
-	} else {
-		return num;
-	}
-};
-let targetItemInContextMenu;
+let targetItemInTable;
+
+//for arr in localstorage
 let selectedDate;
 let selectedShift;
 let selectedItemInContextMenu;
 let selectedColorInContextMenu;
 let selectedTodoValue;
+
+//for todo
 let currentTodo;
 let addTaskBtn;
 let inputTodo;
@@ -612,6 +605,18 @@ const clearAllTodosWrappers = () => {
 	});
 };
 
+const pushObjInArr = () => {
+	arrForUserNotes.push(
+		new UserNotes(
+			selectedDate,
+			selectedShift,
+			selectedColorInContextMenu,
+			selectedTodoValue,
+			selectedItemInContextMenu
+		)
+	);
+};
+
 function Task(description) {
 	this.description = description;
 	this.completed = false;
@@ -623,6 +628,10 @@ const filterTasks = () => {
 	const completedTasks =
 		tasks.length && tasks.filter((item) => item.completed == true);
 	tasks = [...activeTasks, ...completedTasks];
+};
+
+const setAttrCurCell = (curСell, tasks) => {
+	curСell.setAttribute("data-desc", JSON.stringify(tasks));
 };
 
 const fillHtmlList = () => {
@@ -659,7 +668,8 @@ const fillHtmlList = () => {
 				} else {
 					todoItemElems[index].classList.remove("checked");
 				}
-				// filterTasks();
+				selectedTodoValue = tasks;
+
 				fillHtmlList();
 			});
 
@@ -668,47 +678,96 @@ const fillHtmlList = () => {
 				tasks.splice(index, 1);
 				selectedTodoValue = tasks;
 				fillHtmlList();
+				// setAttrCurCell(curСell, tasks);
 			});
 		});
 	}
 };
+//заполняем шапку в контекстном меню и в попапе
+const getInfoFromTable = (
+	target,
+	curShift,
+	curDay,
+	curMonth,
+	curYear,
+	curDayWeek
+) => {
+	//заполняем даты
+	//Объяснение :
+	// element.parentNode.children→ Возвращает братьев element, включая этот элемент.
+	// Array.from→ Приводит конструктор children к Array объекту
+	// indexOf→ Вы можете подать заявку indexOf, потому что теперь у вас есть Array объект.
+	let day = Array.from(target.parentNode.children).indexOf(target);
+	curDay.innerHTML = getZero(day);
+
+	let month = currMonth.value + 1;
+	curMonth.innerHTML = getZero(month);
+
+	curYear.innerHTML = currYear.value;
+
+	//заполняем название смены в контекстном меню
+	let shift = target.parentElement.firstChild.innerText;
+	curShift.innerHTML = `"${shift}"`;
+
+	//заполняем поле дней недели
+	let dayWeek = new Date(currYear.value, currMonth.value, day).getDay();
+	curDayWeek.innerHTML = dayNames[dayWeek];
+
+	selectedDate = JSON.stringify(
+		new Date(currYear.value, currMonth.value, day + 1)
+	);
+	selectedShift = shift;
+};
+
+// если на одной и той же дате и одной и той же смене нажимаем второй раз,
+//то старые данные удаляются, новые записываются
+const filterArr = (arr) => {
+	let arr1 = [],
+		arr2 = [],
+		repetition = [],
+		remainder = [],
+		result;
+	for (let i = 0; i < arr.length; i++) {
+		if (arr[i].date == selectedDate && arr[i].shift == selectedShift) {
+			repetition.push(arr[i]);
+			arr1 = [repetition.shift()];
+		} else {
+			remainder.push(arr[i]);
+			arr2 = remainder;
+		}
+	}
+	result = arr1.concat(arr2);
+	arrForUserNotes = result.slice();
+};
 
 calendarBody.addEventListener("contextmenu", (e) => {
+	const menuHeaderShift = rightClickMenu.querySelector(".menu-header__shift");
+	const menuHeaderDay = rightClickMenu.querySelector(".menu-header__day");
+	const menuHeaderMonth = rightClickMenu.querySelector(".menu-header__month");
+	const menuHeaderYear = rightClickMenu.querySelector(".menu-header__year");
+	const menuHeaderDayWeek = rightClickMenu.querySelector(
+		".menu-header__day-week"
+	);
+
 	tasks = [];
-	targetItemInContextMenu = e.target;
+
+	//ячейка в таблице
+	targetItemInTable = e.target;
+
 	//заполняем шапку в контекстном меню
-	let shift;
-	if (targetItemInContextMenu.closest(".calendar-context-menu")) {
+	if (targetItemInTable.closest(".calendar-context-menu")) {
 		e.preventDefault();
 		rightClickMenu.classList.add("active");
 		body.classList.add("lock");
-		//заполняем даты
-		//Объяснение :
-		// element.parentNode.children→ Возвращает братьев element, включая этот элемент.
-		// Array.from→ Приводит конструктор children к Array объекту
-		// indexOf→ Вы можете подать заявку indexOf, потому что теперь у вас есть Array объект.
-		let day = Array.from(targetItemInContextMenu.parentNode.children).indexOf(
-			targetItemInContextMenu
+
+		getInfoFromTable(
+			targetItemInTable,
+			menuHeaderShift,
+			menuHeaderDay,
+			menuHeaderMonth,
+			menuHeaderYear,
+			menuHeaderDayWeek
 		);
-		rightClickMenuHeaderDay.innerHTML = getZero(day);
-
-		let month = currMonth.value + 1;
-		rightClickMenuHeaderMonth.innerHTML = getZero(month);
-
-		rightClickMenuHeaderYear.innerHTML = currYear.value;
-
-		//заполняем название смены в контекстном меню
-		shift = targetItemInContextMenu.parentElement.firstChild.innerText;
-		rightClickMenuHeaderShift.innerHTML = `"${shift}"`;
-
-		//заполняем поле дней недели
-		let dayWeek = new Date(currYear.value, currMonth.value, day).getDay();
-		rightClickMenuHeaderDayWeek.innerHTML = dayNames[dayWeek];
-
-		selectedDate = JSON.stringify(
-			new Date(currYear.value, currMonth.value, day + 1)
-		);
-		selectedShift = shift;
 	}
 
 	// находим куда надо вставить todo из localstorage
@@ -718,10 +777,6 @@ calendarBody.addEventListener("contextmenu", (e) => {
 				let rightClickMenuItemValue = rightClickMenuItems.querySelectorAll(
 					".right-click-menu-item__value"
 				);
-				// console.log(selectedDate);
-				// console.log(item.date);
-				// console.log(selectedShift);
-				// console.log(item.shift);
 
 				rightClickMenuItemValue.forEach((menuItem) => {
 					if (menuItem.getAttribute("data-value") == item.keyNote) {
@@ -733,21 +788,12 @@ calendarBody.addEventListener("contextmenu", (e) => {
 						todosWrapper.innerHTML = "";
 						inputTodo = currentTodo.querySelector(".new-description-task");
 						addTaskBtn = currentTodo.querySelector(".add-task-btn");
-
-						// console.log(todosWrapper);
-						// console.log(inputTodo);
-						// console.log(addTaskBtn);
 					}
 				});
 
 				if (item.desc) {
 					tasks = item.desc.slice();
 					fillHtmlList();
-				} else {
-					// todosWrappers.forEach((item) => {
-					// 	item.innerHTML = "";
-					// 	console.log(item);
-					// });
 				}
 			}
 		});
@@ -767,10 +813,11 @@ const updateLocalStorage = (name, data) => {
 
 rightClickMenuItems.addEventListener("click", (e) => {
 	let target = e.target;
+	console.log(target);
 
 	if (target.closest(".right-click-menu-item__btn")) {
 		//получаем букву и вставляем в таблицу
-		targetItemInContextMenu.innerHTML = target.getAttribute("data-value");
+		targetItemInTable.innerHTML = target.getAttribute("data-value");
 
 		selectedItemInContextMenu = target.getAttribute("data-value");
 
@@ -779,64 +826,33 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 		let inputColor = divColor.querySelector("input");
 
-		targetItemInContextMenu.style.backgroundColor = inputColor.value;
-		// targetItemInContextMenu.style.borderRadius = "4px";
-		// targetItemInContextMenu.style.marginRight = "3px";
-		// targetItemInContextMenu.style.marginLeft = "3px";
-		// targetItemInContextMenu.style.marginTop = "1px";
-		// targetItemInContextMenu.style.marginBottom = "1px";
+		targetItemInTable.style.backgroundColor = inputColor.value;
 
 		selectedColorInContextMenu = inputColor.value;
-
-		// let currentMenuItem = target.closest(".right-click-menu-item");
-		// currentTodo = currentMenuItem.nextSibling;
-		// console.log(currentTodo);
-		// todosWrapper = currentTodo.querySelector(
-		// 	".right-click-menu__todos-wrapper"
-		// );
-		// console.log(todosWrapper);
-		// if (!todosWrapper) {
-		// 	console.log("ok");
-		// 	// tasks = [];
-		// 	// selectedTodoValue = tasks;
-		// }
+		console.log(tasks);
+		if (tasks.length > 0) {
+			targetItemInTable.setAttribute("data-desc", JSON.stringify(tasks));
+			targetItemInTable.classList.add("desc");
+		}
+		targetItemInTable.setAttribute(
+			"data-key-note",
+			target.getAttribute("data-value")
+		);
+		targetItemInTable.setAttribute("data-shift", selectedShift);
+		targetItemInTable.setAttribute("data-color", inputColor.value);
 
 		//создание объекта с выбранными данными из контекстного меню и сохраняем в массив
-		arrForUserNotes.push(
-			new UserNotes(
-				selectedDate,
-				selectedShift,
-				selectedColorInContextMenu,
-				selectedTodoValue,
-				selectedItemInContextMenu
-			)
-		);
-		// если на одной и той же дате и одной и той же смене нажимаем второй раз,
-		//то старые данные удаляются, новые записываются
-		const filterArr = (arr) => {
-			let arr1 = [],
-				arr2 = [],
-				repetition = [],
-				remainder = [],
-				result;
-			for (let i = 0; i < arr.length; i++) {
-				if (arr[i].date == selectedDate && arr[i].shift == selectedShift) {
-					repetition.push(arr[i]);
-					arr1 = [repetition.shift()];
-				} else {
-					remainder.push(arr[i]);
-					arr2 = remainder;
-				}
-			}
-			result = arr1.concat(arr2);
-			arrForUserNotes = result.slice();
-		};
+
+		pushObjInArr();
+
 		filterArr(arrForUserNotes);
 
 		updateLocalStorage("userNotes", arrForUserNotes);
 
 		removeActiveArrowsTodos();
 		clearAllTodosWrappers();
+
+		searchBtnsAddFPopupOpen();
 	}
 
 	if (target.closest(".right-click-menu-item__color input")) {
@@ -848,7 +864,7 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 	//открываем todo в контекстном меню
 	if (target.closest(".right-click-menu-item__desc")) {
-		removeActiveArrowsTodos();
+		// removeActiveArrowsTodos();
 
 		let rightClickMenuItem = target.closest(".right-click-menu-item");
 		let arrow = rightClickMenuItem.querySelector(
@@ -890,33 +906,89 @@ rightClickMenu.addEventListener("click", (e) => {
 });
 
 //popup
-const btns = document.querySelectorAll(".desc");
+let btns;
 const popup = document.querySelector(".popup");
+// const popupContent = document.querySelector(".popup__content");
 const popupCloseBtn = document.querySelector(".popup__close");
-
-function popupOpen(e) {
-	let descValue = e.target.getAttribute("data-desc");
-	let popupDesc = popup.querySelector(".popup__desc");
-	popupDesc.innerHTML = descValue;
-
-	console.log(popupDesc);
-	console.log(descValue);
+const popupOpen = (e) => {
 	popup.classList.remove("hide");
 	popup.classList.add("show");
 	document.body.style.overflow = "hidden";
 	body.style.paddingRight = scrollWidth + "px";
-}
 
-btns.forEach((btn) => {
-	btn.addEventListener("click", popupOpen);
-});
+	const menuHeaderShift = popup.querySelector(".menu-header__shift");
+	const menuHeaderDay = popup.querySelector(".menu-header__day");
+	const menuHeaderMonth = popup.querySelector(".menu-header__month");
+	const menuHeaderYear = popup.querySelector(".menu-header__year");
+	const menuHeaderDayWeek = popup.querySelector(".menu-header__day-week");
 
-function popupClose() {
+	targetItemInTable = e.target;
+
+	getInfoFromTable(
+		targetItemInTable,
+		menuHeaderShift,
+		menuHeaderDay,
+		menuHeaderMonth,
+		menuHeaderYear,
+		menuHeaderDayWeek
+	);
+
+	selectedShift = targetItemInTable.getAttribute("data-shift");
+	selectedColorInContextMenu = targetItemInTable.getAttribute("data-color");
+	selectedItemInContextMenu = targetItemInTable.getAttribute("data-key-note");
+
+	tasks = JSON.parse(targetItemInTable.getAttribute("data-desc"));
+	selectedTodoValue = tasks;
+	console.log(selectedShift);
+	console.log(selectedColorInContextMenu);
+	console.log(selectedItemInContextMenu);
+
+	console.log(tasks);
+
+	todosWrapper = popup.querySelector(".right-click-menu__todos-wrapper");
+
+	// popupContent.appendChild(todosWrapper);
+
+	currentTodo = todosWrapper;
+	inputTodo = popup.querySelector(".new-description-task");
+	addTaskBtn = popup.querySelector(".add-task-btn");
+
+	fillHtmlList();
+
+	addTaskBtn.addEventListener("click", () => {
+		if (inputTodo.value) {
+			tasks.push(new Task(inputTodo.value));
+			selectedTodoValue = tasks;
+		}
+		setAttrCurCell(targetItemInTable, tasks);
+		inputTodo.value = "";
+		pushObjInArr();
+		filterArr(arrForUserNotes);
+		updateLocalStorage("userNotes", arrForUserNotes);
+
+		fillHtmlList();
+	});
+};
+
+const searchBtnsAddFPopupOpen = () => {
+	btns = document.querySelectorAll(".desc");
+	btns.forEach((btn) => {
+		btn.addEventListener("click", popupOpen);
+	});
+};
+
+searchBtnsAddFPopupOpen();
+
+const popupClose = () => {
 	popup.classList.remove("show");
 	popup.classList.add("hide");
 	document.body.style.overflow = "";
 	body.style.paddingRight = 0;
-}
+	setAttrCurCell(targetItemInTable, tasks);
+	pushObjInArr();
+	filterArr(arrForUserNotes);
+	updateLocalStorage("userNotes", arrForUserNotes);
+};
 
 popupCloseBtn.addEventListener("click", popupClose);
 

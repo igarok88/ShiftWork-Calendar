@@ -108,12 +108,10 @@ body.lock {
 
 .calendar-day,
 .calendar-header-day,
-.right-click-menu-header div,
+.menu-header div,
 .right-click-menu-item__btn,
 .right-click-menu-item__desc,
 .right-click-menu-item__color,
-.right-click-menu-item__desc-text-area textarea,
-/* .right-click-menu-item__desc-text-area-btn, */
 .right-click-menu__todo {
 	min-height: 30px;
 	display: flex;
@@ -124,15 +122,13 @@ body.lock {
 	margin: 3px;
 }
 .calendar-day,
-.right-click-menu-header div,
+.menu-header div,
 .right-click-menu-item__btn,
 .right-click-menu-item__desc,
 .right-click-menu-item__color,
-.right-click-menu-item__desc-text-area textarea,
-/* .right-click-menu-item__desc-text-area-btn, */
 .right-click-menu__todo {
 	background-color: var(--bg-div);
-	animation: to-top 2s forwards;
+	animation: to-top 1s forwards;
 	cursor: pointer;
 	color: var(--color-txt);
 }
@@ -248,7 +244,7 @@ body.lock {
 .month-picker {
 	display: flex;
 	align-items: center;
-	animation: to-top 2s forwards;
+	animation: to-top 1s forwards;
 }
 
 .arrow {
@@ -415,7 +411,7 @@ body.lock {
 	bottom: 9px;
 }
 
-.right-click-menu-close {
+.menu-close {
 	display: block;
 	width: 30px;
 	height: 20px;
@@ -425,8 +421,8 @@ body.lock {
 	z-index: 5;
 }
 
-.right-click-menu-close:before,
-.right-click-menu-close:after {
+.menu-close:before,
+.menu-close:after {
 	content: "";
 	background-color: #fff;
 	position: absolute;
@@ -437,10 +433,10 @@ body.lock {
 	-o-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
 }
-.right-click-menu-close:before {
+.menu-close:before {
 	top: 0;
 }
-.right-click-menu-close:after {
+.menu-close:after {
 	bottom: 0;
 }
 .right-click-menu {
@@ -460,26 +456,26 @@ body.lock {
 	bottom: 0;
 }
 
-.right-click-menu-close:before {
+.menu-close:before {
 	-webkit-transform: rotate(45deg);
 	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
 	top: 9px;
 }
-.right-click-menu-close:after {
+.menu-close:after {
 	-webkit-transform: rotate(-45deg);
 	-ms-transform: rotate(-45deg);
 	transform: rotate(-45deg);
 	bottom: 9px;
 }
 
-.right-click-menu-header {
+.menu-header {
 	margin: 6px 0px 0px 0px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
-.right-click-menu-header div {
+.menu-header div {
 	padding: 7px;
 }
 .right-click-menu ul {
@@ -568,32 +564,30 @@ body.lock {
 
 .right-click-menu__todo {
 	position: relative;
-	top: -59px;
-	transition: all 0.3s ease 0s;
 	grid-template-columns: 5fr 1fr;
 	overflow: hidden;
+}
+
+.right-click-menu .right-click-menu__todo {
+	/* transition: all 0.3s ease 0s; */
+	height: 0;
+
+	display: none;
+	top: -100%;
 	opacity: 0;
 	visibility: hidden;
-	height: 0;
-	display: none;
 }
-.right-click-menu__todo.active {
+
+.right-click-menu .right-click-menu__todo.active {
 	display: flex;
+	/* transform: rotate(90deg); */
 
 	top: 0;
 	opacity: 1;
 	visibility: visible;
-	min-height: 350px;
+	height: inherit;
 }
-/* .right-click-menu-item__desc-text-area textarea {
-	resize: none;
-	padding: 10px;
-	overflow: hidden;
-} */
-/* .right-click-menu-item__desc-text-area-btn span {
-	font-size: 30px;
-	margin-top: -7px;
-} */
+
 .desc {
 	border: 4px solid rgb(55, 98, 163);
 }
