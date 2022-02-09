@@ -110,7 +110,8 @@ let arrForUserNotes;
 let removeLocalStorage = document.querySelector(".remove-local-storage");
 removeLocalStorage.addEventListener("click", () => {
 	localStorage.removeItem("userNotes");
-	location.reload();
+	generateCalendar(currMonth.value, currYear.value);
+	location.href = location.href;
 });
 
 if (!localStorage.userNotes) {
@@ -320,7 +321,7 @@ const generateCalendar = (month, year) => {
 						item.shift == nameShift
 					) {
 						day.innerHTML = item.keyNote;
-						if (item.desc) {
+						if (item.desc && item.desc.length > 0) {
 							day.setAttribute("data-desc", JSON.stringify(item.desc));
 							day.classList.add("desc");
 						}
@@ -640,6 +641,29 @@ const setAttrCurCell = (curСell, tasks) => {
 	curСell.setAttribute("data-desc", JSON.stringify(tasks));
 };
 
+const removeClassDescEventListener = () => {
+	if (!tasks.length > 0) {
+		targetItemInTable.classList.remove("desc");
+		targetItemInTable.removeEventListener("click", popupOpen);
+	}
+};
+
+const addTask = (addTaskBtn) => {
+	addTaskBtn.addEventListener("click", () => {
+		if (inputTodo.value) {
+			tasks.push(new Task(inputTodo.value));
+			selectedTodoValue = tasks;
+		}
+		setAttrCurCell(targetItemInTable, tasks);
+		inputTodo.value = "";
+		pushObjInArr();
+		filterArr(arrForUserNotes);
+		updateLocalStorage("userNotes", arrForUserNotes);
+
+		fillHtmlList();
+	});
+};
+
 const fillHtmlList = () => {
 	todosWrapper.innerHTML = "";
 	if (tasks.length > 0) {
@@ -684,7 +708,7 @@ const fillHtmlList = () => {
 				tasks.splice(index, 1);
 				selectedTodoValue = tasks;
 				fillHtmlList();
-				// setAttrCurCell(curСell, tasks);
+				setAttrCurCell(targetItemInTable, tasks);
 			});
 		});
 	}
@@ -755,8 +779,6 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		".menu-header__day-week"
 	);
 
-	tasks = [];
-
 	//ячейка в таблице
 	targetItemInTable = e.target;
 
@@ -775,7 +797,7 @@ calendarBody.addEventListener("contextmenu", (e) => {
 			menuHeaderDayWeek
 		);
 	}
-
+	tasks = [];
 	// находим куда надо вставить todo из localstorage
 	if (arrForUserNotes.length > 0) {
 		arrForUserNotes.forEach((item) => {
@@ -786,21 +808,27 @@ calendarBody.addEventListener("contextmenu", (e) => {
 
 				rightClickMenuItemValue.forEach((menuItem) => {
 					if (menuItem.getAttribute("data-value") == item.keyNote) {
-						let rightClickMenuItem = menuItem.parentNode.parentNode;
-						currentTodo = rightClickMenuItem.nextSibling;
-						todosWrapper = currentTodo.querySelector(
-							".right-click-menu__todos-wrapper"
-						);
-						todosWrapper.innerHTML = "";
-						inputTodo = currentTodo.querySelector(".new-description-task");
-						addTaskBtn = currentTodo.querySelector(".add-task-btn");
+						if (item.desc && item.desc.length > 0) {
+							let rightClickMenuItem = menuItem.parentNode.parentNode;
+							currentTodo = rightClickMenuItem.nextSibling;
+							todosWrapper = currentTodo.querySelector(
+								".right-click-menu__todos-wrapper"
+							);
+							todosWrapper.innerHTML = "";
+							inputTodo = currentTodo.querySelector(".new-description-task");
+							addTaskBtn = currentTodo.querySelector(".add-task-btn");
+							tasks = item.desc.slice();
+							fillHtmlList();
+							let arrow = rightClickMenuItem.querySelector(
+								".right-click-menu-item__desc-arrow"
+							);
+
+							arrow.classList.add("active");
+							currentTodo.classList.add("active");
+							addTask(addTaskBtn);
+						}
 					}
 				});
-
-				if (item.desc) {
-					tasks = item.desc.slice();
-					fillHtmlList();
-				}
 			}
 		});
 	}
@@ -819,9 +847,11 @@ const updateLocalStorage = (name, data) => {
 
 rightClickMenuItems.addEventListener("click", (e) => {
 	let target = e.target;
-	// console.log(target);
+	let rightClickMenuItemBtn;
 
 	if (target.closest(".right-click-menu-item__btn")) {
+		rightClickMenuItemBtn = e.target.closest(".right-click-menu-item__btn");
+
 		//получаем букву и вставляем в таблицу
 		targetItemInTable.innerHTML = target.getAttribute("data-value");
 
@@ -835,7 +865,6 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		targetItemInTable.style.backgroundColor = inputColor.value;
 
 		selectedColorInContextMenu = inputColor.value;
-		// console.log(tasks);
 		if (tasks.length > 0) {
 			targetItemInTable.setAttribute("data-desc", JSON.stringify(tasks));
 			targetItemInTable.classList.add("desc");
@@ -859,6 +888,10 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		clearAllTodosWrappers();
 
 		searchBtnsAddFPopupOpen();
+
+		removeClassDescEventListener();
+
+		addTask(rightClickMenuItemBtn);
 	}
 
 	if (target.closest(".right-click-menu-item__color input")) {
@@ -870,9 +903,12 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 	//открываем todo в контекстном меню
 	if (target.closest(".right-click-menu-item__desc")) {
-		// removeActiveArrowsTodos();
+		removeActiveArrowsTodos();
 
 		let rightClickMenuItem = target.closest(".right-click-menu-item");
+		rightClickMenuItemBtn = rightClickMenuItem.querySelector(
+			".right-click-menu-item__btn"
+		);
 		let arrow = rightClickMenuItem.querySelector(
 			".right-click-menu-item__desc-arrow"
 		);
@@ -887,17 +923,11 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		todosWrapper = currentTodo.querySelector(
 			".right-click-menu__todos-wrapper"
 		);
-	}
-
-	inputTodo.value = "";
-	addTaskBtn.addEventListener("click", () => {
-		if (inputTodo.value) {
-			tasks.push(new Task(inputTodo.value));
-			selectedTodoValue = tasks;
-		}
 		fillHtmlList();
 		inputTodo.value = "";
-	});
+		addTask(addTaskBtn);
+		addTask(rightClickMenuItemBtn);
+	}
 });
 
 rightClickMenu.addEventListener("click", (e) => {
@@ -961,19 +991,7 @@ const popupOpen = (e) => {
 
 	fillHtmlList();
 
-	addTaskBtn.addEventListener("click", () => {
-		if (inputTodo.value) {
-			tasks.push(new Task(inputTodo.value));
-			selectedTodoValue = tasks;
-		}
-		setAttrCurCell(targetItemInTable, tasks);
-		inputTodo.value = "";
-		pushObjInArr();
-		filterArr(arrForUserNotes);
-		updateLocalStorage("userNotes", arrForUserNotes);
-
-		fillHtmlList();
-	});
+	addTask(addTaskBtn);
 };
 
 const searchBtnsAddFPopupOpen = () => {
@@ -994,6 +1012,8 @@ const popupClose = () => {
 	pushObjInArr();
 	filterArr(arrForUserNotes);
 	updateLocalStorage("userNotes", arrForUserNotes);
+
+	removeClassDescEventListener();
 };
 
 popupCloseBtn.addEventListener("click", popupClose);
