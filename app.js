@@ -107,6 +107,12 @@ let calendarCountD = document.querySelector(".calendar-count-d");
 let calendarColumn = calendar.querySelectorAll(".calendar-column");
 let arrForUserNotes;
 
+let removeLocalStorage = document.querySelector(".remove-local-storage");
+removeLocalStorage.addEventListener("click", () => {
+	localStorage.removeItem("userNotes");
+	location.reload();
+});
+
 if (!localStorage.userNotes) {
 	arrForUserNotes = [];
 } else {
@@ -813,7 +819,7 @@ const updateLocalStorage = (name, data) => {
 
 rightClickMenuItems.addEventListener("click", (e) => {
 	let target = e.target;
-	console.log(target);
+	// console.log(target);
 
 	if (target.closest(".right-click-menu-item__btn")) {
 		//получаем букву и вставляем в таблицу
@@ -829,7 +835,7 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		targetItemInTable.style.backgroundColor = inputColor.value;
 
 		selectedColorInContextMenu = inputColor.value;
-		console.log(tasks);
+		// console.log(tasks);
 		if (tasks.length > 0) {
 			targetItemInTable.setAttribute("data-desc", JSON.stringify(tasks));
 			targetItemInTable.classList.add("desc");
@@ -939,11 +945,11 @@ const popupOpen = (e) => {
 
 	tasks = JSON.parse(targetItemInTable.getAttribute("data-desc"));
 	selectedTodoValue = tasks;
-	console.log(selectedShift);
-	console.log(selectedColorInContextMenu);
-	console.log(selectedItemInContextMenu);
+	// console.log(selectedShift);
+	// console.log(selectedColorInContextMenu);
+	// console.log(selectedItemInContextMenu);
 
-	console.log(tasks);
+	// console.log(tasks);
 
 	todosWrapper = popup.querySelector(".right-click-menu__todos-wrapper");
 

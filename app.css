@@ -317,6 +317,16 @@ body.lock {
 	left: calc(2px + 50%);
 }
 
+.remove-local-storage {
+	border: 1px solid var(--color-txt);
+	margin-top: 50px;
+	padding: 20px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	color: var(--color-txt);
+}
+
 @keyframes to-top {
 	0% {
 		opacity: 0;
