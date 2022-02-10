@@ -5,16 +5,21 @@
 	--dark-hover: #323048;
 	--dark-text: #f8fbff;
 	--dark-bg-div: #21223f69;
+	--dark-day-off: rgb(255, 30, 0);
+	--dark-curr-day: #0606fda2;
+	--dark-curr-day-text-color: #fff;
+	--dark-desc: rgb(55, 98, 163);
 
 	--light-body: #f3f8fe;
 	--light-main: #fdfdfd;
 	--light-second: #c3c2c8;
 	--light-hover: #edf0f5;
 	--light-text: #151426;
-	--light-bg-div: #f9fbfd;
-	--red: rgba(255, 30, 0, 0.562);
-	--blue: #0000ffa2;
-	--white: #fff;
+	--light-bg-div: #e0e9f128;
+	--light-day-off: rgba(255, 30, 0, 0.562);
+	--light-curr-day: #0000ffa2;
+	--light-curr-day-text-color: #fff;
+	--light-desc: rgb(55, 98, 163);
 
 	--shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 
@@ -28,6 +33,10 @@
 	--bg-second: var(--dark-second);
 	--color-hover: var(--dark-hover);
 	--color-txt: var(--dark-text);
+	--day-off: var(--dark-day-off);
+	--curr-day: var(--dark-curr-day);
+	--curr-day-text-color: var(--dark-curr-day-text-color);
+	--desc: var(--dark-desc);
 }
 
 .light {
@@ -37,6 +46,10 @@
 	--bg-second: var(--light-second);
 	--color-hover: var(--light-hover);
 	--color-txt: var(--light-text);
+	--day-off: var(--light-day-off);
+	--curr-day: var(--light-curr-day);
+	--curr-day-text-color: var(--light-curr-day-text-color);
+	--desc: var(--light-desc);
 }
 
 * {
@@ -156,17 +169,46 @@ body.lock {
 }
 .calendar-day-off,
 .curr-date {
-	margin: 3px 0;
-	border-radius: 0;
+	/* margin: 3px 0;
+	border-radius: 0; */
 }
 
 .calendar-day-off {
-	background-color: var(--red);
+	/* background-color: var(--day-off); */
+	/* border-bottom: 3px solid rgb(192, 127, 127);
+	border-top: 3px solid rgb(192, 127, 127);
+	border-left: 3px solid var(--bg-main);
+	border-right: 3px solid var(--bg-main); */
 }
-.curr-date {
-	background-color: var(--blue);
-	color: var(--white);
+.calendar-day-off::before,
+.calendar-day-off::after,
+.curr-date::before,
+.curr-date::after {
+	position: absolute;
+	content: "";
+	height: 2px;
+	width: 115%;
 }
+.calendar-day-off::before {
+	top: 0;
+	background-color: var(--day-off);
+}
+.calendar-day-off::after {
+	bottom: 0;
+	background-color: var(--day-off);
+}
+.curr-date::before {
+	top: 0;
+	background-color: var(--curr-day);
+}
+.curr-date::after {
+	bottom: 0;
+	background-color: var(--curr-day);
+}
+/* .curr-date {
+	background-color: var(--curr-day);
+	color: var(--curr-day-text-color);
+} */
 .calendar-nav {
 	position: relative;
 	display: flex;
@@ -344,9 +386,9 @@ body.lock {
 	top: 5px;
 	left: 4px;
 	z-index: 3;
-	background-color: rgb(68, 52, 126);
+	background-color: var(--bg-main);
 	border-radius: 5px;
-	box-shadow: 0 0 10px rgb(68, 52, 126);
+	box-shadow: 0 0 10px var(--color-txt);
 }
 .header__burger {
 	display: block;
@@ -359,7 +401,7 @@ body.lock {
 }
 .header__burger span {
 	position: absolute;
-	background-color: #fff;
+	background-color: var(--color-txt);
 	top: 9px;
 	left: 0;
 	width: 100%;
@@ -371,7 +413,7 @@ body.lock {
 .header__burger:before,
 .header__burger:after {
 	content: "";
-	background-color: #fff;
+	background-color: var(--color-txt);
 	position: absolute;
 	width: 100%;
 	height: 2px;
@@ -392,7 +434,7 @@ body.lock {
 	left: -100%;
 	width: 100%;
 	height: 100%;
-	background-color: rgb(68, 52, 126);
+	background-color: var(--bg-main);
 	-webkit-transition: all 0.3s ease 0s;
 	-o-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
@@ -455,7 +497,7 @@ body.lock {
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgb(68, 52, 126);
+	background-color: var(--bg-main);
 	-webkit-transition: all 0.3s ease 0s;
 	-o-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
@@ -599,7 +641,7 @@ body.lock {
 }
 
 .desc {
-	border: 4px solid rgb(55, 98, 163);
+	border: 4px solid var(--desc);
 }
 .popup {
 	position: fixed;
@@ -630,22 +672,20 @@ body.lock {
 }
 
 .popup__content {
-	padding: 20px;
+	padding: 10px 20px;
 	background-color: #fff;
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	border-radius: 15px;
-	max-height: 80vh;
+	max-height: 95vh;
 	overflow-y: auto;
 	color: var(--color-txt);
 	background-color: var(--bg-main);
 }
-.popup__content h2 {
-	font-size: 13px;
-	color: var(--bg-second);
-	font-weight: normal;
-	margin-bottom: 10px;
-}
+
 .popup__close {
+	text-align: center;
+	width: 35px;
+	height: 35px;
 	position: absolute;
 	top: 8px;
 	right: 14px;
@@ -656,41 +696,58 @@ body.lock {
 	border: none;
 	background-color: transparent;
 	cursor: pointer;
+	z-index: 2;
 }
 
 /* todo */
 .right-click-menu__todo {
+	background-color: inherit;
 	display: flex;
 	flex-direction: column;
+	margin: 0;
+}
+.right-click .right-click-menu-item.right-click-menu__todo {
+	padding: 0px 20px;
+	background-color: var(--bg-div);
 	margin: 6px;
 }
 .right-click-menu__todo h2 {
-	font-size: 14px;
-
-	margin: 5px 0 0 0;
+	font-size: 18px;
+	color: var(--bg-second);
+	font-weight: normal;
+	margin: 10px 0 15px;
 }
+.right-click .right-click-menu__todo h2 {
+	margin: 20px 5px 0;
+}
+
 .right-click-menu__todos-wrapper {
 	width: 100%;
 }
 .todo-item {
-	padding: 5px;
+	padding: 5px 0;
+	margin: 5px 0;
 	/* border: 1px solid black; */
+}
+.todo-item.right-click-menu-item {
+	margin: 0;
 }
 .todo-check-desc {
 	display: flex;
 }
 
 .right-click-menu__add-todo-wrapper {
+	margin: 20px 3px;
 	width: 100%;
 }
 .input-wrapper input {
-	padding: 15px;
+	padding: 15px 6px;
 	/* margin: 7px; */
 	width: 100%;
 	/* border-bottom: 1px solid black; */
 	outline: none;
 	border: none;
-	background-color: var(--bg-div);
+	background-color: inherit;
 }
 
 .btn-complete,
@@ -704,13 +761,16 @@ body.lock {
 }
 .button-wrapper .cross {
 	top: 14px;
-	left: calc(50% - 10px);
+	left: 50%;
 }
 .add-task-btn .cross:before {
 	transform: rotate(0deg);
 }
 .add-task-btn .cross:after {
 	transform: rotate(90deg);
+}
+.description {
+	overflow: hidden;
 }
 .btn-delete {
 	position: relative;
@@ -726,6 +786,10 @@ body.lock {
 	position: relative;
 }
 /*Checkboxes styles*/
+.todo-item.checked .description {
+	text-decoration: line-through;
+}
+
 input[type="checkbox"] {
 	display: none;
 }
@@ -752,7 +816,7 @@ input[type="checkbox"] + label:before {
 	display: block;
 	width: 20px;
 	height: 20px;
-	border: 2px solid #6cc0e5;
+	border: 3px solid #6cc0e5;
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -779,7 +843,7 @@ input[type="checkbox"]:checked + label:before {
 	height: 20px;
 	position: absolute;
 	top: -3px;
-	left: calc(50%);
+	left: 50%;
 	z-index: 5;
 }
 

@@ -629,6 +629,18 @@ function Task(description) {
 	this.completed = false;
 }
 
+function UserNotes(date, shift, color, desc, key) {
+	(this.date = date),
+		(this.shift = shift),
+		(this.color = color),
+		(this.desc = desc),
+		(this.keyNote = key);
+}
+
+const updateLocalStorage = (name, data) => {
+	localStorage.setItem(name, JSON.stringify(data));
+};
+
 const filterTasks = () => {
 	const activeTasks =
 		tasks.length && tasks.filter((item) => item.completed == false);
@@ -651,11 +663,13 @@ const removeClassDescEventListener = () => {
 const addTask = (addTaskBtn) => {
 	addTaskBtn.addEventListener("click", () => {
 		if (inputTodo.value) {
+			console.log(inputTodo);
 			tasks.push(new Task(inputTodo.value));
 			selectedTodoValue = tasks;
+			inputTodo.value = "";
 		}
 		setAttrCurCell(targetItemInTable, tasks);
-		inputTodo.value = "";
+
 		pushObjInArr();
 		filterArr(arrForUserNotes);
 		updateLocalStorage("userNotes", arrForUserNotes);
@@ -672,6 +686,7 @@ const editDescription = () => {
 				let currDesc = item.closest(".description");
 				currDesc.addEventListener("keyup", () => {
 					tasks[index] = new Task(currDesc.innerText);
+					selectedTodoValue = tasks;
 				});
 			}
 		});
@@ -712,6 +727,7 @@ const fillHtmlList = () => {
 				} else {
 					todoItemElems[index].classList.remove("checked");
 				}
+				selectedTodoValue = tasks; ///////////////////
 
 				fillHtmlList();
 			});
@@ -819,7 +835,6 @@ calendarBody.addEventListener("contextmenu", (e) => {
 				let rightClickMenuItemValue = rightClickMenuItems.querySelectorAll(
 					".right-click-menu-item__value"
 				);
-
 				rightClickMenuItemValue.forEach((menuItem) => {
 					if (menuItem.getAttribute("data-value") == item.keyNote) {
 						if (item.desc && item.desc.length > 0) {
@@ -847,17 +862,6 @@ calendarBody.addEventListener("contextmenu", (e) => {
 		});
 	}
 });
-function UserNotes(date, shift, color, desc, key) {
-	(this.date = date),
-		(this.shift = shift),
-		(this.color = color),
-		(this.desc = desc),
-		(this.keyNote = key);
-}
-
-const updateLocalStorage = (name, data) => {
-	localStorage.setItem(name, JSON.stringify(data));
-};
 
 rightClickMenuItems.addEventListener("click", (e) => {
 	let target = e.target;
@@ -958,8 +962,9 @@ rightClickMenu.addEventListener("click", (e) => {
 //popup
 let btns;
 const popup = document.querySelector(".popup");
-// const popupContent = document.querySelector(".popup__content");
+const idPopup = document.querySelector("#popup");
 const popupCloseBtn = document.querySelector(".popup__close");
+
 const popupOpen = (e) => {
 	popup.classList.remove("hide");
 	popup.classList.add("show");
@@ -989,15 +994,8 @@ const popupOpen = (e) => {
 
 	tasks = JSON.parse(targetItemInTable.getAttribute("data-desc"));
 	selectedTodoValue = tasks;
-	// console.log(selectedShift);
-	// console.log(selectedColorInContextMenu);
-	// console.log(selectedItemInContextMenu);
-
-	// console.log(tasks);
 
 	todosWrapper = popup.querySelector(".right-click-menu__todos-wrapper");
-
-	// popupContent.appendChild(todosWrapper);
 
 	currentTodo = todosWrapper;
 	inputTodo = popup.querySelector(".new-description-task");
@@ -1022,11 +1020,17 @@ const popupClose = () => {
 	popup.classList.add("hide");
 	document.body.style.overflow = "";
 	body.style.paddingRight = 0;
+
+	if (inputTodo.value) {
+		tasks.push(new Task(inputTodo.value));
+		selectedTodoValue = tasks;
+		inputTodo.value = "";
+	}
+
 	setAttrCurCell(targetItemInTable, tasks);
 	pushObjInArr();
 	filterArr(arrForUserNotes);
 	updateLocalStorage("userNotes", arrForUserNotes);
-
 	removeClassDescEventListener();
 };
 
