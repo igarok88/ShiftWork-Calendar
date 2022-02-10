@@ -664,6 +664,20 @@ const addTask = (addTaskBtn) => {
 	});
 };
 
+const editDescription = () => {
+	let descsInTodo = document.querySelectorAll(".description");
+	descsInTodo.forEach((item, index) => {
+		item.addEventListener("click", () => {
+			if (item.closest(".description")) {
+				let currDesc = item.closest(".description");
+				currDesc.addEventListener("keyup", () => {
+					tasks[index] = new Task(currDesc.innerText);
+				});
+			}
+		});
+	});
+};
+
 const fillHtmlList = () => {
 	todosWrapper.innerHTML = "";
 	if (tasks.length > 0) {
@@ -698,7 +712,6 @@ const fillHtmlList = () => {
 				} else {
 					todoItemElems[index].classList.remove("checked");
 				}
-				selectedTodoValue = tasks;
 
 				fillHtmlList();
 			});
@@ -711,6 +724,7 @@ const fillHtmlList = () => {
 				setAttrCurCell(targetItemInTable, tasks);
 			});
 		});
+		editDescription();
 	}
 };
 //заполняем шапку в контекстном меню и в попапе
