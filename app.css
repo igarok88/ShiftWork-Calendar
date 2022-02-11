@@ -1,14 +1,25 @@
 :root {
 	--dark-body: #4d4c5a;
-	--dark-main: #141529;
+	--dark-main: #0f1427;
 	--dark-second: #79788c;
 	--dark-hover: #323048;
 	--dark-text: #f8fbff;
 	--dark-bg-div: #21223f69;
-	--dark-day-off: rgb(255, 30, 0);
-	--dark-curr-day: #0606fda2;
-	--dark-curr-day-text-color: #fff;
-	--dark-desc: rgb(55, 98, 163);
+	--dark-day-off: #44535e;
+	--dark-curr-day: #d1d0cc;
+	--dark-curr-day-text-color: #0e1821;
+	--dark-desc: #374258;
+
+	--dark-2-body: #4d4c5a;
+	--dark-2-main: #000000;
+	--dark-2-second: #798f8c;
+	--dark-2-hover: #323048;
+	--dark-2-text: #d9ebe9;
+	--dark-2-bg-div: #0e1821;
+	--dark-2-day-off: #44535e;
+	--dark-2-curr-day: #d9ebe9;
+	--dark-2-curr-day-text-color: #0e1821;
+	--dark-2-desc: #374258;
 
 	--light-body: #f3f8fe;
 	--light-main: #fdfdfd;
@@ -21,7 +32,7 @@
 	--light-curr-day-text-color: #fff;
 	--light-desc: rgb(55, 98, 163);
 
-	--shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	/* --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; */
 
 	--font-family: Arial;
 }
@@ -37,6 +48,18 @@
 	--curr-day: var(--dark-curr-day);
 	--curr-day-text-color: var(--dark-curr-day-text-color);
 	--desc: var(--dark-desc);
+}
+.dark-2 {
+	--bg-body: var(--dark-2-body);
+	--bg-div: var(--dark-2-bg-div);
+	--bg-main: var(--dark-2-main);
+	--bg-second: var(--dark-2-second);
+	--color-hover: var(--dark-2-hover);
+	--color-txt: var(--dark-2-text);
+	--day-off: var(--dark-2-day-off);
+	--curr-day: var(--dark-2-curr-day);
+	--curr-day-text-color: var(--dark-2-curr-day-text-color);
+	--desc: var(--dark-2-desc);
 }
 
 .light {
@@ -88,7 +111,7 @@ body.lock {
 	background-color: var(--bg-main);
 	position: relative;
 	overflow: hidden;
-	padding: 0px 0px 55px 0px;
+	padding: 0px 0px 48px 0px;
 }
 
 .calendar-name {
@@ -145,6 +168,9 @@ body.lock {
 	cursor: pointer;
 	color: var(--color-txt);
 }
+.popup .menu-header div {
+	background-color: inherit;
+}
 
 .calendar-day:nth-child(2) {
 	margin-top: 36px;
@@ -157,7 +183,7 @@ body.lock {
 	border-radius: 0px;
 	height: 30px;
 	margin: 0px;
-	border-bottom: 1px solid var(--bg-second);
+	/* border-bottom: 1px solid var(--bg-second); */
 }
 .calendar-week-day div,
 .calendar-days div {
@@ -169,18 +195,21 @@ body.lock {
 }
 .calendar-day-off,
 .curr-date {
-	/* margin: 3px 0;
-	border-radius: 0; */
+	margin: 3px 0;
+	border-radius: 0;
 }
-
+.curr-date {
+	background-color: var(--curr-day);
+	color: var(--curr-day-text-color);
+}
 .calendar-day-off {
-	/* background-color: var(--day-off); */
+	background-color: var(--day-off);
 	/* border-bottom: 3px solid rgb(192, 127, 127);
 	border-top: 3px solid rgb(192, 127, 127);
 	border-left: 3px solid var(--bg-main);
 	border-right: 3px solid var(--bg-main); */
 }
-.calendar-day-off::before,
+/* .calendar-day-off::before,
 .calendar-day-off::after,
 .curr-date::before,
 .curr-date::after {
@@ -204,11 +233,8 @@ body.lock {
 .curr-date::after {
 	bottom: 0;
 	background-color: var(--curr-day);
-}
-/* .curr-date {
-	background-color: var(--curr-day);
-	color: var(--curr-day-text-color);
 } */
+
 .calendar-nav {
 	position: relative;
 	display: flex;
@@ -222,7 +248,7 @@ body.lock {
 	bottom: 0;
 	left: 0;
 	background-color: var(--bg-main);
-	border-top: 1px solid var(--bg-second);
+	/* border-top: 1px solid var(--bg-second); */
 }
 .calendar-count {
 	grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -300,7 +326,7 @@ body.lock {
 }
 @media (max-width: 390px) {
 	.calendar {
-		padding: 0px 0px 90px 0px;
+		padding: 0px 0px 80px 0px;
 	}
 	.calendar-nav {
 		flex-direction: column;
@@ -318,7 +344,7 @@ body.lock {
 	background-color: var(--color-hover);
 }
 
-.calendar-footer {
+.calendar-menu {
 	padding: 10px;
 	display: flex;
 	justify-content: flex-end;
@@ -334,32 +360,7 @@ body.lock {
 	color: var(--color-txt);
 }
 
-.dark-mode-switch {
-	position: relative;
-	width: 48px;
-	height: 25px;
-	border-radius: 14px;
-	background-color: var(--bg-second);
-	cursor: pointer;
-}
-
-.dark-mode-switch-ident {
-	width: 21px;
-	height: 21px;
-	border-radius: 50%;
-	background-color: var(--bg-main);
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	transition: left 0.5s ease-in-out;
-}
-
-.dark .dark-mode-switch .dark-mode-switch-ident {
-	top: 2px;
-	left: calc(2px + 50%);
-}
-
-.remove-local-storage {
+/* .remove-local-storage {
 	border: 1px solid var(--color-txt);
 	margin-top: 50px;
 	padding: 20px;
@@ -367,7 +368,7 @@ body.lock {
 	justify-content: flex-end;
 	align-items: center;
 	color: var(--color-txt);
-}
+} */
 
 @keyframes to-top {
 	0% {
@@ -379,27 +380,27 @@ body.lock {
 	}
 }
 
-.header__burger-wrapper {
+.burger-wrapper {
 	width: 50px;
 	height: 42px;
 	position: fixed;
-	top: 5px;
-	left: 4px;
+	top: 8px;
+	left: 8px;
 	z-index: 3;
 	background-color: var(--bg-main);
 	border-radius: 5px;
-	box-shadow: 0 0 10px var(--color-txt);
+	box-shadow: 0 0 8px var(--color-txt);
 }
-.header__burger {
+.burger__btn {
 	display: block;
 	width: 30px;
 	height: 20px;
 	position: fixed;
-	top: 15px;
-	left: 14px;
+	top: 18px;
+	left: 18px;
 	z-index: 4;
 }
-.header__burger span {
+.burger__btn span {
 	position: absolute;
 	background-color: var(--color-txt);
 	top: 9px;
@@ -410,8 +411,8 @@ body.lock {
 	-o-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
 }
-.header__burger:before,
-.header__burger:after {
+.burger__btn:before,
+.burger__btn:after {
 	content: "";
 	background-color: var(--color-txt);
 	position: absolute;
@@ -422,13 +423,14 @@ body.lock {
 	-o-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
 }
-.header__burger:before {
+.burger__btn:before {
 	top: 0;
 }
-.header__burger:after {
+.burger__btn:after {
 	bottom: 0;
 }
-.header__menu {
+.burger__menu {
+	padding: 60px 20px 20px;
 	position: fixed;
 	top: 0;
 	left: -100%;
@@ -441,22 +443,73 @@ body.lock {
 	overflow: auto;
 	z-index: 3;
 }
-.header__menu.active {
+.burger__menu.active {
 	left: 0;
 }
+.burger__menu-item {
+	padding: 10px;
+	margin: 10px;
+	background-color: var(--bg-div);
+	color: var(--color-txt);
+	border-radius: 10px;
+	position: relative;
+}
 
-.header__burger.active span {
+.burger__menu-item-title {
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	color: var(--color-txt);
+}
+
+.burger__menu-item-cross {
+	width: 20px;
+	transform: rotate(45deg);
+	height: 20px;
+	position: relative;
+	transition: all 0.5s ease 0s;
+}
+.burger__menu-item-cross .cross {
+	top: 0px;
+	left: 0px;
+}
+.burger__menu-item-cross .cross::before,
+.burger__menu-item-cross .cross::after {
+	background-color: var(--color-txt);
+}
+.burger__menu-item-cross.active {
+	transform: rotate(-90deg);
+}
+
+.burger__menu-item-more {
+	height: 0;
+	margin: 0 10px;
+	padding: 0 2px;
+	opacity: 0;
+	visibility: hidden;
+	overflow: hidden;
+	transition: all 0.5s ease 0s;
+}
+.burger__menu-item-more.active {
+	margin: 10px;
+	padding: 2px;
+	opacity: 1;
+	visibility: visible;
+	height: inherit;
+}
+.burger__btn.active span {
 	-webkit-transform: scale(0);
 	-ms-transform: scale(0);
 	transform: scale(0);
 }
-.header__burger.active:before {
+.burger__btn.active:before {
 	-webkit-transform: rotate(45deg);
 	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
 	top: 9px;
 }
-.header__burger.active:after {
+.burger__btn.active:after {
 	-webkit-transform: rotate(-45deg);
 	-ms-transform: rotate(-45deg);
 	transform: rotate(-45deg);
@@ -476,7 +529,7 @@ body.lock {
 .menu-close:before,
 .menu-close:after {
 	content: "";
-	background-color: #fff;
+	background-color: var(--color-txt);
 	position: absolute;
 	width: 100%;
 	height: 2px;
@@ -712,7 +765,7 @@ body.lock {
 	margin: 6px;
 }
 .right-click-menu__todo h2 {
-	font-size: 18px;
+	font-size: 16px;
 	color: var(--bg-second);
 	font-weight: normal;
 	margin: 10px 0 15px;
@@ -748,6 +801,7 @@ body.lock {
 	outline: none;
 	border: none;
 	background-color: inherit;
+	color: var(--dark-text);
 }
 
 .btn-complete,
@@ -799,8 +853,8 @@ input[type="checkbox"] + label {
 	position: relative;
 	padding-left: 35px;
 	margin-bottom: 20px;
-	font: 14px/20px "Open Sans", Arial, sans-serif;
-	color: #ddd;
+	/* font: 14px/20px "Open Sans", Arial, sans-serif;
+	color: rgb(146, 0, 0); */
 	cursor: pointer;
 	user-select: none;
 	top: 6px;
@@ -816,7 +870,7 @@ input[type="checkbox"] + label:before {
 	display: block;
 	width: 20px;
 	height: 20px;
-	border: 3px solid #6cc0e5;
+	border: 3px solid var(--color-txt);
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -850,7 +904,7 @@ input[type="checkbox"]:checked + label:before {
 .cross:before,
 .cross:after {
 	content: "";
-	background-color: #6cc0e5;
+	background-color: var(--bg-second);
 	position: absolute;
 	width: 100%;
 	height: 2px;

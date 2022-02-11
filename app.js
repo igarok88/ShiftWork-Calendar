@@ -114,6 +114,12 @@ removeLocalStorage.addEventListener("click", () => {
 	location.href = location.href;
 });
 
+if (localStorage.userSettings) {
+	let userSettings = JSON.parse(localStorage.getItem("userSettings"));
+	body.className = "";
+	body.classList.add(userSettings.theme);
+}
+
 if (!localStorage.userNotes) {
 	arrForUserNotes = [];
 } else {
@@ -431,17 +437,10 @@ document.querySelector("#next-year").onclick = () => {
 	generateCalendar(currMonth.value, currYear.value);
 };
 
-let darkModeToggle = document.querySelector(".dark-mode-switch");
-
-darkModeToggle.onclick = () => {
-	body.classList.toggle("light");
-	body.classList.toggle("dark");
-};
-
 //Burger menu
-const burger = document.querySelector(".header__burger");
-const headerMenu = document.querySelector(".header__menu");
-const burgerWrapper = document.querySelector(".header__burger-wrapper");
+const burger = document.querySelector(".burger__btn");
+const headerMenu = document.querySelector(".burger__menu");
+const burgerWrapper = document.querySelector(".burger__btn-wrapper");
 
 const docHeight = document.documentElement.scrollHeight;
 const winHeight = document.documentElement.clientHeight;
@@ -455,6 +454,41 @@ burger.addEventListener("click", () => {
 	} else {
 		body.style.paddingRight = 0;
 	}
+});
+headerMenu.addEventListener("click", (e) => {
+	let target = e.target;
+	let burgerMenuItem;
+
+	if (target.closest(".burger__menu-item")) {
+		burgerMenuItem = target.closest(".burger__menu-item");
+		let arrow = burgerMenuItem.querySelector(".burger__menu-item-cross");
+		arrow.classList.toggle("active");
+
+		let burgerMenuItemMore = burgerMenuItem.querySelector(
+			".burger__menu-item-more"
+		);
+		burgerMenuItemMore.classList.toggle("active");
+	}
+});
+
+let burgerMenuThemes = document.querySelectorAll(".burger__menu-color");
+burgerMenuThemes.forEach((theme) => {
+	theme.addEventListener("click", () => {
+		if (theme.closest(".theme-1")) {
+			body.className = "";
+			body.classList.add("dark");
+		}
+		if (theme.closest(".theme-2")) {
+			body.className = "";
+			body.classList.add("light");
+		}
+		if (theme.closest(".theme-3")) {
+			body.className = "";
+			body.classList.add("dark-2");
+		}
+
+		updateLocalStorage("userSettings", new UserSettings(body.className));
+	});
 });
 
 //Контекстное меню
@@ -637,6 +671,10 @@ function UserNotes(date, shift, color, desc, key) {
 		(this.keyNote = key);
 }
 
+function UserSettings(theme) {
+	this.theme = theme;
+}
+
 const updateLocalStorage = (name, data) => {
 	localStorage.setItem(name, JSON.stringify(data));
 };
@@ -654,7 +692,8 @@ const setAttrCurCell = (curСell, tasks) => {
 };
 
 const removeClassDescEventListener = () => {
-	if (!tasks.length > 0) {
+	if (tasks.length > 0) {
+	} else {
 		targetItemInTable.classList.remove("desc");
 		targetItemInTable.removeEventListener("click", popupOpen);
 	}
@@ -663,7 +702,6 @@ const removeClassDescEventListener = () => {
 const addTask = (addTaskBtn) => {
 	addTaskBtn.addEventListener("click", () => {
 		if (inputTodo.value) {
-			console.log(inputTodo);
 			tasks.push(new Task(inputTodo.value));
 			selectedTodoValue = tasks;
 			inputTodo.value = "";

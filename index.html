@@ -5,27 +5,70 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Calendar</title>
 		<link rel="stylesheet" href="lib/coloris.min.css" />
+		<link rel="stylesheet" href="theme.css" />
 		<link rel="stylesheet" href="app.css" />
 	</head>
 
-	<body class="light">
+	<body class="dark-2">
 		<div class="container">
 			<div class="calendar">
-				<header class="header">
-					<div class="header__burger">
+				<header>
+					<div class="burger__btn">
 						<span></span>
 					</div>
-					<div class="header__burger-wrapper"></div>
-					<nav class="header__menu">
-						<div class="calendar-footer">
-							<div class="toggle">
-								<span>Dark Mode</span>
-								<div class="dark-mode-switch">
-									<div class="dark-mode-switch-ident"></div>
+					<div class="burger-wrapper"></div>
+					<nav class="burger__menu">
+						<div class="burger__menu-theme burger__menu-item">
+							<div class="burger__menu-item-title">
+								<h2>Цветовые темы</h2>
+								<div class="burger__menu-item-cross">
+									<span class="cross"></span>
+								</div>
+							</div>
+
+							<div class="burger__menu-theme-choice burger__menu-item-more">
+								<div class="burger__menu-color theme-1">
+									<div class="color color-1"></div>
+									<div class="color color-2"></div>
+									<div class="color color-3"></div>
+									<div class="color color-4"></div>
+									<div class="color color-5"></div>
+									<div class="color color-6"></div>
+									<div class="color color-7"></div>
+									<div class="color color-8"></div>
+									<div class="color color-9"></div>
+									<div class="color color-10"></div>
+								</div>
+								<div class="burger__menu-color theme-2">
+									<div class="color color-1"></div>
+									<div class="color color-2"></div>
+									<div class="color color-3"></div>
+									<div class="color color-4"></div>
+									<div class="color color-5"></div>
+									<div class="color color-6"></div>
+									<div class="color color-7"></div>
+									<div class="color color-8"></div>
+									<div class="color color-9"></div>
+									<div class="color color-10"></div>
+								</div>
+								<div class="burger__menu-color theme-3">
+									<div class="color color-1"></div>
+									<div class="color color-2"></div>
+									<div class="color color-3"></div>
+									<div class="color color-4"></div>
+									<div class="color color-5"></div>
+									<div class="color color-6"></div>
+									<div class="color color-7"></div>
+									<div class="color color-8"></div>
+									<div class="color color-9"></div>
+									<div class="color color-10"></div>
 								</div>
 							</div>
 						</div>
-						<div class="remove-local-storage">Clear all user data</div>
+
+						<div class="remove-local-storage burger__menu-item">
+							Clear all user data
+						</div>
 					</nav>
 				</header>
 				<div class="right-click">
