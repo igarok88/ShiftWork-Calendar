@@ -461,35 +461,63 @@ headerMenu.addEventListener("click", (e) => {
 
 	if (target.closest(".burger__menu-item")) {
 		burgerMenuItem = target.closest(".burger__menu-item");
-		let arrow = burgerMenuItem.querySelector(".burger__menu-item-cross");
-		arrow.classList.toggle("active");
+		let cross = burgerMenuItem.querySelector(".burger__menu-item-cross");
+		cross.classList.toggle("active");
 
 		let burgerMenuItemMore = burgerMenuItem.querySelector(
 			".burger__menu-item-more"
 		);
 		burgerMenuItemMore.classList.toggle("active");
 	}
+
+	const selectTheme = (target, name, classBody) => {
+		let burgerMenuThemes = document.querySelectorAll(".burger__menu-color");
+		burgerMenuThemes.forEach((theme) => {
+			// theme.classList.remove("focus");
+		});
+
+		if (target.closest(name)) {
+			let currTheme = target.closest(".burger__menu-color");
+			body.className = "";
+			body.classList.add(classBody);
+
+			if (body.className == classBody) {
+				currTheme.classList.add("focus");
+			}
+
+			updateLocalStorage("userSettings", new UserSettings(body.className));
+		}
+	};
+
+	selectTheme(target, ".theme-1", "dark");
+	selectTheme(target, ".theme-2", "light");
+	selectTheme(target, ".theme-3", "dark-2");
 });
 
-let burgerMenuThemes = document.querySelectorAll(".burger__menu-color");
-burgerMenuThemes.forEach((theme) => {
-	theme.addEventListener("click", () => {
-		if (theme.closest(".theme-1")) {
-			body.className = "";
-			body.classList.add("dark");
-		}
-		if (theme.closest(".theme-2")) {
-			body.className = "";
-			body.classList.add("light");
-		}
-		if (theme.closest(".theme-3")) {
-			body.className = "";
-			body.classList.add("dark-2");
-		}
+// let burgerMenuThemes = document.querySelectorAll(".burger__menu-color");
+// burgerMenuThemes.forEach((theme) => {
+// 	theme.addEventListener("click", () => {
+// 		theme.classList.remove("focus");
+// 		console.log(theme);
+// 		if (theme.closest(".theme-1")) {
+// 			body.className = "";
+// 			body.classList.add("dark");
+// 			theme.classList.add("focus");
+// 		}
+// 		if (theme.closest(".theme-2")) {
+// 			body.className = "";
+// 			body.classList.add("light");
+// 			theme.classList.add("focus");
+// 		}
+// 		if (theme.closest(".theme-3")) {
+// 			body.className = "";
+// 			body.classList.add("dark-2");
+// 			theme.classList.add("focus");
+// 		}
 
-		updateLocalStorage("userSettings", new UserSettings(body.className));
-	});
-});
+// 		updateLocalStorage("userSettings", new UserSettings(body.className));
+// 	});
+// });
 
 //Контекстное меню
 const calendarBody = document.querySelector(".calendar-body");
