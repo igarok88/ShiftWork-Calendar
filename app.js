@@ -471,21 +471,20 @@ headerMenu.addEventListener("click", (e) => {
 	}
 
 	const selectTheme = (target, name, classBody) => {
-		let burgerMenuThemes = document.querySelectorAll(".burger__menu-color");
-		burgerMenuThemes.forEach((theme) => {
-			// theme.classList.remove("focus");
-		});
+		// let burgerMenuThemes = document.querySelectorAll(".burger__menu-color");
+		// burgerMenuThemes.forEach((theme) => {
+		// 	theme.classList.remove("focus");
+		// });
 
 		if (target.closest(name)) {
 			let currTheme = target.closest(".burger__menu-color");
 			body.className = "";
 			body.classList.add(classBody);
+			body.classList.toggle("lock");
 
-			if (body.className == classBody) {
-				currTheme.classList.add("focus");
-			}
+			currTheme.classList.add("focus");
 
-			updateLocalStorage("userSettings", new UserSettings(body.className));
+			updateLocalStorage("userSettings", new UserSettings(classBody));
 		}
 	};
 
@@ -493,31 +492,6 @@ headerMenu.addEventListener("click", (e) => {
 	selectTheme(target, ".theme-2", "light");
 	selectTheme(target, ".theme-3", "dark-2");
 });
-
-// let burgerMenuThemes = document.querySelectorAll(".burger__menu-color");
-// burgerMenuThemes.forEach((theme) => {
-// 	theme.addEventListener("click", () => {
-// 		theme.classList.remove("focus");
-// 		console.log(theme);
-// 		if (theme.closest(".theme-1")) {
-// 			body.className = "";
-// 			body.classList.add("dark");
-// 			theme.classList.add("focus");
-// 		}
-// 		if (theme.closest(".theme-2")) {
-// 			body.className = "";
-// 			body.classList.add("light");
-// 			theme.classList.add("focus");
-// 		}
-// 		if (theme.closest(".theme-3")) {
-// 			body.className = "";
-// 			body.classList.add("dark-2");
-// 			theme.classList.add("focus");
-// 		}
-
-// 		updateLocalStorage("userSettings", new UserSettings(body.className));
-// 	});
-// });
 
 //Контекстное меню
 const calendarBody = document.querySelector(".calendar-body");
@@ -1028,7 +1002,7 @@ rightClickMenu.addEventListener("click", (e) => {
 //popup
 let btns;
 const popup = document.querySelector(".popup");
-const idPopup = document.querySelector("#popup");
+// const idPopup = document.querySelector("#popup");
 const popupCloseBtn = document.querySelector(".popup__close");
 
 const popupOpen = (e) => {
@@ -1113,3 +1087,46 @@ document.addEventListener("keydown", (e) => {
 		popupClose();
 	}
 });
+
+//Router
+let controller = {
+	async startRoute() {
+		await console.log("this empty");
+		burger.classList.remove("active");
+		headerMenu.classList.remove("active");
+	},
+
+	async menuRoute() {
+		await console.log("this menu");
+		burger.classList.add("active");
+		headerMenu.classList.add("active");
+	},
+	async contextRoute() {
+		await console.log("this context menu");
+	},
+};
+
+function getRouteInfo() {
+	const hash = location.hash ? location.hash.slice(1) : "";
+	console.log(hash);
+	const name = hash;
+	console.log(name);
+	return { name };
+}
+
+function handleHash() {
+	const { name } = getRouteInfo();
+
+	if (name) {
+		const routeName = name + "Route";
+		console.log(routeName);
+		controller[routeName]();
+	} else {
+		const routeName = "start" + "Route";
+		controller[routeName]();
+	}
+}
+
+window.addEventListener("hashchange", handleHash);
+
+handleHash();

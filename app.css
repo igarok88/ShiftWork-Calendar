@@ -801,7 +801,7 @@ body.lock {
 	outline: none;
 	border: none;
 	background-color: inherit;
-	color: var(--dark-text);
+	color: var(--color-txt);
 }
 
 .btn-complete,
@@ -857,7 +857,7 @@ input[type="checkbox"] + label {
 	color: rgb(146, 0, 0); */
 	cursor: pointer;
 	user-select: none;
-	top: 6px;
+	top: 7px;
 	left: calc(50% - 20px);
 }
 
@@ -870,7 +870,7 @@ input[type="checkbox"] + label:before {
 	display: block;
 	width: 20px;
 	height: 20px;
-	border: 3px solid var(--color-txt);
+	border: 2px solid var(--bg-second);
 	position: absolute;
 	left: 0;
 	top: 0;
