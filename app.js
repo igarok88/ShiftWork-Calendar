@@ -454,6 +454,12 @@ burger.addEventListener("click", () => {
 	} else {
 		body.style.paddingRight = 0;
 	}
+
+	if (burger.className.includes("active")) {
+		location.hash = "menu";
+	} else {
+		location.hash = "";
+	}
 });
 headerMenu.addEventListener("click", (e) => {
 	let target = e.target;
@@ -471,11 +477,6 @@ headerMenu.addEventListener("click", (e) => {
 	}
 
 	const selectTheme = (target, name, classBody) => {
-		// let burgerMenuThemes = document.querySelectorAll(".burger__menu-color");
-		// burgerMenuThemes.forEach((theme) => {
-		// 	theme.classList.remove("focus");
-		// });
-
 		if (target.closest(name)) {
 			let currTheme = target.closest(".burger__menu-color");
 			body.className = "";
@@ -703,7 +704,8 @@ const removeClassDescEventListener = () => {
 
 const addTask = (addTaskBtn) => {
 	addTaskBtn.addEventListener("click", () => {
-		if (inputTodo.value) {
+		// console.log(inputTodo);
+		if (inputTodo && inputTodo.value) {
 			tasks.push(new Task(inputTodo.value));
 			selectedTodoValue = tasks;
 			inputTodo.value = "";
@@ -734,7 +736,10 @@ const editDescription = () => {
 };
 
 const fillHtmlList = () => {
-	todosWrapper.innerHTML = "";
+	// console.log(todosWrapper);
+	if (todosWrapper) {
+		todosWrapper.innerHTML = "";
+	}
 	if (tasks.length > 0) {
 		filterTasks();
 		tasks.forEach((item, index) => {
@@ -817,6 +822,8 @@ const getInfoFromTable = (
 		new Date(currYear.value, currMonth.value, day + 1)
 	);
 	selectedShift = shift;
+
+	location.hash = `context/${selectedDate}-${shift}`;
 };
 
 // если на одной и той же дате и одной и той же смене нажимаем второй раз,
@@ -950,6 +957,8 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		removeClassDescEventListener();
 
 		addTask(rightClickMenuItemBtn);
+
+		location.hash = "";
 	}
 
 	if (target.closest(".right-click-menu-item__color input")) {
@@ -1094,12 +1103,17 @@ let controller = {
 		await console.log("this empty");
 		burger.classList.remove("active");
 		headerMenu.classList.remove("active");
+		body.classList.remove("lock");
+		rightClickMenu.classList.remove("active");
+		popup.classList.remove("show");
+		// location.hash = "";
 	},
 
 	async menuRoute() {
 		await console.log("this menu");
 		burger.classList.add("active");
 		headerMenu.classList.add("active");
+		body.classList.add("lock");
 	},
 	async contextRoute() {
 		await console.log("this context menu");
@@ -1109,18 +1123,19 @@ let controller = {
 function getRouteInfo() {
 	const hash = location.hash ? location.hash.slice(1) : "";
 	console.log(hash);
-	const name = hash;
-	console.log(name);
-	return { name };
+	const [name, id] = hash.split("/");
+	// const name = hash;
+	console.log(id);
+	return { name, params: { id } };
 }
 
 function handleHash() {
-	const { name } = getRouteInfo();
+	const { name, params } = getRouteInfo();
 
 	if (name) {
 		const routeName = name + "Route";
 		console.log(routeName);
-		controller[routeName]();
+		controller[routeName](params);
 	} else {
 		const routeName = "start" + "Route";
 		controller[routeName]();
