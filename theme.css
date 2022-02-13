@@ -8,96 +8,96 @@
 }
 .color {
 	width: 10%;
-	height: 20px;
+	height: 25px;
 }
-.theme-1 .color-1 {
+#dark .color-1 {
 	background-color: var(--dark-body);
 }
-.theme-1 .color-2 {
+#dark .color-2 {
 	background-color: var(--dark-main);
 }
-.theme-1 .color-3 {
+#dark .color-3 {
 	background-color: var(--dark-second);
 }
-.theme-1 .color-4 {
+#dark .color-4 {
 	background-color: var(--dark-hover);
 }
-.theme-1 .color-5 {
+#dark .color-5 {
 	background-color: var(--dark-text);
 }
-.theme-1 .color-6 {
+#dark .color-6 {
 	background-color: var(--dark-bg-div);
 }
-.theme-1 .color-7 {
+#dark .color-7 {
 	background-color: var(--dark-day-off);
 }
-.theme-1 .color-8 {
+#dark .color-8 {
 	background-color: var(--dark-curr-day);
 }
-.theme-1 .color-9 {
+#dark .color-9 {
 	background-color: var(--dark-curr-day-text-color);
 }
-.theme-1 .color-10 {
+#dark .color-10 {
 	background-color: var(--dark-desc);
 }
-.theme-2 .color-1 {
+#light .color-1 {
 	background-color: var(--light-body);
 }
-.theme-2 .color-2 {
+#light .color-2 {
 	background-color: var(--light-main);
 }
-.theme-2 .color-3 {
+#light .color-3 {
 	background-color: var(--light-second);
 }
-.theme-2 .color-4 {
+#light .color-4 {
 	background-color: var(--light-hover);
 }
-.theme-2 .color-5 {
+#light .color-5 {
 	background-color: var(--light-text);
 }
-.theme-2 .color-6 {
+#light .color-6 {
 	background-color: var(--light-bg-div);
 }
-.theme-2 .color-7 {
+#light .color-7 {
 	background-color: var(--light-day-off);
 }
-.theme-2 .color-8 {
+#light .color-8 {
 	background-color: var(--light-curr-day);
 }
-.theme-2 .color-9 {
+#light .color-9 {
 	background-color: var(--light-curr-day-text-color);
 }
-.theme-2 .color-10 {
+#light .color-10 {
 	background-color: var(--light-desc);
 }
 
-.theme-3 .color-1 {
+#dark-2 .color-1 {
 	background-color: var(--dark-2-body);
 }
-.theme-3 .color-2 {
+#dark-2 .color-2 {
 	background-color: var(--dark-2-main);
 }
-.theme-3 .color-3 {
+#dark-2 .color-3 {
 	background-color: var(--dark-2-second);
 }
-.theme-3 .color-4 {
+#dark-2 .color-4 {
 	background-color: var(--dark-2-hover);
 }
-.theme-3 .color-5 {
+#dark-2 .color-5 {
 	background-color: var(--dark-2-text);
 }
-.theme-3 .color-6 {
+#dark-2 .color-6 {
 	background-color: var(--dark-2-bg-div);
 }
-.theme-3 .color-7 {
+#dark-2 .color-7 {
 	background-color: var(--dark-2-day-off);
 }
-.theme-3 .color-8 {
+#dark-2 .color-8 {
 	background-color: var(--dark-2-curr-day);
 }
-.theme-3 .color-9 {
+#dark-2 .color-9 {
 	background-color: var(--dark-2-curr-day-text-color);
 }
-.theme-3 .color-10 {
+#dark-2 .color-10 {
 	background-color: var(--dark-2-desc);
 }

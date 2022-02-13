@@ -113,11 +113,22 @@ removeLocalStorage.addEventListener("click", () => {
 	generateCalendar(currMonth.value, currYear.value);
 	location.href = location.href;
 });
-
+const toggleFocusBurgerMenu = () => {
+	let burgerSubmenuItems = document.querySelectorAll(".burger__submenu-item");
+	burgerSubmenuItems.forEach((item) => {
+		if (item.closest(`#${body.className}`)) {
+			item.classList.add("focus");
+		} else {
+			item.classList.remove("focus");
+		}
+	});
+};
 if (localStorage.userSettings) {
 	let userSettings = JSON.parse(localStorage.getItem("userSettings"));
 	body.className = "";
 	body.classList.add(userSettings.theme);
+
+	toggleFocusBurgerMenu();
 }
 
 if (!localStorage.userNotes) {
@@ -468,30 +479,42 @@ headerMenu.addEventListener("click", (e) => {
 	if (target.closest(".burger__menu-item")) {
 		burgerMenuItem = target.closest(".burger__menu-item");
 		let cross = burgerMenuItem.querySelector(".burger__menu-item-cross");
-		cross.classList.toggle("active");
+		if (cross) {
+			cross.classList.toggle("active");
+		}
 
 		let burgerMenuItemMore = burgerMenuItem.querySelector(
 			".burger__menu-item-more"
 		);
-		burgerMenuItemMore.classList.toggle("active");
+		if (burgerMenuItemMore) {
+			burgerMenuItemMore.classList.toggle("active");
+		}
+
+		if (localStorage.userSettings) {
+			let userSettings = JSON.parse(localStorage.getItem("userSettings"));
+			body.className = "";
+			body.classList.add(userSettings.theme);
+
+			toggleFocusBurgerMenu();
+		}
 	}
 
-	const selectTheme = (target, name, classBody) => {
-		if (target.closest(name)) {
-			let currTheme = target.closest(".burger__menu-color");
+	const selectTheme = (target, nameTheme) => {
+		if (target.closest(`#${nameTheme}`)) {
+			// let currTheme = target.closest(".burger__menu-color");
 			body.className = "";
-			body.classList.add(classBody);
+			body.classList.add(nameTheme);
 			body.classList.toggle("lock");
 
-			currTheme.classList.add("focus");
+			// currTheme.classList.add("focus");
 
-			updateLocalStorage("userSettings", new UserSettings(classBody));
+			updateLocalStorage("userSettings", new UserSettings(nameTheme));
 		}
 	};
 
-	selectTheme(target, ".theme-1", "dark");
-	selectTheme(target, ".theme-2", "light");
-	selectTheme(target, ".theme-3", "dark-2");
+	selectTheme(target, "dark");
+	selectTheme(target, "light");
+	selectTheme(target, "dark-2");
 });
 
 //Контекстное меню
@@ -1081,6 +1104,7 @@ const popupClose = () => {
 	filterArr(arrForUserNotes);
 	updateLocalStorage("userNotes", arrForUserNotes);
 	removeClassDescEventListener();
+	location.hash = "";
 };
 
 popupCloseBtn.addEventListener("click", popupClose);
