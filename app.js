@@ -1,6 +1,88 @@
 const body = document.querySelector("body");
 const calendar = document.querySelector(".calendar");
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const zaes = {
+	root: [
+		"23",
+		"23",
+		"23",
+		"",
+		"",
+		"15",
+		"15",
+		"15",
+		"",
+		"",
+		"7",
+		"7",
+		"7",
+		"",
+		"",
+		"23",
+		"23",
+		"23",
+		"",
+		"",
+		"15",
+		"15",
+		"15",
+		"",
+		"",
+		"7",
+		"7",
+		"7",
+		"",
+		"",
+		"23",
+		"23",
+		"23",
+		"",
+		"",
+		"15",
+		"15",
+		"15",
+		"",
+		"",
+		"7",
+		"7",
+		"7",
+		"",
+		"",
+		"23",
+		"23",
+		"23",
+		"",
+		"",
+		"15",
+		"15",
+		"15",
+		"",
+		"",
+		"7",
+		"7",
+		"7",
+		"",
+		"",
+		"23",
+		"23",
+		"23",
+		"",
+		"",
+		"15",
+		"15",
+		"15",
+		"",
+		"",
+		"7",
+		"7",
+		"7",
+		"",
+		"",
+	],
+	calendarName: ["", "", "А", "Б", "В", "Г", "Д", "Е"],
+};
+
 const calendarName = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
 const monthNames = [
 	"January",
@@ -352,11 +434,11 @@ const generateCalendar = (month, year) => {
 			}
 		};
 
-		fillDay(calendarA, 15, calendarCountA, arrForCountA, calendarName[2]);
-		fillDay(calendarB, 21, calendarCountB, arrForCountB, calendarName[3]);
-		fillDay(calendarV, 27, calendarCountV, arrForCountV, calendarName[4]);
-		fillDay(calendarG, 18, calendarCountG, arrForCountG, calendarName[5]);
-		fillDay(calendarD, 24, calendarCountD, arrForCountD, calendarName[6]);
+		fillDay(calendarA, 15, calendarCountA, arrForCountA, zaes.calendarName[2]);
+		fillDay(calendarB, 21, calendarCountB, arrForCountB, zaes.calendarName[3]);
+		fillDay(calendarV, 27, calendarCountV, arrForCountV, zaes.calendarName[4]);
+		fillDay(calendarG, 18, calendarCountG, arrForCountG, zaes.calendarName[5]);
+		fillDay(calendarD, 24, calendarCountD, arrForCountD, zaes.calendarName[6]);
 		fillDay(calendarE);
 
 		//вешаем класс curr-date на сегодняшнюю дату
@@ -382,6 +464,7 @@ monthNames.forEach((e, index) => {
 		body.style.paddingRight = 0;
 		currMonth.value = index;
 		generateCalendar(index, currYear.value);
+		location.hash = "";
 	};
 	monthList.appendChild(month);
 });
@@ -413,6 +496,7 @@ monthPicker.onclick = () => {
 	} else {
 		body.style.paddingRight = 0;
 	}
+	location.hash = "monthlist";
 };
 
 let currDate = new Date();
@@ -451,7 +535,7 @@ document.querySelector("#next-year").onclick = () => {
 //Burger menu
 const burger = document.querySelector(".burger__btn");
 const headerMenu = document.querySelector(".burger__menu");
-const burgerWrapper = document.querySelector(".burger__btn-wrapper");
+const burgerWrapper = document.querySelector(".burger-wrapper");
 
 const docHeight = document.documentElement.scrollHeight;
 const winHeight = document.documentElement.clientHeight;
@@ -1028,6 +1112,8 @@ rightClickMenu.addEventListener("click", (e) => {
 
 		removeActiveArrowsTodos();
 		clearAllTodosWrappers();
+
+		location.hash = "";
 	}
 });
 
@@ -1123,42 +1209,45 @@ document.addEventListener("keydown", (e) => {
 
 //Router
 let controller = {
-	async startRoute() {
-		await console.log("this empty");
+	startRoute() {
 		burger.classList.remove("active");
+		burger.style.display = "block";
+		burgerWrapper.style.display = "block";
 		headerMenu.classList.remove("active");
 		body.classList.remove("lock");
 		rightClickMenu.classList.remove("active");
 		popup.classList.remove("show");
-		// location.hash = "";
-	},
+		monthList.classList.remove("show");
 
-	async menuRoute() {
-		await console.log("this menu");
+		let calendarHeaderDays = document.querySelectorAll(".calendar-header-day");
+		calendarHeaderDays.forEach((item) => {
+			item.style.position = "fixed";
+		});
+	},
+	menuRoute() {
 		burger.classList.add("active");
 		headerMenu.classList.add("active");
 		body.classList.add("lock");
 	},
-	async contextRoute() {
-		await console.log("this context menu");
+	contextRoute() {},
+	monthlistRoute() {
+		console.log(burgerWrapper);
+
+		burger.style.display = "none";
+		burgerWrapper.style.display = "none";
 	},
 };
 
 function getRouteInfo() {
 	const hash = location.hash ? location.hash.slice(1) : "";
-	console.log(hash);
 	const [name, id] = hash.split("/");
-	// const name = hash;
-	console.log(id);
 	return { name, params: { id } };
 }
 
 function handleHash() {
 	const { name, params } = getRouteInfo();
-
 	if (name) {
 		const routeName = name + "Route";
-		console.log(routeName);
 		controller[routeName](params);
 	} else {
 		const routeName = "start" + "Route";
