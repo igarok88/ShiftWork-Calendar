@@ -253,6 +253,7 @@ body.lock {
 .calendar-count {
 	grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
+
 .calendar-count .calendar-day {
 	margin: 3px;
 	color: var(--bg-second);

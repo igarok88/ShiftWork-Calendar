@@ -1,8 +1,13 @@
 const body = document.querySelector("body");
 const calendar = document.querySelector(".calendar");
+const calendarBody = document.querySelector(".calendar-body");
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const zaes = {
+let calendarCountShift = calendar.querySelector(".calendar-count");
+let arrForUserNotes;
+
+//шаблон объекта смен
+const shiftObj = {
 	root: [
 		"23",
 		"23",
@@ -80,10 +85,33 @@ const zaes = {
 		"",
 		"",
 	],
-	calendarName: ["", "", "А", "Б", "В", "Г", "Д", "Е"],
+	shiftsName: ["А", "Б", "В", "Г", "Д", "Е"],
+	shiftsKeys: [15, 21, 27, 18, 24],
 };
 
-const calendarName = ["", "", "А", "Б", "В", "Г", "Д", "Е"];
+let arrForCount = [];
+
+let { shiftsName } = shiftObj;
+
+shiftsName.forEach((item, index) => {
+	let div = document.createElement("div");
+	div.classList.add("calendar-column");
+	div.classList.add("calendar-shift");
+	calendarBody.appendChild(div);
+	calendarBody.style.gridTemplateColumns = `repeat(${
+		shiftsName.length + 2
+	}, 1fr)`;
+
+	div = document.createElement("div");
+	div.classList.add("calendar-day");
+	div.classList.add("calendar-count-shift");
+	calendarCountShift.appendChild(div);
+	// calendarCountShift.style.gridTemplateColumns = `repeat(${
+	// 	shiftsName.length + 2
+	// }, 1fr)`;
+
+	arrForCount[index] = [];
+});
 const monthNames = [
 	"January",
 	"February",
@@ -98,96 +126,6 @@ const monthNames = [
 	"November",
 	"December",
 ];
-const root = [
-	"23",
-	"23",
-	"23",
-	"",
-	"",
-	"15",
-	"15",
-	"15",
-	"",
-	"",
-	"7",
-	"7",
-	"7",
-	"",
-	"",
-	"23",
-	"23",
-	"23",
-	"",
-	"",
-	"15",
-	"15",
-	"15",
-	"",
-	"",
-	"7",
-	"7",
-	"7",
-	"",
-	"",
-	"23",
-	"23",
-	"23",
-	"",
-	"",
-	"15",
-	"15",
-	"15",
-	"",
-	"",
-	"7",
-	"7",
-	"7",
-	"",
-	"",
-	"23",
-	"23",
-	"23",
-	"",
-	"",
-	"15",
-	"15",
-	"15",
-	"",
-	"",
-	"7",
-	"7",
-	"7",
-	"",
-	"",
-	"23",
-	"23",
-	"23",
-	"",
-	"",
-	"15",
-	"15",
-	"15",
-	"",
-	"",
-	"7",
-	"7",
-	"7",
-	"",
-	"",
-];
-let calendarA = calendar.querySelector(".calendar-a");
-let calendarB = calendar.querySelector(".calendar-b");
-let calendarV = calendar.querySelector(".calendar-v");
-let calendarG = calendar.querySelector(".calendar-g");
-let calendarD = calendar.querySelector(".calendar-d");
-let calendarE = calendar.querySelector(".calendar-e");
-let calendarCountA = document.querySelector(".calendar-count-a");
-let calendarCountB = document.querySelector(".calendar-count-b");
-let calendarCountV = document.querySelector(".calendar-count-v");
-let calendarCountG = document.querySelector(".calendar-count-g");
-let calendarCountD = document.querySelector(".calendar-count-d");
-let calendarColumn = calendar.querySelectorAll(".calendar-column");
-let arrForUserNotes;
 
 let removeLocalStorage = document.querySelector(".remove-local-storage");
 removeLocalStorage.addEventListener("click", () => {
@@ -253,12 +191,6 @@ const generateCalendar = (month, year) => {
 	let calendarDays = calendar.querySelector(".calendar-days");
 	let calendarHeaderYear = calendar.querySelector("#year");
 
-	let arrForCountA = [];
-	let arrForCountB = [];
-	let arrForCountV = [];
-	let arrForCountG = [];
-	let arrForCountD = [];
-
 	let daysOfMonth = [
 		31,
 		getFebDays(year),
@@ -274,12 +206,23 @@ const generateCalendar = (month, year) => {
 		31,
 	];
 
-	calendarColumn.forEach((column, index) => {
-		column.innerHTML = "";
-		let day = document.createElement("div");
-		day.classList.add("calendar-header-day");
-		day.innerHTML = calendarName[index];
-		column.appendChild(day);
+	let calendarColumns = calendar.querySelectorAll(".calendar-column");
+
+	let calendarShiftsName;
+
+	calendarColumns.forEach((column, index) => {
+		if (index > 1) {
+			column.innerHTML = "";
+			let day = document.createElement("div");
+			day.classList.add("calendar-header-day");
+			day.classList.add("calendar-shift-name");
+
+			column.appendChild(day);
+		}
+		calendarShiftsName = document.querySelectorAll(".calendar-shift-name");
+	});
+	calendarShiftsName.forEach((item, index) => {
+		item.innerHTML = shiftsName[index];
 	});
 
 	//получаем первый день месяца
@@ -355,7 +298,8 @@ const generateCalendar = (month, year) => {
 
 		//заполняем поля смен
 
-		const fillDay = (shift, key, calendarCount, arrForCount, nameShift) => {
+		const fillDay = (shift, calendarCount, arrForCount, key, nameShift) => {
+			console.log(arrForCount);
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
@@ -378,7 +322,7 @@ const generateCalendar = (month, year) => {
 
 			//заполняем колонку смен
 			if (key) {
-				day.innerHTML = root[residual + i + key];
+				day.innerHTML = shiftObj.root[residual + i + key];
 				shift.appendChild(day);
 			} else {
 				day.innerHTML = "";
@@ -389,11 +333,11 @@ const generateCalendar = (month, year) => {
 
 			//считаем количество смен в месяце
 			if (
-				root[indexForDay] == "23" ||
-				root[indexForDay] == "15" ||
-				root[indexForDay] == "7"
+				shiftObj.root[indexForDay] == "23" ||
+				shiftObj.root[indexForDay] == "15" ||
+				shiftObj.root[indexForDay] == "7"
 			) {
-				arrForCount.push(root[residual + i + key]);
+				arrForCount.push(shiftObj.root[residual + i + key]);
 			}
 
 			if (i == daysOfMonth[month] - 1) {
@@ -434,12 +378,56 @@ const generateCalendar = (month, year) => {
 			}
 		};
 
-		fillDay(calendarA, 15, calendarCountA, arrForCountA, zaes.calendarName[2]);
-		fillDay(calendarB, 21, calendarCountB, arrForCountB, zaes.calendarName[3]);
-		fillDay(calendarV, 27, calendarCountV, arrForCountV, zaes.calendarName[4]);
-		fillDay(calendarG, 18, calendarCountG, arrForCountG, zaes.calendarName[5]);
-		fillDay(calendarD, 24, calendarCountD, arrForCountD, zaes.calendarName[6]);
-		fillDay(calendarE);
+		let calendarShifts = document.querySelectorAll(".calendar-shift");
+		let calendarCountShifts = document.querySelectorAll(
+			".calendar-count-shift"
+		);
+
+		shiftsName.forEach((item, index) => {
+			fillDay(
+				calendarShifts[index],
+				calendarCountShifts[index],
+				arrForCount[index],
+				shiftObj.shiftsKeys[index],
+				shiftObj.shiftsName[index]
+			);
+		});
+		// fillDay(
+		// 	calendarShifts[0],
+		// 	shiftsKeys[0],
+		// 	calendarCountShifts[0],
+		// 	arrForCountA,
+		// 	zaes.shiftsName[0]
+		// );
+		// fillDay(
+		// 	calendarShifts[1],
+		// 	21,
+		// 	calendarCountShifts[1],
+		// 	arrForCountB,
+		// 	zaes.shiftsName[1]
+		// );
+		// fillDay(
+		// 	calendarShifts[2],
+		// 	27,
+		// 	calendarCountShifts[2],
+		// 	arrForCountV,
+		// 	zaes.shiftsName[2]
+		// );
+		// fillDay(
+		// 	calendarShifts[3],
+		// 	18,
+		// 	calendarCountShifts[3],
+		// 	arrForCountG,
+		// 	zaes.shiftsName[3]
+		// );
+		// fillDay(
+		// 	calendarShifts[4],
+		// 	24,
+		// 	calendarCountShifts[4],
+		// 	arrForCountD,
+		// 	zaes.shiftsName[4]
+		// );
+		// fillDay(calendarShifts[5]);
 
 		//вешаем класс curr-date на сегодняшнюю дату
 		if (
@@ -602,7 +590,7 @@ headerMenu.addEventListener("click", (e) => {
 });
 
 //Контекстное меню
-const calendarBody = document.querySelector(".calendar-body");
+
 const rightClickMenu = document.querySelector(".right-click-menu");
 
 let rightClickMenuItemNames = {
@@ -1231,8 +1219,6 @@ let controller = {
 	},
 	contextRoute() {},
 	monthlistRoute() {
-		console.log(burgerWrapper);
-
 		burger.style.display = "none";
 		burgerWrapper.style.display = "none";
 	},
