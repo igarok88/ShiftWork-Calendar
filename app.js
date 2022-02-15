@@ -9,90 +9,115 @@ let arrForUserNotes;
 //шаблон объекта смен
 const shiftObj = {
 	root: [
-		"23",
-		"23",
-		"23",
-		"",
-		"",
-		"15",
-		"15",
-		"15",
-		"",
-		"",
-		"7",
-		"7",
-		"7",
-		"",
-		"",
-		"23",
-		"23",
-		"23",
-		"",
-		"",
-		"15",
-		"15",
-		"15",
-		"",
-		"",
-		"7",
-		"7",
-		"7",
-		"",
-		"",
-		"23",
-		"23",
-		"23",
-		"",
-		"",
-		"15",
-		"15",
-		"15",
-		"",
-		"",
-		"7",
-		"7",
-		"7",
-		"",
-		"",
-		"23",
-		"23",
-		"23",
-		"",
-		"",
-		"15",
-		"15",
-		"15",
-		"",
-		"",
-		"7",
-		"7",
-		"7",
-		"",
-		"",
-		"23",
-		"23",
-		"23",
-		"",
-		"",
-		"15",
-		"15",
-		"15",
-		"",
-		"",
-		"7",
-		"7",
-		"7",
-		"",
-		"",
+		[
+			"Н23",
+			"23",
+			"23",
+			"",
+			"",
+			"15",
+			"15",
+			"15",
+			"",
+			"",
+			"7",
+			"7",
+			"7",
+			"",
+			"",
+		],
+		["15", "15", "", "", "7", "7", "7", "", "", "23", "23", "23", "", "", "15"],
+		["7", "", "", "23", "23", "23", "", "", "15", "15", "15", "", "", "7", "7"],
+		["", "", "15", "15", "15", "", "", "7", "7", "7", "", "", "23", "23", "23"],
+		["23", "23", "23", "", "", "15", "15", "15", "", "", "7", "7", "7", "", ""],
+		[],
 	],
-	shiftsName: ["А", "Б", "В", "Г", "Д", "Е"],
-	shiftsKeys: [15, 21, 27, 18, 24],
+
+	// root: [
+	// 	"23",
+	// 	"23",
+	// 	"23",
+	// 	"",
+	// 	"",
+	// 	"15",
+	// 	"15",
+	// 	"15",
+	// 	"",
+	// 	"",
+	// 	"7",
+	// 	"7",
+	// 	"7",
+	// 	"",
+	// 	"",
+	// 	"23",
+	// 	"23",
+	// 	"23",
+	// 	"",
+	// 	"",
+	// 	"15",
+	// 	"15",
+	// 	"15",
+	// 	"",
+	// 	"",
+	// 	"7",
+	// 	"7",
+	// 	"7",
+	// 	"",
+	// 	"",
+	// 	"23",
+	// 	"23",
+	// 	"23",
+	// 	"",
+	// 	"",
+	// 	"15",
+	// 	"15",
+	// 	"15",
+	// 	"",
+	// 	"",
+	// 	"7",
+	// 	"7",
+	// 	"7",
+	// 	"",
+	// 	"",
+	// 	"23",
+	// 	"23",
+	// 	"23",
+	// 	"",
+	// 	"",
+	// 	"15",
+	// 	"15",
+	// 	"15",
+	// 	"",
+	// 	"",
+	// 	"7",
+	// 	"7",
+	// 	"7",
+	// 	"",
+	// 	"",
+	// 	"23",
+	// 	"23",
+	// 	"23",
+	// 	"",
+	// 	"",
+	// 	"15",
+	// 	"15",
+	// 	"15",
+	// 	"",
+	// 	"",
+	// 	"7",
+	// 	"7",
+	// 	"7",
+	// 	"",
+	// 	"",
+	// ],
+	shiftsName: ["А", "Б", "В", "Г", "Д"],
+	// "Б", "В", "Г", "Д","Е"
+	// shiftsKeys: [15, 21, 27, 18, 24],
 };
 
-let arrForCount = [];
+let { root, shiftsName } = shiftObj;
 
-let { shiftsName } = shiftObj;
-
+let countGridColumns = [];
 shiftsName.forEach((item, index) => {
 	let div = document.createElement("div");
 	div.classList.add("calendar-column");
@@ -106,11 +131,10 @@ shiftsName.forEach((item, index) => {
 	div.classList.add("calendar-day");
 	div.classList.add("calendar-count-shift");
 	calendarCountShift.appendChild(div);
-	// calendarCountShift.style.gridTemplateColumns = `repeat(${
-	// 	shiftsName.length + 2
-	// }, 1fr)`;
 
-	arrForCount[index] = [];
+	countGridColumns[index] = "1fr";
+	let countGridColumnsStr = countGridColumns.join(" ");
+	calendarCountShift.style.gridTemplateColumns = `2fr ${countGridColumnsStr}`;
 });
 const monthNames = [
 	"January",
@@ -187,10 +211,14 @@ let scrollWidth = div.offsetWidth - div.clientWidth;
 div.remove();
 
 const generateCalendar = (month, year) => {
+	let arrForCount = [];
+	shiftsName.forEach((item, index) => {
+		arrForCount[index] = [];
+	});
+
 	let calendarWeekDay = calendar.querySelector(".calendar-week-day");
 	let calendarDays = calendar.querySelector(".calendar-days");
-	let calendarHeaderYear = calendar.querySelector("#year");
-
+	let calendarFooterYear = calendar.querySelector("#year");
 	let daysOfMonth = [
 		31,
 		getFebDays(year),
@@ -211,12 +239,12 @@ const generateCalendar = (month, year) => {
 	let calendarShiftsName;
 
 	calendarColumns.forEach((column, index) => {
+		column.innerHTML = "";
+		let day = document.createElement("div");
+		column.appendChild(day);
+		day.classList.add("calendar-header-day");
 		if (index > 1) {
-			column.innerHTML = "";
-			let day = document.createElement("div");
-			day.classList.add("calendar-header-day");
 			day.classList.add("calendar-shift-name");
-
 			column.appendChild(day);
 		}
 		calendarShiftsName = document.querySelectorAll(".calendar-shift-name");
@@ -246,7 +274,7 @@ const generateCalendar = (month, year) => {
 	//получаем имя текущего месяца
 	let currMonth = `${monthNames[month]}`;
 	monthPicker.innerHTML = currMonth;
-	calendarHeaderYear.innerHTML = year;
+	calendarFooterYear.innerHTML = year;
 
 	const setWidthFooter = () => {
 		let calendarNav = calendar.querySelector(".calendar-nav");
@@ -298,8 +326,8 @@ const generateCalendar = (month, year) => {
 
 		//заполняем поля смен
 
-		const fillDay = (shift, calendarCount, arrForCount, key, nameShift) => {
-			console.log(arrForCount);
+		const fillDay = (shift, calendarCount, arrForCount, nameShift, root) => {
+			console.log(root);
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
@@ -320,25 +348,36 @@ const generateCalendar = (month, year) => {
 				day.classList.add("calendar-day-off");
 			}
 
+			const multiplyRoot = () => {
+				console.log(root[residual + i]);
+				let arr = root.concat(root);
+				root = arr.slice();
+				console.log(root);
+			};
+
+			if (root[residual + i] == undefined) {
+				multiplyRoot();
+				multiplyRoot();
+			}
+			// if (root[residual + i] == undefined) {
+			// 	console.log(root[residual + i]);
+			// 	let arr = root.concat(root);
+			// 	root = arr.slice();
+			// 	console.log(root);
+			// }
 			//заполняем колонку смен
-			if (key) {
-				day.innerHTML = shiftObj.root[residual + i + key];
-				shift.appendChild(day);
-			} else {
-				day.innerHTML = "";
-				shift.appendChild(day);
-			}
+			console.log(residual);
+			day.innerHTML = root[residual + i];
+			shift.appendChild(day);
+			// if (root[residual + i] == undefined) {
+			// 	day.innerHTML = "";
+			// 	shift.appendChild(day);
+			// }
 
-			let indexForDay = residual + i + key;
+			// }
 
-			//считаем количество смен в месяце
-			if (
-				shiftObj.root[indexForDay] == "23" ||
-				shiftObj.root[indexForDay] == "15" ||
-				shiftObj.root[indexForDay] == "7"
-			) {
-				arrForCount.push(shiftObj.root[residual + i + key]);
-			}
+			// let indexForDay = residual + i + key;
+			////////////////////////////////////
 
 			if (i == daysOfMonth[month] - 1) {
 				let headerDay = shift.querySelector(".calendar-header-day");
@@ -346,9 +385,6 @@ const generateCalendar = (month, year) => {
 				headerDay.style.position = "fixed";
 				// setWidthHeaderDay();
 
-				if (calendarCount) {
-					calendarCount.innerHTML = arrForCount.length;
-				}
 				setWidthFooter();
 			}
 
@@ -376,6 +412,26 @@ const generateCalendar = (month, year) => {
 					}
 				});
 			}
+
+			//считаем количество смен в месяце
+
+			// сразу не пересчитывает смены, надо обновлять
+			const countShifts = () => {
+				if (
+					day.innerHTML == "23" ||
+					day.innerHTML == "15" ||
+					day.innerHTML == "7" ||
+					day.innerHTML == "Д" ||
+					day.innerHTML == "У"
+				) {
+					arrForCount.push(day.innerHTML);
+					// console.log(arrForCount);
+				}
+				if (calendarCount) {
+					calendarCount.innerHTML = arrForCount.length;
+				}
+			};
+			countShifts();
 		};
 
 		let calendarShifts = document.querySelectorAll(".calendar-shift");
@@ -388,46 +444,10 @@ const generateCalendar = (month, year) => {
 				calendarShifts[index],
 				calendarCountShifts[index],
 				arrForCount[index],
-				shiftObj.shiftsKeys[index],
-				shiftObj.shiftsName[index]
+				shiftsName[index],
+				root[index]
 			);
 		});
-		// fillDay(
-		// 	calendarShifts[0],
-		// 	shiftsKeys[0],
-		// 	calendarCountShifts[0],
-		// 	arrForCountA,
-		// 	zaes.shiftsName[0]
-		// );
-		// fillDay(
-		// 	calendarShifts[1],
-		// 	21,
-		// 	calendarCountShifts[1],
-		// 	arrForCountB,
-		// 	zaes.shiftsName[1]
-		// );
-		// fillDay(
-		// 	calendarShifts[2],
-		// 	27,
-		// 	calendarCountShifts[2],
-		// 	arrForCountV,
-		// 	zaes.shiftsName[2]
-		// );
-		// fillDay(
-		// 	calendarShifts[3],
-		// 	18,
-		// 	calendarCountShifts[3],
-		// 	arrForCountG,
-		// 	zaes.shiftsName[3]
-		// );
-		// fillDay(
-		// 	calendarShifts[4],
-		// 	24,
-		// 	calendarCountShifts[4],
-		// 	arrForCountD,
-		// 	zaes.shiftsName[4]
-		// );
-		// fillDay(calendarShifts[5]);
 
 		//вешаем класс curr-date на сегодняшнюю дату
 		if (
