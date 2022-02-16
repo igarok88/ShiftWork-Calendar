@@ -8,114 +8,42 @@ let arrForUserNotes;
 
 //шаблон объекта смен
 const shiftObj = {
-	root: [
-		[
-			"Н23",
-			"23",
-			"23",
-			"",
-			"",
-			"15",
-			"15",
-			"15",
-			"",
-			"",
-			"7",
-			"7",
-			"7",
-			"",
-			"",
+	shiftsName: ["А", "Б", "В", "Г", "Д", "Е"],
+	/////////
+	namesContextMenu: {
+		key: ["7", "15", "23", "У", "Э", "Д", "О", "&nbsp", "З"],
+		name: [
+			"Смена с 07-00",
+			"Смена с 15-00",
+			"Смена с 23-00",
+			"Учеба/Тренировка",
+			"Экзамен",
+			"Доработка",
+			"Отгулы",
+			"Выходной",
+			"Заметка",
 		],
+	},
+	root: [
+		["23", "23", "23", "", "", "15", "15", "15", "", "", "7", "7", "7", "", ""],
 		["15", "15", "", "", "7", "7", "7", "", "", "23", "23", "23", "", "", "15"],
 		["7", "", "", "23", "23", "23", "", "", "15", "15", "15", "", "", "7", "7"],
 		["", "", "15", "15", "15", "", "", "7", "7", "7", "", "", "23", "23", "23"],
-		["23", "23", "23", "", "", "15", "15", "15", "", "", "7", "7", "7", "", ""],
+		["", "7", "7", "7", "", "", "23", "23", "23", "", "", "15", "15", "15", ""],
 		[],
 	],
-
-	// root: [
-	// 	"23",
-	// 	"23",
-	// 	"23",
-	// 	"",
-	// 	"",
-	// 	"15",
-	// 	"15",
-	// 	"15",
-	// 	"",
-	// 	"",
-	// 	"7",
-	// 	"7",
-	// 	"7",
-	// 	"",
-	// 	"",
-	// 	"23",
-	// 	"23",
-	// 	"23",
-	// 	"",
-	// 	"",
-	// 	"15",
-	// 	"15",
-	// 	"15",
-	// 	"",
-	// 	"",
-	// 	"7",
-	// 	"7",
-	// 	"7",
-	// 	"",
-	// 	"",
-	// 	"23",
-	// 	"23",
-	// 	"23",
-	// 	"",
-	// 	"",
-	// 	"15",
-	// 	"15",
-	// 	"15",
-	// 	"",
-	// 	"",
-	// 	"7",
-	// 	"7",
-	// 	"7",
-	// 	"",
-	// 	"",
-	// 	"23",
-	// 	"23",
-	// 	"23",
-	// 	"",
-	// 	"",
-	// 	"15",
-	// 	"15",
-	// 	"15",
-	// 	"",
-	// 	"",
-	// 	"7",
-	// 	"7",
-	// 	"7",
-	// 	"",
-	// 	"",
-	// 	"23",
-	// 	"23",
-	// 	"23",
-	// 	"",
-	// 	"",
-	// 	"15",
-	// 	"15",
-	// 	"15",
-	// 	"",
-	// 	"",
-	// 	"7",
-	// 	"7",
-	// 	"7",
-	// 	"",
-	// 	"",
-	// ],
-	shiftsName: ["А", "Б", "В", "Г", "Д"],
-	// "Б", "В", "Г", "Д","Е"
-	// shiftsKeys: [15, 21, 27, 18, 24],
 };
-
-let { root, shiftsName } = shiftObj;
+const shiftObj1 = {
+	shiftsName: ["А", "Б", "В", "Г", "Д"],
+	root: [
+		["0", "0", "", "16", "16", "", "8", "8"],
+		["16", "", "8", "8", "0", "0", "", "16"],
+		["8", "8", "0", "0", "", "16", "16", ""],
+		["", "16", "16", "", "8", "8", "0", "0"],
+		[],
+	],
+};
+let { shiftsName, namesContextMenu, root } = shiftObj;
 
 let countGridColumns = [];
 shiftsName.forEach((item, index) => {
@@ -327,7 +255,17 @@ const generateCalendar = (month, year) => {
 		//заполняем поля смен
 
 		const fillDay = (shift, calendarCount, arrForCount, nameShift, root) => {
-			console.log(root);
+			const multiplyRoot = () => {
+				let arr = root.concat(root);
+				root = arr.slice();
+			};
+			if (root.length == 0) {
+			} else {
+				while (root.length < 50) {
+					multiplyRoot();
+				}
+			}
+
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
@@ -348,36 +286,13 @@ const generateCalendar = (month, year) => {
 				day.classList.add("calendar-day-off");
 			}
 
-			const multiplyRoot = () => {
-				console.log(root[residual + i]);
-				let arr = root.concat(root);
-				root = arr.slice();
-				console.log(root);
-			};
-
-			if (root[residual + i] == undefined) {
-				multiplyRoot();
-				multiplyRoot();
-			}
-			// if (root[residual + i] == undefined) {
-			// 	console.log(root[residual + i]);
-			// 	let arr = root.concat(root);
-			// 	root = arr.slice();
-			// 	console.log(root);
-			// }
 			//заполняем колонку смен
-			console.log(residual);
-			day.innerHTML = root[residual + i];
+			day.innerHTML = root[residual + i + 15];
 			shift.appendChild(day);
-			// if (root[residual + i] == undefined) {
-			// 	day.innerHTML = "";
-			// 	shift.appendChild(day);
-			// }
-
-			// }
-
-			// let indexForDay = residual + i + key;
-			////////////////////////////////////
+			if (root[residual + i] == undefined) {
+				day.innerHTML = "";
+				shift.appendChild(day);
+			}
 
 			if (i == daysOfMonth[month] - 1) {
 				let headerDay = shift.querySelector(".calendar-header-day");
@@ -1027,6 +942,7 @@ calendarBody.addEventListener("contextmenu", (e) => {
 
 rightClickMenuItems.addEventListener("click", (e) => {
 	let target = e.target;
+
 	let rightClickMenuItemBtn;
 
 	if (target.closest(".right-click-menu-item__btn")) {
@@ -1074,6 +990,39 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		addTask(rightClickMenuItemBtn);
 
 		location.hash = "";
+
+		//пересчитываем количество смен и вставляем в конец таблицы
+
+		//for count shifts
+		let arrForCount = [];
+		let currentColumnShift = targetItemInTable.closest(".calendar-shift");
+		let calendarCountShifts = document.querySelectorAll(
+			".calendar-count-shift"
+		);
+		let columnShifts = document.querySelectorAll(".calendar-shift");
+
+		let targetItemsInTable =
+			currentColumnShift.querySelectorAll(".calendar-day");
+
+		targetItemsInTable.forEach((item) => {
+			if (
+				item.innerHTML == "23" ||
+				item.innerHTML == "15" ||
+				item.innerHTML == "7" ||
+				item.innerHTML == "Д" ||
+				item.innerHTML == "У"
+			) {
+				arrForCount.push(item.innerHTML);
+				console.log(arrForCount.length);
+			}
+		});
+
+		columnShifts.forEach((item, index) => {
+			if (item == currentColumnShift) {
+				console.log(index);
+				calendarCountShifts[index].innerHTML = arrForCount.length;
+			}
+		});
 	}
 
 	if (target.closest(".right-click-menu-item__color input")) {
