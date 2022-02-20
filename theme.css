@@ -1,10 +1,101 @@
+:root {
+	--dark-body: #4d4c5a;
+	--dark-main: #0f1427;
+	--dark-second: #79788c;
+	--dark-hover: #323048;
+	--dark-text: #f8fbff;
+	--dark-bg-div: #21223f69;
+	--dark-day-off: #44535e;
+	--dark-curr-day: #d1d0cc;
+	--dark-curr-day-text-color: #0e1821;
+	--dark-desc: #374258;
+	--dark-focus: rgba(255, 255, 255, 0.096);
+	--dark-selected: rgba(109, 97, 97, 0.459);
+
+	--dark-2-body: #4d4c5a;
+	--dark-2-main: #000000;
+	--dark-2-second: #798f8c;
+	--dark-2-hover: #323048;
+	--dark-2-text: #d9ebe9;
+	--dark-2-bg-div: #0e1821;
+	--dark-2-day-off: #44535e;
+	--dark-2-curr-day: #d9ebe9;
+	--dark-2-curr-day-text-color: #0e1821;
+	--dark-2-desc: #374258;
+	--dark-2-focus: rgba(255, 255, 255, 0.096);
+	--dark-2-selected: rgba(109, 97, 97, 0.459);
+
+	--light-body: #f3f8fe;
+	--light-main: #fdfdfd;
+	--light-second: #c3c2c8;
+	--light-hover: #edf0f5;
+	--light-text: #151426;
+	/* --light-bg-div: #c8d9e9; */
+	--light-bg-div: #f3f7fa;
+	--light-day-off: rgba(255, 30, 0, 0.562);
+	--light-curr-day: #0000ffa2;
+	--light-curr-day-text-color: #fff;
+	--light-desc: rgb(55, 98, 163);
+	--light-focus: rgba(145, 139, 139, 0.062);
+	--light-selected: rgba(202, 192, 192, 0.74);
+
+	/* --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; */
+
+	--font-family: Arial;
+}
+
+.dark {
+	--bg-body: var(--dark-body);
+	--bg-div: var(--dark-bg-div);
+	--bg-main: var(--dark-main);
+	--bg-second: var(--dark-second);
+	--color-hover: var(--dark-hover);
+	--color-txt: var(--dark-text);
+	--day-off: var(--dark-day-off);
+	--curr-day: var(--dark-curr-day);
+	--curr-day-text-color: var(--dark-curr-day-text-color);
+	--desc: var(--dark-desc);
+	--focus: var(--dark-focus);
+	--selected: var(--dark-selected);
+}
+.dark-2 {
+	--bg-body: var(--dark-2-body);
+	--bg-div: var(--dark-2-bg-div);
+	--bg-main: var(--dark-2-main);
+	--bg-second: var(--dark-2-second);
+	--color-hover: var(--dark-2-hover);
+	--color-txt: var(--dark-2-text);
+	--day-off: var(--dark-2-day-off);
+	--curr-day: var(--dark-2-curr-day);
+	--curr-day-text-color: var(--dark-2-curr-day-text-color);
+	--desc: var(--dark-2-desc);
+	--focus: var(--dark-2-focus);
+	--selected: var(--dark-2-selected);
+}
+
+.light {
+	--bg-body: var(--light-body);
+	--bg-div: var(--light-bg-div);
+	--bg-main: var(--light-main);
+	--bg-second: var(--light-second);
+	--color-hover: var(--light-hover);
+	--color-txt: var(--light-text);
+	--day-off: var(--light-day-off);
+	--curr-day: var(--light-curr-day);
+	--curr-day-text-color: var(--light-curr-day-text-color);
+	--desc: var(--light-desc);
+	--focus: var(--light-focus);
+	--selected: var(--light-selected);
+}
+
 .burger__menu-color {
 	display: flex;
-	padding: 20px 0px;
 }
-.burger__menu-color.focus {
+.focus {
 	/* box-shadow: 0 0 8px var(--color-txt); */
-	border: 2px solid var(--color-txt);
+	/* border-top: 2px solid var(--color-txt);
+	border-bottom: 2px solid var(--color-txt); */
+	background-color: var(--focus);
 }
 .color {
 	width: 10%;

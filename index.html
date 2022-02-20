@@ -18,7 +18,7 @@
 					</div>
 					<div class="burger-wrapper"></div>
 					<nav class="burger__menu">
-						<div class="burger__menu-theme burger__menu-item">
+						<div class="burger__menu-item burger__menu-theme">
 							<div class="burger__menu-item-title">
 								<h2>Цветовые темы</h2>
 								<div class="burger__menu-item-cross">
@@ -26,8 +26,8 @@
 								</div>
 							</div>
 
-							<div class="burger__menu-theme-choice burger__menu-item-more">
-								<div id="dark" class="burger__menu-color burger__submenu-item">
+							<div class="burger__menu-item-more burger__menu-choice-theme">
+								<div id="dark" class="burger__submenu-item burger__menu-color">
 									<div class="color color-1"></div>
 									<div class="color color-2"></div>
 									<div class="color color-3"></div>
@@ -39,7 +39,7 @@
 									<div class="color color-9"></div>
 									<div class="color color-10"></div>
 								</div>
-								<div id="light" class="burger__menu-color burger__submenu-item">
+								<div id="light" class="burger__submenu-item burger__menu-color">
 									<div class="color color-1"></div>
 									<div class="color color-2"></div>
 									<div class="color color-3"></div>
@@ -68,7 +68,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="burger__menu-theme burger__menu-item">
+						<div class="burger__menu-item">
 							<div class="burger__menu-item-title">
 								<h2>Выбор смены</h2>
 								<div class="burger__menu-item-cross">
@@ -76,13 +76,43 @@
 								</div>
 							</div>
 
-							<div class="burger__menu-item-more">
-								<div class="burger__submenu-item"></div>
-								<div class="burger__submenu-item"></div>
-								<div class="burger__submenu-item"></div>
+							<div
+								class="burger__menu-item-more burger__menu-choice-shift"
+							></div>
+						</div>
+						<div class="burger__menu-item burger__menu-create-shift">
+							<div class="burger__menu-item-title">
+								<h2>Создать свой график</h2>
+								<div class="burger__menu-item-cross">
+									<span class="cross"></span>
+								</div>
+							</div>
+							<div
+								class="burger__menu-item-more burger__menu-create-shift-more"
+							>
+								<div class="burger__submenu-item burger__menu-add-shift">
+									<h2>Дата начала смены</h2>
+
+									<div class="burger__date">
+										<span class="burger__day input-wrapper">
+											<input type="text" placeholder="07" />.
+										</span>
+										<span class="burger__month input-wrapper">
+											<input type="text" placeholder="02" />.
+										</span>
+										<span class="burger__year input-wrapper">
+											<input type="text" placeholder="2022" />
+										</span>
+									</div>
+									<h2></h2>
+
+									Добавить смену
+								</div>
 							</div>
 						</div>
-						<div class="remove-local-storage burger__menu-item">
+						<div
+							class="remove-local-storage burger__menu-item burger__menu-item-title"
+						>
 							Clear all user data
 						</div>
 					</nav>

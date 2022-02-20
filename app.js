@@ -6,43 +6,174 @@ const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 let calendarCountShift = calendar.querySelector(".calendar-count");
 let arrForUserNotes;
 
-//шаблон объекта смен
-const shiftObj = {
-	shiftsName: ["А", "Б", "В", "Г", "Д", "Е"],
-	/////////
-	namesContextMenu: {
-		key: ["7", "15", "23", "У", "Э", "Д", "О", "&nbsp", "З"],
-		name: [
-			"Смена с 07-00",
-			"Смена с 15-00",
-			"Смена с 23-00",
-			"Учеба/Тренировка",
-			"Экзамен",
-			"Доработка",
-			"Отгулы",
-			"Выходной",
-			"Заметка",
+const choiceShifts = [
+	{
+		name: "Запорожская АЭС",
+		shiftsName: ["А", "Б", "В", "Г", "Д", "Е"],
+		namesContextMenu: [
+			{ key: "7", title: "Смена с 07-00", color: "", count: true },
+			{ key: "15", title: "Смена с 15-00", color: "", count: true },
+			{ key: "23", title: "Смена с 23-00", color: "", count: true },
+			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
+			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
+			{ key: "Э", title: "Экзамен", color: "#d62828" },
+			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
+			{ key: "", title: "Выходной", color: "" },
+			{ key: "З", title: "Заметка", color: "#e9c46a" },
+		],
+		root: [
+			[
+				"23",
+				"23",
+				"23",
+				"",
+				"",
+				"15",
+				"15",
+				"15",
+				"",
+				"",
+				"7",
+				"7",
+				"7",
+				"",
+				"",
+			],
+			[
+				"15",
+				"15",
+				"",
+				"",
+				"7",
+				"7",
+				"7",
+				"",
+				"",
+				"23",
+				"23",
+				"23",
+				"",
+				"",
+				"15",
+			],
+			[
+				"7",
+				"",
+				"",
+				"23",
+				"23",
+				"23",
+				"",
+				"",
+				"15",
+				"15",
+				"15",
+				"",
+				"",
+				"7",
+				"7",
+			],
+			[
+				"",
+				"",
+				"15",
+				"15",
+				"15",
+				"",
+				"",
+				"7",
+				"7",
+				"7",
+				"",
+				"",
+				"23",
+				"23",
+				"23",
+			],
+			[
+				"",
+				"7",
+				"7",
+				"7",
+				"",
+				"",
+				"23",
+				"23",
+				"23",
+				"",
+				"",
+				"15",
+				"15",
+				"15",
+				"",
+			],
+			[],
 		],
 	},
-	root: [
-		["23", "23", "23", "", "", "15", "15", "15", "", "", "7", "7", "7", "", ""],
-		["15", "15", "", "", "7", "7", "7", "", "", "23", "23", "23", "", "", "15"],
-		["7", "", "", "23", "23", "23", "", "", "15", "15", "15", "", "", "7", "7"],
-		["", "", "15", "15", "15", "", "", "7", "7", "7", "", "", "23", "23", "23"],
-		["", "7", "7", "7", "", "", "23", "23", "23", "", "", "15", "15", "15", ""],
-		[],
-	],
-};
-const shiftObj1 = {
-	shiftsName: ["А", "Б", "В", "Г", "Д"],
-	root: [
-		["0", "0", "", "16", "16", "", "8", "8"],
-		["16", "", "8", "8", "0", "0", "", "16"],
-		["8", "8", "0", "0", "", "16", "16", ""],
-		["", "16", "16", "", "8", "8", "0", "0"],
-		[],
-	],
-};
+	{
+		name: "Запорожская ТЭС",
+		shiftsName: ["А", "Б", "В", "Г", "Д"],
+		namesContextMenu: [
+			{ key: "8", title: "Смена с 08-00", color: "", count: true },
+			{ key: "16", title: "Смена с 16-00", color: "", count: true },
+			{ key: "0", title: "Смена с 00-00", color: "", count: true },
+			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
+			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
+			{ key: "Э", title: "Экзамен", color: "#d62828" },
+			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
+			{ key: "", title: "Выходной", color: "" },
+			{ key: "З", title: "Заметка", color: "#e9c46a" },
+		],
+		root: [
+			["0", "0", "", "16", "16", "", "8", "8"],
+			["16", "", "8", "8", "0", "0", "", "16"],
+			["8", "8", "0", "0", "", "16", "16", ""],
+			["", "16", "16", "", "8", "8", "0", "0"],
+			[],
+		],
+	},
+	{
+		name: "Свой график",
+		shiftsName: ["Название смены"],
+		namesContextMenu: [
+			{ key: "", title: "Смена с ", color: "" },
+			{ key: "", title: "Выходной", color: "" },
+			{ key: "К", title: "Закончить построение графика", color: "" },
+		],
+		root: [[]],
+		template: true,
+	},
+];
+//шаблон объекта смен
+let shiftObj = choiceShifts[0];
+
+if (localStorage.userShift) {
+	shiftObj = JSON.parse(localStorage.getItem("userShift"));
+}
+
+choiceShifts.forEach((item, index) => {
+	let burgerMenuChoiceShifts = document.querySelector(
+		".burger__menu-choice-shift"
+	);
+
+	burgerMenuChoiceShifts.innerHTML += `
+		<div class="burger__submenu-item burger__menu-shift">
+			${item.name}
+		</div>
+	`;
+	let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
+	burgerMenuShifts.forEach((menuShift, index) => {
+		menuShift.addEventListener("click", (e) => {
+			let currentShift = e.target.closest(".burger__menu-shift");
+			if (currentShift == menuShift) {
+				shiftObj = choiceShifts[index];
+				updateLocalStorage("userShift", shiftObj);
+				location.hash = "";
+				location.reload();
+			}
+		});
+	});
+});
 let { shiftsName, namesContextMenu, root } = shiftObj;
 
 let countGridColumns = [];
@@ -85,22 +216,11 @@ removeLocalStorage.addEventListener("click", () => {
 	generateCalendar(currMonth.value, currYear.value);
 	location.href = location.href;
 });
-const toggleFocusBurgerMenu = () => {
-	let burgerSubmenuItems = document.querySelectorAll(".burger__submenu-item");
-	burgerSubmenuItems.forEach((item) => {
-		if (item.closest(`#${body.className}`)) {
-			item.classList.add("focus");
-		} else {
-			item.classList.remove("focus");
-		}
-	});
-};
+
 if (localStorage.userSettings) {
 	let userSettings = JSON.parse(localStorage.getItem("userSettings"));
 	body.className = "";
 	body.classList.add(userSettings.theme);
-
-	toggleFocusBurgerMenu();
 }
 
 if (!localStorage.userNotes) {
@@ -255,20 +375,30 @@ const generateCalendar = (month, year) => {
 		//заполняем поля смен
 
 		const fillDay = (shift, calendarCount, arrForCount, nameShift, root) => {
+			let day = document.createElement("div");
+			day.classList.add("calendar-day");
+			day.classList.add("calendar-context-menu");
+
 			const multiplyRoot = () => {
 				let arr = root.concat(root);
 				root = arr.slice();
 			};
-			if (root.length == 0) {
-			} else {
-				while (root.length < 50) {
-					multiplyRoot();
+			if (root) {
+				if (root.length == 0) {
+				} else {
+					while (root.length < 50) {
+						multiplyRoot();
+					}
+				}
+
+				//заполняем колонку смен
+				day.innerHTML = root[residual + i + 15];
+				shift.appendChild(day);
+				if (root[residual + i] == undefined) {
+					day.innerHTML = "";
+					shift.appendChild(day);
 				}
 			}
-
-			let day = document.createElement("div");
-			day.classList.add("calendar-day");
-			day.classList.add("calendar-context-menu");
 			//вешаем класс curr-date на сегодняшнюю дату
 			if (
 				i + 1 === currDate.getDate() &&
@@ -284,14 +414,6 @@ const generateCalendar = (month, year) => {
 				dayNames[iDay.getDay()] == dayNames[6]
 			) {
 				day.classList.add("calendar-day-off");
-			}
-
-			//заполняем колонку смен
-			day.innerHTML = root[residual + i + 15];
-			shift.appendChild(day);
-			if (root[residual + i] == undefined) {
-				day.innerHTML = "";
-				shift.appendChild(day);
 			}
 
 			if (i == daysOfMonth[month] - 1) {
@@ -329,24 +451,17 @@ const generateCalendar = (month, year) => {
 			}
 
 			//считаем количество смен в месяце
+			namesContextMenu.forEach((obj) => {
+				if (obj.count) {
+					if (day.innerHTML == obj.key) {
+						arrForCount.push(day.innerHTML);
+					}
+				}
+			});
 
-			// сразу не пересчитывает смены, надо обновлять
-			const countShifts = () => {
-				if (
-					day.innerHTML == "23" ||
-					day.innerHTML == "15" ||
-					day.innerHTML == "7" ||
-					day.innerHTML == "Д" ||
-					day.innerHTML == "У"
-				) {
-					arrForCount.push(day.innerHTML);
-					// console.log(arrForCount);
-				}
-				if (calendarCount) {
-					calendarCount.innerHTML = arrForCount.length;
-				}
-			};
-			countShifts();
+			if (calendarCount) {
+				calendarCount.innerHTML = arrForCount.length;
+			}
 		};
 
 		let calendarShifts = document.querySelectorAll(".calendar-shift");
@@ -456,34 +571,34 @@ document.querySelector("#next-year").onclick = () => {
 };
 
 //Burger menu
-const burger = document.querySelector(".burger__btn");
-const headerMenu = document.querySelector(".burger__menu");
+const burgerBtn = document.querySelector(".burger__btn");
+const burgerMenu = document.querySelector(".burger__menu");
 const burgerWrapper = document.querySelector(".burger-wrapper");
 
 const docHeight = document.documentElement.scrollHeight;
 const winHeight = document.documentElement.clientHeight;
 
-burger.addEventListener("click", () => {
-	burger.classList.toggle("active");
-	headerMenu.classList.toggle("active");
+burgerBtn.addEventListener("click", () => {
+	burgerBtn.classList.toggle("active");
+	burgerMenu.classList.toggle("active");
 	body.classList.toggle("lock");
-	if (docHeight > winHeight && burger.className.includes("active")) {
+	if (docHeight > winHeight && burgerBtn.className.includes("active")) {
 		body.style.paddingRight = scrollWidth + "px";
 	} else {
 		body.style.paddingRight = 0;
 	}
 
-	if (burger.className.includes("active")) {
+	if (burgerBtn.className.includes("active")) {
 		location.hash = "menu";
 	} else {
 		location.hash = "";
 	}
 });
-headerMenu.addEventListener("click", (e) => {
+burgerMenu.addEventListener("click", (e) => {
 	let target = e.target;
 	let burgerMenuItem;
 
-	if (target.closest(".burger__menu-item")) {
+	if (target.closest(".burger__menu-item-title")) {
 		burgerMenuItem = target.closest(".burger__menu-item");
 		let cross = burgerMenuItem.querySelector(".burger__menu-item-cross");
 		if (cross) {
@@ -501,19 +616,63 @@ headerMenu.addEventListener("click", (e) => {
 			let userSettings = JSON.parse(localStorage.getItem("userSettings"));
 			body.className = "";
 			body.classList.add(userSettings.theme);
-
-			toggleFocusBurgerMenu();
+			let selectedBurgerSubmenuItem = document.querySelector(
+				`.burger__submenu-item#${userSettings.theme}`
+			);
+			selectedBurgerSubmenuItem.classList.add("focus");
 		}
+
+		if (localStorage.userShift) {
+			shiftObj = JSON.parse(localStorage.getItem("userShift"));
+			let burgerSubmenuItems = document.querySelectorAll(
+				".burger__submenu-item"
+			);
+			burgerSubmenuItems.forEach((item, index) => {
+				if (item.textContent.trim() == shiftObj.name) {
+					burgerSubmenuItems[index].classList.add("focus");
+				}
+			});
+		}
+	}
+	if (target.closest(".burger__menu-color")) {
+		let currentBurgerSubmenuItem = target.closest(".burger__menu-color");
+		let burgerSubmenuItems = document.querySelectorAll(".burger__menu-color");
+		burgerSubmenuItems.forEach((item) => {
+			if (item == currentBurgerSubmenuItem) {
+				item.classList.add("focus");
+			} else {
+				item.classList.remove("focus");
+			}
+		});
+	}
+	if (target.closest(".burger__menu-shift")) {
+		let currentBurgerSubmenuItem = target.closest(".burger__menu-shift");
+		let burgerSubmenuItems = document.querySelectorAll(".burger__menu-shift");
+		burgerSubmenuItems.forEach((item) => {
+			if (item == currentBurgerSubmenuItem) {
+				item.classList.add("focus");
+			} else {
+				item.classList.remove("focus");
+			}
+		});
+	}
+
+	if (target.closest(".burger__menu-create-shift")) {
+		let burgerSubmenuItems = document.querySelector(
+			".burger__menu-create-shift-more"
+		);
+		console.log(burgerSubmenuItems);
+		// burgerSubmenuItems.innerHTML = `
+		// <div class="burger__submenu-item burger__menu-add-shift">
+		// 	Добавить смену
+		// </div>`;
 	}
 
 	const selectTheme = (target, nameTheme) => {
 		if (target.closest(`#${nameTheme}`)) {
-			// let currTheme = target.closest(".burger__menu-color");
 			body.className = "";
 			body.classList.add(nameTheme);
 			body.classList.toggle("lock");
-
-			// currTheme.classList.add("focus");
 
 			updateLocalStorage("userSettings", new UserSettings(nameTheme));
 		}
@@ -528,60 +687,11 @@ headerMenu.addEventListener("click", (e) => {
 
 const rightClickMenu = document.querySelector(".right-click-menu");
 
-let rightClickMenuItemNames = {
-	23: {
-		title: "Смена с 23-00",
-		desc: "",
-		color: "",
-	},
-	7: {
-		title: "Смена с 07-00",
-		desc: "",
-		color: "",
-	},
-	15: {
-		title: "Смена с 15-00",
-		desc: "",
-		color: "",
-	},
-	У: {
-		title: "Учеба/Тренировка",
-		desc: "",
-		color: "#e76f51",
-	},
-	Э: {
-		title: "Экзамен",
-		desc: "",
-		color: "#d62828",
-	},
-	Д: {
-		title: "Доработка",
-		desc: "",
-		color: "#00b4d880",
-	},
-	О: {
-		title: "Отгулы",
-		desc: "",
-		color: "#2a9d8f",
-	},
-	"&nbsp": {
-		title: "Выходной",
-		desc: "",
-		color: "",
-	},
-	З: {
-		title: "Заметка",
-		desc: "",
-		color: "#e9c46a",
-	},
-};
-
 const rightClickMenuItems = calendar.querySelector(".right-click-menu ul");
 
 //верстка элементов контекстного меню
-const entries = Object.entries(rightClickMenuItemNames);
-let key, val;
-for ([key, val] of entries) {
+
+namesContextMenu.forEach((obj) => {
 	let li = document.createElement("li");
 	li.classList.add("right-click-menu-item");
 
@@ -598,44 +708,44 @@ for ([key, val] of entries) {
 
 	let btnValue = document.createElement("div");
 	btnValue.classList.add("right-click-menu-item__value");
-	btnValue.setAttribute("data-value", key);
-	btnValue.innerHTML = `"${key}"`;
+	btnValue.setAttribute("data-value", obj.key);
+	btnValue.innerHTML = `"${obj.key}"`;
 	btn.appendChild(btnValue);
 
 	let btnName = document.createElement("div");
 	btnName.classList.add("right-click-menu-item__name");
-	btnName.setAttribute("data-value", key);
-	btnName.innerHTML = val.title;
+	btnName.setAttribute("data-value", obj.key);
+	btnName.innerHTML = obj.title;
 	btn.appendChild(btnName);
 
 	let color = document.createElement("div");
 	color.classList.add("right-click-menu-item__color");
-	color.innerHTML = `<input readonly type="text" data-coloris value='${val.color}'/>`;
+	color.innerHTML = `<input readonly type="text" data-coloris value='${obj.color}'/>`;
 	li.appendChild(color);
 
 	let liForTodo = document.createElement("li");
 	liForTodo.classList.add("right-click-menu-item");
 	liForTodo.classList.add("right-click-menu__todo");
 	liForTodo.innerHTML = `
-		<h2>Задачи на день:</h2>
-		
-		<ul class="right-click-menu__todos-wrapper">
-		</ul>
-		
-		<div class="right-click-menu__add-todo-wrapper right-click-menu-item">
-			<div></div>
-			<div class="input-wrapper">
-				<input placeholder="Новый пункт" type="text" class="new-description-task" />
+			<h2>Задачи на день:</h2>
+			
+			<ul class="right-click-menu__todos-wrapper">
+			</ul>
+			
+			<div class="right-click-menu__add-todo-wrapper right-click-menu-item">
+				<div></div>
+				<div class="input-wrapper">
+					<input placeholder="Новый пункт" type="text" class="new-description-task" />
+				</div>
+				<div class="button-wrapper add-task-btn" >
+					<span class="cross"></span>
+				</div>
 			</div>
-			<div class="button-wrapper add-task-btn" >
-				<span class="cross"></span>
-			</div>
-		</div>
-	`;
+		`;
 
 	rightClickMenuItems.appendChild(li);
 	rightClickMenuItems.appendChild(liForTodo);
-}
+});
 
 let targetItemInTable;
 
@@ -706,6 +816,10 @@ function UserNotes(date, shift, color, desc, key) {
 
 function UserSettings(theme) {
 	this.theme = theme;
+}
+
+function UserShift(shift) {
+	this.shift = shift;
 }
 
 const updateLocalStorage = (name, data) => {
@@ -876,6 +990,30 @@ const filterArr = (arr) => {
 	result = arr1.concat(arr2);
 	arrForUserNotes = result.slice();
 };
+//выделяем текущий день при клике
+calendarBody.addEventListener("click", (e) => {
+	let target = e.target;
+	let allDays = document.querySelectorAll(".calendar-day");
+	allDays.forEach((day) => {
+		day.classList.remove("selected");
+	});
+
+	let column = target.closest(".calendar-column");
+	let days = column.querySelectorAll(".calendar-day");
+	let index;
+	days.forEach((day, i) => {
+		if (day == target) {
+			index = i;
+		}
+	});
+	let columns = document.querySelectorAll(".calendar-column");
+	columns.forEach((column) => {
+		days = column.querySelectorAll(".calendar-day");
+		if (target.closest(".calendar-day")) {
+			days[index].classList.add("selected");
+		}
+	});
+});
 
 calendarBody.addEventListener("contextmenu", (e) => {
 	const menuHeaderShift = rightClickMenu.querySelector(".menu-header__shift");
@@ -1005,21 +1143,17 @@ rightClickMenuItems.addEventListener("click", (e) => {
 			currentColumnShift.querySelectorAll(".calendar-day");
 
 		targetItemsInTable.forEach((item) => {
-			if (
-				item.innerHTML == "23" ||
-				item.innerHTML == "15" ||
-				item.innerHTML == "7" ||
-				item.innerHTML == "Д" ||
-				item.innerHTML == "У"
-			) {
-				arrForCount.push(item.innerHTML);
-				console.log(arrForCount.length);
-			}
+			namesContextMenu.forEach((obj) => {
+				if (obj.count) {
+					if (item.innerHTML == obj.key) {
+						arrForCount.push(item.innerHTML);
+					}
+				}
+			});
 		});
 
 		columnShifts.forEach((item, index) => {
 			if (item == currentColumnShift) {
-				console.log(index);
 				calendarCountShifts[index].innerHTML = arrForCount.length;
 			}
 		});
@@ -1167,10 +1301,10 @@ document.addEventListener("keydown", (e) => {
 //Router
 let controller = {
 	startRoute() {
-		burger.classList.remove("active");
-		burger.style.display = "block";
+		burgerBtn.classList.remove("active");
+		burgerBtn.style.display = "block";
 		burgerWrapper.style.display = "block";
-		headerMenu.classList.remove("active");
+		burgerMenu.classList.remove("active");
 		body.classList.remove("lock");
 		rightClickMenu.classList.remove("active");
 		popup.classList.remove("show");
@@ -1182,13 +1316,13 @@ let controller = {
 		});
 	},
 	menuRoute() {
-		burger.classList.add("active");
-		headerMenu.classList.add("active");
+		burgerBtn.classList.add("active");
+		burgerMenu.classList.add("active");
 		body.classList.add("lock");
 	},
 	contextRoute() {},
 	monthlistRoute() {
-		burger.style.display = "none";
+		burgerBtn.style.display = "none";
 		burgerWrapper.style.display = "none";
 	},
 };
