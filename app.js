@@ -6,6 +6,37 @@ const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 let calendarCountShift = calendar.querySelector(".calendar-count");
 let arrForUserNotes;
 
+function UserShift(
+	name = "Мое предприятие",
+	shiftsName = ["Моя смена"],
+	namesContextMenu = [],
+	root = [],
+	template
+) {
+	if (name == "") {
+		name = "Мое предприятие";
+	}
+	if (shiftsName == "") {
+		shiftsName = ["Моя смена"];
+	}
+	this.name = name;
+	this.shiftsName = shiftsName;
+	this.namesContextMenu = namesContextMenu;
+	this.root = root;
+	this.template = template;
+}
+
+// let myShifts = [];
+
+let shiftTemplate = {
+	namesContextMenu: [
+		{ key: "", title: "Выходной" },
+		{ key: "&#10004;", title: "Закончить построение графика", endCicle: true },
+	],
+	root: [[]],
+	template: true,
+};
+
 const choiceShifts = [
 	{
 		name: "Запорожская АЭС",
@@ -18,7 +49,7 @@ const choiceShifts = [
 			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
 			{ key: "Э", title: "Экзамен", color: "#d62828" },
 			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
-			{ key: "", title: "Выходной", color: "" },
+			{ key: "&nbsp;", title: "Выходной", color: "" },
 			{ key: "З", title: "Заметка", color: "#e9c46a" },
 		],
 		root: [
@@ -121,7 +152,7 @@ const choiceShifts = [
 			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
 			{ key: "Э", title: "Экзамен", color: "#d62828" },
 			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
-			{ key: "", title: "Выходной", color: "" },
+			{ key: "&nbsp;", title: "Выходной", color: "" },
 			{ key: "З", title: "Заметка", color: "#e9c46a" },
 		],
 		root: [
@@ -131,17 +162,6 @@ const choiceShifts = [
 			["", "16", "16", "", "8", "8", "0", "0"],
 			[],
 		],
-	},
-	{
-		name: "Свой график",
-		shiftsName: ["Название смены"],
-		namesContextMenu: [
-			{ key: "", title: "Смена с ", color: "" },
-			{ key: "", title: "Выходной", color: "" },
-			{ key: "К", title: "Закончить построение графика", color: "" },
-		],
-		root: [[]],
-		template: true,
 	},
 ];
 //шаблон объекта смен
@@ -379,6 +399,10 @@ const generateCalendar = (month, year) => {
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
 
+			if (shiftObj.template) {
+				day.classList.add("calendar-day-create-shift");
+			}
+
 			const multiplyRoot = () => {
 				let arr = root.concat(root);
 				root = arr.slice();
@@ -399,6 +423,7 @@ const generateCalendar = (month, year) => {
 					shift.appendChild(day);
 				}
 			}
+
 			//вешаем класс curr-date на сегодняшнюю дату
 			if (
 				i + 1 === currDate.getDate() &&
@@ -594,6 +619,7 @@ burgerBtn.addEventListener("click", () => {
 		location.hash = "";
 	}
 });
+
 burgerMenu.addEventListener("click", (e) => {
 	let target = e.target;
 	let burgerMenuItem;
@@ -657,15 +683,33 @@ burgerMenu.addEventListener("click", (e) => {
 		});
 	}
 
-	if (target.closest(".burger__menu-create-shift")) {
-		let burgerSubmenuItems = document.querySelector(
-			".burger__menu-create-shift-more"
+	if (target.closest(".burger__menu-add-shift-btn")) {
+		let burgerMenuAddShiftInputs = document.querySelectorAll(
+			".burger__menu-add-shift input"
 		);
-		console.log(burgerSubmenuItems);
-		// burgerSubmenuItems.innerHTML = `
-		// <div class="burger__submenu-item burger__menu-add-shift">
-		// 	Добавить смену
-		// </div>`;
+
+		// myShifts.push(
+		// 	new UserShift(
+		// 		burgerMenuAddShiftInputs[0].value,
+		// 		burgerMenuAddShiftInputs[1].value,
+		// 		shiftTemplate.namesContextMenu,
+		// 		shiftTemplate.root
+		// 	)
+		// );
+		burgerMenuAddShiftInputs[0].value = "";
+		burgerMenuAddShiftInputs[1].value = "";
+		updateLocalStorage(
+			"userShift",
+			new UserShift(
+				burgerMenuAddShiftInputs[0].value,
+				burgerMenuAddShiftInputs[1].value,
+				shiftTemplate.namesContextMenu,
+				shiftTemplate.root,
+				true
+			)
+		);
+		location.hash = "";
+		location.reload();
 	}
 
 	const selectTheme = (target, nameTheme) => {
@@ -726,6 +770,7 @@ namesContextMenu.forEach((obj) => {
 	let liForTodo = document.createElement("li");
 	liForTodo.classList.add("right-click-menu-item");
 	liForTodo.classList.add("right-click-menu__todo");
+
 	liForTodo.innerHTML = `
 			<h2>Задачи на день:</h2>
 			
@@ -745,6 +790,12 @@ namesContextMenu.forEach((obj) => {
 
 	rightClickMenuItems.appendChild(li);
 	rightClickMenuItems.appendChild(liForTodo);
+
+	if (shiftObj.template) {
+		li.style.gridTemplateColumns = "none";
+		desc.style.display = "none";
+		color.style.display = "none";
+	}
 });
 
 let targetItemInTable;
@@ -807,20 +858,23 @@ function Task(description) {
 }
 
 function UserNotes(date, shift, color, desc, key) {
-	(this.date = date),
-		(this.shift = shift),
-		(this.color = color),
-		(this.desc = desc),
-		(this.keyNote = key);
+	this.date = date;
+	this.shift = shift;
+	this.color = color;
+	this.desc = desc;
+	this.keyNote = key;
 }
 
 function UserSettings(theme) {
 	this.theme = theme;
 }
 
-function UserShift(shift) {
-	this.shift = shift;
-}
+// function UserShift(name, shiftsName, namesContextMenu, root) {
+// 	this.name = name;
+// 	this.shiftsName = shiftsName;
+// 	this.namesContextMenu = namesContextMenu;
+// 	this.root = root;
+// }
 
 const updateLocalStorage = (name, data) => {
 	localStorage.setItem(name, JSON.stringify(data));
@@ -880,30 +934,31 @@ const editDescription = () => {
 };
 
 const fillHtmlList = () => {
-	// console.log(todosWrapper);
 	if (todosWrapper) {
 		todosWrapper.innerHTML = "";
 	}
 	if (tasks.length > 0) {
 		filterTasks();
 		tasks.forEach((item, index) => {
-			todosWrapper.innerHTML += `
-				<li class="todo-item right-click-menu-item ${item.completed ? "checked" : ""}">
-					<div class="custom-checkbox">
-						<input 
-							class="btn-complete" 
-							type="checkbox" 
-							id="${index}" 
-							${item.completed ? "checked" : ""}
-						/>
-						<label for="${index}"></label>
-					</div>
-					<div class="description" contenteditable="true">${item.description}</div>
-					<div class="btn-delete">
-							<span class="cross"></span>
-					</div>
-				</li>
-				`;
+			if (todosWrapper) {
+				todosWrapper.innerHTML += `
+			<li class="todo-item right-click-menu-item ${item.completed ? "checked" : ""}">
+				<div class="custom-checkbox">
+					<input 
+						class="btn-complete" 
+						type="checkbox" 
+						id="${index}" 
+						${item.completed ? "checked" : ""}
+					/>
+					<label for="${index}"></label>
+				</div>
+				<div class="description" contenteditable="true">${item.description}</div>
+				<div class="btn-delete">
+						<span class="cross"></span>
+				</div>
+			</li>
+			`;
+			}
 		});
 		todoItemElems = currentTodo.querySelectorAll(".todo-item");
 		todoItemElems.forEach((item, index) => {
@@ -916,7 +971,7 @@ const fillHtmlList = () => {
 				} else {
 					todoItemElems[index].classList.remove("checked");
 				}
-				selectedTodoValue = tasks; ///////////////////
+				selectedTodoValue = tasks;
 
 				fillHtmlList();
 			});
@@ -990,6 +1045,16 @@ const filterArr = (arr) => {
 	result = arr1.concat(arr2);
 	arrForUserNotes = result.slice();
 };
+
+function UserNameShift(key, title) {
+	this.key = key;
+	if (title == "") {
+		title = `Смена '${key}'`;
+	}
+	this.title = title;
+}
+
+let popupContentBody = document.querySelector(".popup__content-body");
 //выделяем текущий день при клике
 calendarBody.addEventListener("click", (e) => {
 	let target = e.target;
@@ -1013,6 +1078,87 @@ calendarBody.addEventListener("click", (e) => {
 			days[index].classList.add("selected");
 		}
 	});
+
+	//для создания нового графика
+	if (target.closest(".calendar-day-create-shift")) {
+		let day = target.closest(".calendar-day-create-shift");
+		day.addEventListener("click", popupOpen(e));
+	}
+
+	if (shiftObj.template) {
+		popupContentBody.innerHTML = "";
+
+		shiftObj.namesContextMenu.forEach((item) => {
+			if (item.endCicle) {
+				popupContentBody.innerHTML += `
+			<div class="popup__content-item">
+				<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
+					<div class="right-click-menu-item__value" >
+					${item.key}
+					</div>
+					<div class="right-click-menu-item__name">
+					${item.title}
+					</div>
+				</div>
+			</div>
+		`;
+			} else {
+				popupContentBody.innerHTML += `
+				<div class="popup__content-item">
+					<div class="popup__add-shift-btn right-click-menu-item__btn">
+						<div class="right-click-menu-item__value" >
+						" ${item.key}"
+						</div>
+						<div class="right-click-menu-item__name">
+						${item.title}
+						</div>
+					</div>
+				</div>
+			`;
+			}
+		});
+
+		let addShiftItem = `
+			<div class="popup__content-item add-shift-item">
+				<div
+					class="
+						right-click-menu__add-todo-wrapper
+						right-click-menu-item
+						popup__create-shift
+					"
+				>
+					<h3>Название смены (коротко):</h3>
+					<div class="input-wrapper">
+						<input
+							placeholder="пример: '23'
+							type="text"
+							class="new-description-task"
+						/>
+					</div>
+					<h3>Описание смены:</h3>
+					<div class="input-wrapper">
+						<input
+							placeholder="пример: 'Смена с 23-00'"
+							type="text"
+							class="new-description-task"
+						/>
+					</div>
+
+					<div class="close-menu right-click-menu-item__btn">
+					<div class="right-click-menu-item__value">
+					<span class="cross"></span>
+					</div>
+					<div class="right-click-menu-item__name button-wrapper add-task-btn">
+					Добавить смену
+					</div>
+				</div>
+
+					
+				</div>
+			</div>
+		`;
+		popupContentBody.insertAdjacentHTML("beforeend", addShiftItem);
+	}
 });
 
 calendarBody.addEventListener("contextmenu", (e) => {
@@ -1157,6 +1303,9 @@ rightClickMenuItems.addEventListener("click", (e) => {
 				calendarCountShifts[index].innerHTML = arrForCount.length;
 			}
 		});
+
+		// if (shiftObj.template) {
+		// }
 	}
 
 	if (target.closest(".right-click-menu-item__color input")) {
@@ -1241,18 +1390,21 @@ const popupOpen = (e) => {
 	selectedColorInContextMenu = targetItemInTable.getAttribute("data-color");
 	selectedItemInContextMenu = targetItemInTable.getAttribute("data-key-note");
 
-	tasks = JSON.parse(targetItemInTable.getAttribute("data-desc"));
-	selectedTodoValue = tasks;
+	if (shiftObj.template) {
+	} else {
+		tasks = JSON.parse(targetItemInTable.getAttribute("data-desc"));
+		selectedTodoValue = tasks;
 
-	todosWrapper = popup.querySelector(".right-click-menu__todos-wrapper");
+		todosWrapper = popup.querySelector(".right-click-menu__todos-wrapper");
 
-	currentTodo = todosWrapper;
-	inputTodo = popup.querySelector(".new-description-task");
-	addTaskBtn = popup.querySelector(".add-task-btn");
+		currentTodo = todosWrapper;
+		inputTodo = popup.querySelector(".new-description-task");
+		addTaskBtn = popup.querySelector(".add-task-btn");
 
-	fillHtmlList();
+		fillHtmlList();
 
-	addTask(addTaskBtn);
+		addTask(addTaskBtn);
+	}
 };
 
 const searchBtnsAddFPopupOpen = () => {
@@ -1270,17 +1422,20 @@ const popupClose = () => {
 	document.body.style.overflow = "";
 	body.style.paddingRight = 0;
 
-	if (inputTodo.value) {
-		tasks.push(new Task(inputTodo.value));
-		selectedTodoValue = tasks;
-		inputTodo.value = "";
-	}
+	if (shiftObj.template) {
+	} else {
+		if (inputTodo.value) {
+			tasks.push(new Task(inputTodo.value));
+			selectedTodoValue = tasks;
+			inputTodo.value = "";
 
-	setAttrCurCell(targetItemInTable, tasks);
-	pushObjInArr();
-	filterArr(arrForUserNotes);
-	updateLocalStorage("userNotes", arrForUserNotes);
-	removeClassDescEventListener();
+			setAttrCurCell(targetItemInTable, tasks);
+			pushObjInArr();
+			filterArr(arrForUserNotes);
+			updateLocalStorage("userNotes", arrForUserNotes);
+			removeClassDescEventListener();
+		}
+	}
 	location.hash = "";
 };
 
@@ -1289,6 +1444,108 @@ popupCloseBtn.addEventListener("click", popupClose);
 popup.addEventListener("click", (e) => {
 	if (e.target == popup) {
 		popupClose();
+	}
+	//добавляем смену в календарь в режиме создания графика
+	if (e.target.closest(".popup__add-shift-btn")) {
+		let popupContentItem = e.target.closest(".popup__content-item");
+		let currentBtnKeyNote = popupContentItem.querySelector(
+			".popup__add-shift-btn .right-click-menu-item__value"
+		);
+
+		let currentBtnKeyNoteValue = currentBtnKeyNote.textContent
+			.trim()
+			.replace(/["']/g, "");
+
+		targetItemInTable.innerHTML = currentBtnKeyNoteValue;
+		targetItemInTable.setAttribute("data-key-note", currentBtnKeyNoteValue);
+		// targetItemInTable.style.backgroundColor = "red";
+
+		if (e.target.closest("[data-end-cicle]")) {
+			targetItemInTable.setAttribute("data-end-cicle", "");
+			// targetItemInTable.removeAttribute("data-key-note");
+			targetItemInTable.style.backgroundColor = "#00b5ff";
+		}
+
+		popupClose();
+	}
+	//добавляем новую смену
+	let addNewShiftBtn = document.querySelector(
+		".popup__content-item .add-task-btn"
+	);
+
+	let addShiftInputs = document.querySelectorAll(".popup__content-item input");
+	addNewShiftBtn.addEventListener("click", () => {
+		shiftObj.namesContextMenu.unshift(
+			new UserNameShift(addShiftInputs[0].value, addShiftInputs[1].value)
+		);
+
+		targetItemInTable.innerHTML = addShiftInputs[0].value;
+		targetItemInTable.setAttribute("data-key-note", addShiftInputs[0].value);
+
+		targetItemInTable.style.backgroundColor = "red";
+		// targetItemInTable.setAttribute("data-shift", addShiftInputs[1].value);
+		// targetItemInTable.setAttribute("data-color");
+
+		updateLocalStorage("userShift", shiftObj);
+		popupClose();
+	});
+
+	if (shiftObj.template) {
+		let myShiftsNodeList = document.querySelectorAll(
+			".calendar-day-create-shift"
+		);
+		let myShiftsArr = Array.prototype.slice.call(myShiftsNodeList);
+
+		let firstElemIndex = myShiftsArr.findIndex((item) =>
+			item.closest("[data-key-note]")
+		);
+		console.log(firstElemIndex);
+		let myShiftsArrReverse = myShiftsArr.slice().reverse();
+
+		let myShiftsArrReverseIndex = myShiftsArrReverse.findIndex((item) =>
+			item.closest("[data-key-note]")
+		);
+
+		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex - 1;
+		console.log(lastElemIndex);
+		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
+
+		let myShiftsForLocalStoreage = [];
+
+		myShiftsFinal.forEach((item) => {
+			let attr;
+
+			if (item.closest("[data-key-note]")) {
+				attr = item.getAttribute("data-key-note");
+				item.style.backgroundColor = "red";
+			} else {
+				item.innerHTML = "Выходной";
+				item.style.backgroundColor = "red";
+
+				attr = " ";
+			}
+
+			myShiftsForLocalStoreage.push(attr);
+		});
+
+		if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
+			shiftObj.root.unshift(myShiftsForLocalStoreage);
+			updateLocalStorage("userShift", shiftObj);
+			// popupOpen(e);
+			// popupContentBody.innerHTML = "";
+			// myShiftsForLocalStoreage.forEach((item) => {
+			// 	popupContentBody.innerHTML += `
+			// 	<div class="popup__add-shift-btn right-click-menu-item__btn">
+			// 		<div class="right-click-menu-item__value">
+			// 		"${item}"
+			// 		</div>
+			// 		<div class="right-click-menu-item__name">
+			// 		Смена 'ty'
+			// 		</div>
+			// 	</div>
+			// `;
+			// });
+		}
 	}
 });
 

@@ -82,7 +82,7 @@
 						</div>
 						<div class="burger__menu-item burger__menu-create-shift">
 							<div class="burger__menu-item-title">
-								<h2>Создать свой график</h2>
+								<h2>Свой график</h2>
 								<div class="burger__menu-item-cross">
 									<span class="cross"></span>
 								</div>
@@ -91,22 +91,20 @@
 								class="burger__menu-item-more burger__menu-create-shift-more"
 							>
 								<div class="burger__submenu-item burger__menu-add-shift">
-									<h2>Дата начала смены</h2>
-
-									<div class="burger__date">
-										<span class="burger__day input-wrapper">
-											<input type="text" placeholder="07" />.
-										</span>
-										<span class="burger__month input-wrapper">
-											<input type="text" placeholder="02" />.
-										</span>
-										<span class="burger__year input-wrapper">
-											<input type="text" placeholder="2022" />
-										</span>
+									<div>
+										<h2>Укажите название предприяти</h2>
+										<div class="input-wrapper">
+											<input
+												type="text"
+												placeholder="пример: 'Запорожская АЭС'"
+											/>
+										</div>
+										<h2>Укажите название смены</h2>
+										<div class="input-wrapper">
+											<input type="text" placeholder="пример: 'см. А'" />
+										</div>
 									</div>
-									<h2></h2>
-
-									Добавить смену
+									<div class="burger__menu-add-shift-btn">Создать график</div>
 								</div>
 							</div>
 						</div>
@@ -172,7 +170,7 @@
 			<div class="popup__window">
 				<div class="popup__close">&times;</div>
 				<div class="popup__content">
-					<li class="right-click-menu-item right-click-menu__todo active">
+					<div class="right-click-menu-item right-click-menu__todo active">
 						<div class="menu-header">
 							<div class="menu-header__day-week"></div>
 							<div class="menu-header__date">
@@ -182,26 +180,28 @@
 							</div>
 							<div class="menu-header__shift"></div>
 						</div>
-						<h2>Задачи на день:</h2>
+						<div class="popup__content-body">
+							<h2>Задачи на день:</h2>
 
-						<ul class="right-click-menu__todos-wrapper"></ul>
+							<ul class="right-click-menu__todos-wrapper"></ul>
 
-						<div
-							class="right-click-menu__add-todo-wrapper right-click-menu-item"
-						>
-							<div></div>
-							<div class="input-wrapper">
-								<input
-									placeholder="Новый пункт"
-									type="text"
-									class="new-description-task"
-								/>
-							</div>
-							<div class="button-wrapper add-task-btn">
-								<span class="cross"></span>
+							<div
+								class="right-click-menu__add-todo-wrapper right-click-menu-item"
+							>
+								<div class="input-wrapper for-create-shift"></div>
+								<div class="input-wrapper">
+									<input
+										placeholder="Новый пункт"
+										type="text"
+										class="new-description-task"
+									/>
+								</div>
+								<div class="button-wrapper add-task-btn">
+									<span class="cross"></span>
+								</div>
 							</div>
 						</div>
-					</li>
+					</div>
 				</div>
 			</div>
 		</div>

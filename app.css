@@ -94,7 +94,7 @@ body.lock {
 .right-click-menu-item__color,
 .right-click-menu__todo {
 	background-color: var(--bg-div);
-	animation: to-top 1s forwards;
+	/* animation: to-top 1s forwards; */
 	cursor: pointer;
 	color: var(--color-txt);
 }
@@ -425,7 +425,9 @@ body.lock {
 	visibility: visible;
 	height: inherit;
 }
-
+.burger__menu-add-shift-btn {
+	padding: 25px;
+}
 .burger__submenu-item {
 	padding: 25px;
 }
@@ -447,14 +449,15 @@ body.lock {
 	transform: rotate(-45deg);
 	bottom: 9px;
 }
-.burger__date {
+
+/* .burger__date {
 	display: flex;
 	justify-content: center;
 }
 .burger__date .input-wrapper input {
 	width: 60px;
 	font-size: 20px;
-}
+} */
 
 .menu-close {
 	display: block;
@@ -674,7 +677,31 @@ body.lock {
 	color: var(--color-txt);
 	background-color: var(--bg-main);
 }
+/* .popup__content h2 {
+	text-align: center;
+} */
 
+.popup__content .popup__create-shift {
+	display: flex;
+	flex-direction: column;
+}
+
+.popup__content-body {
+	width: 100%;
+}
+
+.popup__content-body h2 {
+	margin: 0;
+}
+.popup__content-item {
+	/* border-top: 5px solid var(--focus); */
+}
+
+.popup__content-item .cross {
+	top: 13px;
+	left: 23px;
+	transform: rotate(45deg);
+}
 .popup__close {
 	text-align: center;
 	width: 35px;
@@ -734,6 +761,7 @@ body.lock {
 	width: 100%;
 }
 .input-wrapper input {
+	font-size: 18px;
 	padding: 15px 6px;
 	/* margin: 7px; */
 	width: 100%;
