@@ -414,12 +414,17 @@ const generateCalendar = (month, year) => {
 						multiplyRoot();
 					}
 				}
+				//
+				//
 
+				//
+
+				//
 				//заполняем колонку смен
 				day.innerHTML = root[residual + i + 15];
 				shift.appendChild(day);
 				if (root[residual + i] == undefined) {
-					day.innerHTML = "";
+					// day.innerHTML = "";
 					shift.appendChild(day);
 				}
 			}
@@ -1499,20 +1504,18 @@ popup.addEventListener("click", (e) => {
 		let firstElemIndex = myShiftsArr.findIndex((item) =>
 			item.closest("[data-key-note]")
 		);
-		console.log(firstElemIndex);
 		let myShiftsArrReverse = myShiftsArr.slice().reverse();
 
 		let myShiftsArrReverseIndex = myShiftsArrReverse.findIndex((item) =>
 			item.closest("[data-key-note]")
 		);
 
-		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex - 1;
-		console.log(lastElemIndex);
+		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
 		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
 
-		let myShiftsForLocalStoreage = [];
+		let myShiftsForLocalStorage = [];
 
-		myShiftsFinal.forEach((item) => {
+		myShiftsFinal.forEach((item, index) => {
 			let attr;
 
 			if (item.closest("[data-key-note]")) {
@@ -1525,26 +1528,27 @@ popup.addEventListener("click", (e) => {
 				attr = " ";
 			}
 
-			myShiftsForLocalStoreage.push(attr);
+			myShiftsForLocalStorage.push(attr);
+
+			if (item.closest("[data-end-cicle]")) {
+				myShiftsForLocalStorage.splice(index, 1);
+			}
 		});
 
+		myShiftsArr.forEach((item, index) => {
+			if (item == targetItemInTable) {
+				console.log(index);
+			}
+		});
+		////
 		if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
-			shiftObj.root.unshift(myShiftsForLocalStoreage);
+			shiftObj.root.unshift(myShiftsForLocalStorage);
 			updateLocalStorage("userShift", shiftObj);
-			// popupOpen(e);
-			// popupContentBody.innerHTML = "";
-			// myShiftsForLocalStoreage.forEach((item) => {
-			// 	popupContentBody.innerHTML += `
-			// 	<div class="popup__add-shift-btn right-click-menu-item__btn">
-			// 		<div class="right-click-menu-item__value">
-			// 		"${item}"
-			// 		</div>
-			// 		<div class="right-click-menu-item__name">
-			// 		Смена 'ty'
-			// 		</div>
-			// 	</div>
-			// `;
-			// });
+
+			//для конструктора смен
+
+			// let currentDay = new Date(year, month, 1);
+			console.log(targetItemInTable);
 		}
 	}
 });
