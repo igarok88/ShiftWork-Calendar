@@ -321,24 +321,8 @@ const generateCalendar = (month, year) => {
 		item.innerHTML = shiftsName[index];
 	});
 
-	//получаем первый день месяца
-	let firstDay = new Date(year, month, 1);
-
-	/////////////////////////////
-
-	var dayNewYear = new Date(2022, 0, 1);
-
-	var diff = firstDay - dayNewYear;
-
-	var dayOne = 86400000;
-	//  1000 * 60 * 60 * 24;
-
-	// количество дней с начала года
-	var dayYear = Math.round(diff / dayOne);
-	var lenShift = 15;
-
-	var residual = dayYear % lenShift;
-
+	//
+	//
 	//получаем имя текущего месяца
 	let currMonth = `${monthNames[month]}`;
 	monthPicker.innerHTML = currMonth;
@@ -392,9 +376,30 @@ const generateCalendar = (month, year) => {
 		dayWeek.innerHTML = dayNames[iDay.getDay()];
 		calendarWeekDay.appendChild(dayWeek);
 
+		//получаем первый день месяца
+		let firstDay = new Date(year, month, 1);
+
+		//получаем 1 января 2022 года, от этой даты привязываем готовые графики
+		let dayNewYear = new Date(2022, 0, 1);
+		console.log(dayNewYear);
+
+		let diff = firstDay - dayNewYear;
+
+		//количество милисекунд в сутках
+		//  86400000 = 1000 * 60 * 60 * 24;
+
+		// количество дней с начала года до первого для текущего месяца
+		let dayYear = Math.round(diff / 86400000);
+		console.log(dayYear);
 		//заполняем поля смен
 
 		const fillDay = (shift, calendarCount, arrForCount, nameShift, root) => {
+			let lenShift = root.length;
+			console.log(`lenShift ${lenShift}`);
+
+			let residual = dayYear % lenShift;
+			console.log(`residual ${residual}`);
+
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
@@ -414,14 +419,9 @@ const generateCalendar = (month, year) => {
 						multiplyRoot();
 					}
 				}
-				//
-				//
 
-				//
-
-				//
 				//заполняем колонку смен
-				day.innerHTML = root[residual + i + 15];
+				day.innerHTML = root[residual + i + lenShift];
 				shift.appendChild(day);
 				if (root[residual + i] == undefined) {
 					// day.innerHTML = "";
@@ -1537,7 +1537,6 @@ popup.addEventListener("click", (e) => {
 
 		myShiftsArr.forEach((item, index) => {
 			if (item == targetItemInTable) {
-				console.log(index);
 			}
 		});
 		////
@@ -1546,8 +1545,8 @@ popup.addEventListener("click", (e) => {
 			updateLocalStorage("userShift", shiftObj);
 
 			//для конструктора смен
-
-			// let currentDay = new Date(year, month, 1);
+			let currentDay = new Date(JSON.parse(selectedDate));
+			console.log(currentDay);
 			console.log(targetItemInTable);
 		}
 	}
