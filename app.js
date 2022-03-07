@@ -5,6 +5,16 @@ const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 let calendarCountShift = calendar.querySelector(".calendar-count");
 let arrForUserNotes;
+let firstElemIndex;
+let startDay;
+
+if (localStorage.startDay) {
+	startDay = JSON.parse(localStorage.getItem("startDay"));
+}
+
+const updateLocalStorage = (name, data) => {
+	localStorage.setItem(name, JSON.stringify(data));
+};
 
 function UserShift(
 	name = "Мое предприятие",
@@ -380,17 +390,25 @@ const generateCalendar = (month, year) => {
 		let firstDay = new Date(year, month, 1);
 
 		//получаем 1 января 2022 года, от этой даты привязываем готовые графики
-		let dayNewYear = new Date(2022, 0, 1);
-		console.log(dayNewYear);
+		startDay = new Date(2022, 0, 1);
 
-		let diff = firstDay - dayNewYear;
+		if (shiftObj.template && firstElemIndex) {
+			startDay = new Date(year, month, firstElemIndex + 1);
+			console.log(startDay);
+			updateLocalStorage("startDay", startDay);
+		}
+		if (localStorage.startDay) {
+			startDay = JSON.parse(localStorage.getItem("startDay"));
+		}
+
+		let diff = firstDay - startDay;
 
 		//количество милисекунд в сутках
 		//  86400000 = 1000 * 60 * 60 * 24;
 
-		// количество дней с начала года до первого для текущего месяца
+		// количество дней с начала года до первого дня текущего месяца
 		let dayYear = Math.round(diff / 86400000);
-		console.log(dayYear);
+		console.log(`dayYear ${dayYear}`);
 		//заполняем поля смен
 
 		const fillDay = (shift, calendarCount, arrForCount, nameShift, root) => {
@@ -421,7 +439,13 @@ const generateCalendar = (month, year) => {
 				}
 
 				//заполняем колонку смен
+
+				if (localStorage.firstElemIndex) {
+					firstElemIndex = +localStorage.getItem("firstElemIndex");
+					console.log(`firstElemIndex ${firstElemIndex}`);
+				}
 				day.innerHTML = root[residual + i + lenShift];
+
 				shift.appendChild(day);
 				if (root[residual + i] == undefined) {
 					// day.innerHTML = "";
@@ -881,10 +905,6 @@ function UserSettings(theme) {
 // 	this.root = root;
 // }
 
-const updateLocalStorage = (name, data) => {
-	localStorage.setItem(name, JSON.stringify(data));
-};
-
 const filterTasks = () => {
 	const activeTasks =
 		tasks.length && tasks.filter((item) => item.completed == false);
@@ -1308,9 +1328,6 @@ rightClickMenuItems.addEventListener("click", (e) => {
 				calendarCountShifts[index].innerHTML = arrForCount.length;
 			}
 		});
-
-		// if (shiftObj.template) {
-		// }
 	}
 
 	if (target.closest(".right-click-menu-item__color input")) {
@@ -1501,7 +1518,7 @@ popup.addEventListener("click", (e) => {
 		);
 		let myShiftsArr = Array.prototype.slice.call(myShiftsNodeList);
 
-		let firstElemIndex = myShiftsArr.findIndex((item) =>
+		firstElemIndex = myShiftsArr.findIndex((item) =>
 			item.closest("[data-key-note]")
 		);
 		let myShiftsArrReverse = myShiftsArr.slice().reverse();
@@ -1535,19 +1552,23 @@ popup.addEventListener("click", (e) => {
 			}
 		});
 
-		myShiftsArr.forEach((item, index) => {
-			if (item == targetItemInTable) {
-			}
-		});
+		// myShiftsArr.forEach((item, index) => {
+		// 	if (item == targetItemInTable) {
+		// 	}
+		// });
 		////
 		if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
 			shiftObj.root.unshift(myShiftsForLocalStorage);
 			updateLocalStorage("userShift", shiftObj);
+			updateLocalStorage("firstElemIndex", firstElemIndex);
+
+			location.hash = "";
+			location.reload();
 
 			//для конструктора смен
-			let currentDay = new Date(JSON.parse(selectedDate));
-			console.log(currentDay);
-			console.log(targetItemInTable);
+			// let currentDay = new Date(JSON.parse(selectedDate));
+			// console.log(currentDay);
+			// console.log(targetItemInTable);
 		}
 	}
 });
