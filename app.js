@@ -8,10 +8,6 @@ let arrForUserNotes;
 let firstElemIndex;
 let startDay;
 
-if (localStorage.startDay) {
-	startDay = JSON.parse(localStorage.getItem("startDay"));
-}
-
 const updateLocalStorage = (name, data) => {
 	localStorage.setItem(name, JSON.stringify(data));
 };
@@ -21,7 +17,8 @@ function UserShift(
 	shiftsName = ["Моя смена"],
 	namesContextMenu = [],
 	root = [],
-	template
+	template,
+	startDate
 ) {
 	if (name == "") {
 		name = "Мое предприятие";
@@ -34,20 +31,19 @@ function UserShift(
 	this.namesContextMenu = namesContextMenu;
 	this.root = root;
 	this.template = template;
+	this.startDate = startDate;
 }
-
-// let myShifts = [];
 
 let shiftTemplate = {
 	namesContextMenu: [
-		{ key: "", title: "Выходной" },
+		{ key: "_", title: "Выходной" },
 		{ key: "&#10004;", title: "Закончить построение графика", endCicle: true },
 	],
 	root: [[]],
 	template: true,
 };
 
-const choiceShifts = [
+let choiceShifts = [
 	{
 		name: "Запорожская АЭС",
 		shiftsName: ["А", "Б", "В", "Г", "Д", "Е"],
@@ -150,6 +146,7 @@ const choiceShifts = [
 			],
 			[],
 		],
+		startDate: "2022-01-01",
 	},
 	{
 		name: "Запорожская ТЭС",
@@ -172,6 +169,7 @@ const choiceShifts = [
 			["", "16", "16", "", "8", "8", "0", "0"],
 			[],
 		],
+		startDate: "2022-01-01",
 	},
 ];
 //шаблон объекта смен
@@ -179,6 +177,10 @@ let shiftObj = choiceShifts[0];
 
 if (localStorage.userShift) {
 	shiftObj = JSON.parse(localStorage.getItem("userShift"));
+}
+
+if (localStorage.choiceShifts) {
+	choiceShifts = JSON.parse(localStorage.getItem("choiceShifts"));
 }
 
 choiceShifts.forEach((item, index) => {
@@ -390,16 +392,7 @@ const generateCalendar = (month, year) => {
 		let firstDay = new Date(year, month, 1);
 
 		//получаем 1 января 2022 года, от этой даты привязываем готовые графики
-		startDay = new Date(2022, 0, 1);
-
-		if (shiftObj.template && firstElemIndex) {
-			startDay = new Date(year, month, firstElemIndex + 1);
-			console.log(startDay);
-			updateLocalStorage("startDay", startDay);
-		}
-		if (localStorage.startDay) {
-			startDay = JSON.parse(localStorage.getItem("startDay"));
-		}
+		startDay = new Date(shiftObj.startDate);
 
 		let diff = firstDay - startDay;
 
@@ -408,15 +401,15 @@ const generateCalendar = (month, year) => {
 
 		// количество дней с начала года до первого дня текущего месяца
 		let dayYear = Math.round(diff / 86400000);
-		console.log(`dayYear ${dayYear}`);
+		// console.log(`dayYear ${dayYear}`);
 		//заполняем поля смен
 
 		const fillDay = (shift, calendarCount, arrForCount, nameShift, root) => {
 			let lenShift = root.length;
-			console.log(`lenShift ${lenShift}`);
+			// console.log(`lenShift ${lenShift}`);
 
 			let residual = dayYear % lenShift;
-			console.log(`residual ${residual}`);
+			// console.log(`residual ${residual}`);
 
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
@@ -440,15 +433,14 @@ const generateCalendar = (month, year) => {
 
 				//заполняем колонку смен
 
-				if (localStorage.firstElemIndex) {
-					firstElemIndex = +localStorage.getItem("firstElemIndex");
-					console.log(`firstElemIndex ${firstElemIndex}`);
-				}
 				day.innerHTML = root[residual + i + lenShift];
 
 				shift.appendChild(day);
-				if (root[residual + i] == undefined) {
-					// day.innerHTML = "";
+				if (root[residual + i + lenShift] == undefined) {
+					//
+					//
+					//
+					day.innerHTML = "";
 					shift.appendChild(day);
 				}
 			}
@@ -507,7 +499,7 @@ const generateCalendar = (month, year) => {
 			//считаем количество смен в месяце
 			namesContextMenu.forEach((obj) => {
 				if (obj.count) {
-					if (day.innerHTML == obj.key) {
+					if (day.innerHTML.trim() == obj.key.trim()) {
 						arrForCount.push(day.innerHTML);
 					}
 				}
@@ -717,14 +709,6 @@ burgerMenu.addEventListener("click", (e) => {
 			".burger__menu-add-shift input"
 		);
 
-		// myShifts.push(
-		// 	new UserShift(
-		// 		burgerMenuAddShiftInputs[0].value,
-		// 		burgerMenuAddShiftInputs[1].value,
-		// 		shiftTemplate.namesContextMenu,
-		// 		shiftTemplate.root
-		// 	)
-		// );
 		burgerMenuAddShiftInputs[0].value = "";
 		burgerMenuAddShiftInputs[1].value = "";
 		updateLocalStorage(
@@ -734,7 +718,8 @@ burgerMenu.addEventListener("click", (e) => {
 				burgerMenuAddShiftInputs[1].value,
 				shiftTemplate.namesContextMenu,
 				shiftTemplate.root,
-				true
+				true,
+				startDay
 			)
 		);
 		location.hash = "";
@@ -897,13 +882,6 @@ function UserNotes(date, shift, color, desc, key) {
 function UserSettings(theme) {
 	this.theme = theme;
 }
-
-// function UserShift(name, shiftsName, namesContextMenu, root) {
-// 	this.name = name;
-// 	this.shiftsName = shiftsName;
-// 	this.namesContextMenu = namesContextMenu;
-// 	this.root = root;
-// }
 
 const filterTasks = () => {
 	const activeTasks =
@@ -1077,6 +1055,7 @@ function UserNameShift(key, title) {
 		title = `Смена '${key}'`;
 	}
 	this.title = title;
+	this.count = true;
 }
 
 let popupContentBody = document.querySelector(".popup__content-body");
@@ -1118,7 +1097,7 @@ calendarBody.addEventListener("click", (e) => {
 				popupContentBody.innerHTML += `
 			<div class="popup__content-item">
 				<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
-					<div class="right-click-menu-item__value" >
+					<div class="right-click-menu-item__value">
 					${item.key}
 					</div>
 					<div class="right-click-menu-item__name">
@@ -1131,8 +1110,8 @@ calendarBody.addEventListener("click", (e) => {
 				popupContentBody.innerHTML += `
 				<div class="popup__content-item">
 					<div class="popup__add-shift-btn right-click-menu-item__btn">
-						<div class="right-click-menu-item__value" >
-						" ${item.key}"
+						<div class="right-click-menu-item__value">
+						"${item.key}"
 						</div>
 						<div class="right-click-menu-item__name">
 						${item.title}
@@ -1169,11 +1148,11 @@ calendarBody.addEventListener("click", (e) => {
 						/>
 					</div>
 
-					<div class="close-menu right-click-menu-item__btn">
+					<div class="close-menu right-click-menu-item__btn add-task-btn">
 					<div class="right-click-menu-item__value">
 					<span class="cross"></span>
 					</div>
-					<div class="right-click-menu-item__name button-wrapper add-task-btn">
+					<div class="right-click-menu-item__name button-wrapper ">
 					Добавить смену
 					</div>
 				</div>
@@ -1552,23 +1531,21 @@ popup.addEventListener("click", (e) => {
 			}
 		});
 
-		// myShiftsArr.forEach((item, index) => {
-		// 	if (item == targetItemInTable) {
-		// 	}
-		// });
-		////
 		if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
 			shiftObj.root.unshift(myShiftsForLocalStorage);
+
+			//получаем день с которого начинается отсчет графика
+
+			startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
+			shiftObj.startDate = startDay;
+			shiftObj.template = false;
 			updateLocalStorage("userShift", shiftObj);
-			updateLocalStorage("firstElemIndex", firstElemIndex);
+
+			choiceShifts.unshift(shiftObj);
+			updateLocalStorage("choiceShifts", choiceShifts);
 
 			location.hash = "";
 			location.reload();
-
-			//для конструктора смен
-			// let currentDay = new Date(JSON.parse(selectedDate));
-			// console.log(currentDay);
-			// console.log(targetItemInTable);
 		}
 	}
 });

@@ -785,12 +785,12 @@ body.lock {
 	top: 14px;
 	left: 50%;
 }
-.add-task-btn .cross:before {
+/* .add-task-btn .cross:before {
 	transform: rotate(0deg);
 }
 .add-task-btn .cross:after {
 	transform: rotate(90deg);
-}
+} */
 .description {
 	overflow: hidden;
 }
