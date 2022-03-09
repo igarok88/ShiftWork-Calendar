@@ -13,16 +13,24 @@ const updateLocalStorage = (name, data) => {
 };
 
 function UserShift(
-	name = "Мое предприятие",
+	name,
 	shiftsName = ["Моя смена"],
 	namesContextMenu = [],
 	root = [],
 	template,
 	startDate
 ) {
+	//присваиваем стандартное имя предприятия
 	if (name == "") {
 		name = "Мое предприятие";
 	}
+	// если название совпадает, то добавляем индекс
+	choiceShifts.forEach((obj, index) => {
+		if (obj.name == name) {
+			name = `${name} ${index + 2}`;
+		}
+	});
+
 	if (shiftsName == "") {
 		shiftsName = ["Моя смена"];
 	}
@@ -709,8 +717,6 @@ burgerMenu.addEventListener("click", (e) => {
 			".burger__menu-add-shift input"
 		);
 
-		burgerMenuAddShiftInputs[0].value = "";
-		burgerMenuAddShiftInputs[1].value = "";
 		updateLocalStorage(
 			"userShift",
 			new UserShift(
@@ -1051,9 +1057,11 @@ const filterArr = (arr) => {
 
 function UserNameShift(key, title) {
 	this.key = key;
+
 	if (title == "") {
 		title = `Смена '${key}'`;
 	}
+
 	this.title = title;
 	this.count = true;
 }
@@ -1473,19 +1481,25 @@ popup.addEventListener("click", (e) => {
 	let addNewShiftBtn = document.querySelector(
 		".popup__content-item .add-task-btn"
 	);
-
 	let addShiftInputs = document.querySelectorAll(".popup__content-item input");
+
 	addNewShiftBtn.addEventListener("click", () => {
 		shiftObj.namesContextMenu.unshift(
 			new UserNameShift(addShiftInputs[0].value, addShiftInputs[1].value)
 		);
 
+		// let replace = confirm("Смена с таким именем существует, заменить?");
+		// shiftObj.namesContextMenu.forEach((obj, index) => {
+		// 	if (obj.key == addShiftInputs[0].value) {
+		// 		shiftObj.namesContextMenu.splice(index, 1);
+		// 		console.log(shiftObj.namesContextMenu[index]);
+		// 	}
+		// });
+
 		targetItemInTable.innerHTML = addShiftInputs[0].value;
 		targetItemInTable.setAttribute("data-key-note", addShiftInputs[0].value);
 
 		targetItemInTable.style.backgroundColor = "red";
-		// targetItemInTable.setAttribute("data-shift", addShiftInputs[1].value);
-		// targetItemInTable.setAttribute("data-color");
 
 		updateLocalStorage("userShift", shiftObj);
 		popupClose();
