@@ -314,7 +314,7 @@ body.lock {
 	position: fixed;
 	top: 8px;
 	left: 8px;
-	z-index: 3;
+	z-index: 4;
 	background-color: var(--bg-main);
 	border-radius: 5px;
 	box-shadow: 0 0 8px var(--color-txt);
@@ -326,7 +326,7 @@ body.lock {
 	position: fixed;
 	top: 18px;
 	left: 18px;
-	z-index: 4;
+	z-index: 5;
 }
 .burger__btn span {
 	position: absolute;
@@ -381,6 +381,9 @@ body.lock {
 	border-radius: 10px;
 	position: relative;
 }
+.burger__menu-item .input-wrapper input {
+	padding: 20px 0;
+}
 
 .burger__menu-item-title {
 	padding: 25px;
@@ -408,6 +411,14 @@ body.lock {
 .burger__menu-item-cross.active {
 	transform: rotate(-90deg);
 }
+.burger__submenu-item .burger__menu-item-cross {
+	padding: 30px;
+}
+
+.burger__submenu-item .burger__menu-item-cross .cross {
+	top: calc(50% - 10px);
+	left: calc(50% - 10px);
+}
 
 .burger__menu-item-more {
 	height: 0;
@@ -419,17 +430,34 @@ body.lock {
 	transition: all 0.5s ease 0s;
 }
 .burger__menu-item-more.active {
-	margin: 10px 0;
+	margin: 0;
 	padding: 2px;
 	opacity: 1;
 	visibility: visible;
 	height: inherit;
 }
+
+.burger__menu-item .burger__submenu-title {
+	display: flex;
+	justify-content: space-between;
+}
+
 .burger__menu-add-shift-btn {
 	padding: 25px;
+	background-color: var(--bg-main);
+	border-radius: 10px;
+	border: 2px solid var(--color-txt);
+	text-align: center;
 }
 .burger__submenu-item {
 	padding: 25px;
+}
+.burger__submenu-title {
+	display: flex;
+	align-items: center;
+}
+.burger__menu-create-shift .burger__submenu-item {
+	padding: 0 25px 25px 25px;
 }
 
 .burger__btn.active span {
@@ -448,6 +476,14 @@ body.lock {
 	-ms-transform: rotate(-45deg);
 	transform: rotate(-45deg);
 	bottom: 9px;
+}
+.burger__menu-reserve-shift-btn {
+	padding: 25px;
+	margin-top: 15px;
+	background-color: var(--bg-main);
+	border-radius: 10px;
+	border: 2px solid var(--color-txt);
+	text-align: center;
 }
 
 /* .burger__date {
