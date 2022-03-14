@@ -45,7 +45,7 @@ function UserShift(
 let shiftTemplate = {
 	namesContextMenu: [
 		{ key: "", title: "Выходной" },
-		{ key: "&#10004;", title: "Закончить построение графика", endCicle: true },
+		// { key: "&#10004;", title: "Закончить построение графика", endCicle: true },
 	],
 	root: [[]],
 	template: true,
@@ -55,7 +55,7 @@ let choiceShifts = [
 	{
 		name: "Запорожская АЭС",
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
-		reserveShift: { name: "E", status: false },
+		options: [{ name: "E", status: false }],
 		namesContextMenu: [
 			{ key: "7", title: "Смена с 07-00", color: "", count: true },
 			{ key: "15", title: "Смена с 15-00", color: "", count: true },
@@ -158,7 +158,8 @@ let choiceShifts = [
 	},
 	{
 		name: "Запорожская ТЭС",
-		shiftsName: ["А", "Б", "В", "Г", "Д"],
+		shiftsName: ["А", "Б", "В", "Г"],
+		options: [{ name: "Д", status: false }],
 		namesContextMenu: [
 			{ key: "8", title: "Смена с 08-00", color: "", count: true },
 			{ key: "16", title: "Смена с 16-00", color: "", count: true },
@@ -175,7 +176,6 @@ let choiceShifts = [
 			["16", "", "8", "8", "0", "0", "", "16"],
 			["8", "8", "0", "0", "", "16", "16", ""],
 			["", "16", "16", "", "8", "8", "0", "0"],
-			[],
 		],
 		startDate: "2022-01-01",
 	},
@@ -191,29 +191,43 @@ if (localStorage.choiceShifts) {
 	choiceShifts = JSON.parse(localStorage.getItem("choiceShifts"));
 }
 
-choiceShifts.forEach((item, index) => {
+choiceShifts.forEach((obj, index) => {
 	let burgerMenuChoiceShifts = document.querySelector(
 		".burger__menu-choice-shift"
 	);
 
-	burgerMenuChoiceShifts.innerHTML += `
-		<div class="burger__submenu-item burger__menu-shift">
-			<div class="burger__submenu-title">
-				<div class='burger__submenu-name'>${item.name}</div>
-				<div class="burger__menu-item-cross">
-					<span class="cross"></span>
+	if (obj.name == shiftObj.name && obj.options) {
+		burgerMenuChoiceShifts.innerHTML += `
+			<div class="burger__submenu-item burger__menu-shift">
+				<div class="burger__submenu-title">
+					<div class='burger__submenu-name'>${obj.name}</div>
+					<div class="burger__menu-item-cross">
+						<span class="cross"></span>
+					</div>
 				</div>
+				<div class="burger__menu-item-more"></div>
 			</div>
-			
-			<div class="burger__menu-item-more"></div>
-		</div>
-	`;
+		`;
+	} else {
+		burgerMenuChoiceShifts.innerHTML += `
+			<div class="burger__submenu-item burger__menu-shift">
+				<div class="burger__submenu-title">
+					<div class='burger__submenu-name'>${obj.name}</div>
+				</div>
+				<div class="burger__menu-item-more"></div>
+			</div>
+		`;
+	}
+
 	let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
 	burgerMenuShifts.forEach((menuShift, index) => {
 		menuShift.addEventListener("click", (e) => {
 			let currentShift = e.target.closest(".burger__menu-shift");
 			if (currentShift == menuShift) {
-				if (e.target.closest(".burger__menu-item-cross")) {
+				if (
+					e.target.closest(".burger__menu-item-cross") ||
+					e.target.closest(".burger__menu-reserve-shift-btn")
+				) {
 				} else {
 					shiftObj = choiceShifts[index];
 					updateLocalStorage("userShift", shiftObj);
@@ -684,15 +698,14 @@ burgerMenu.addEventListener("click", (e) => {
 
 		if (localStorage.userShift) {
 			shiftObj = JSON.parse(localStorage.getItem("userShift"));
-			let burgerSubmenuItems = document.querySelectorAll(
-				".burger__submenu-item"
-			);
-			burgerSubmenuItems.forEach((item, index) => {
-				if (item.textContent.trim() == shiftObj.name) {
-					burgerSubmenuItems[index].classList.add("focus");
-				}
-			});
 		}
+
+		let burgerSubmenuItems = document.querySelectorAll(".burger__submenu-item");
+		burgerSubmenuItems.forEach((item, index) => {
+			if (item.textContent.trim() == shiftObj.name) {
+				burgerSubmenuItems[index].classList.add("focus");
+			}
+		});
 	}
 
 	if (target.closest(".burger__menu-item-cross")) {
@@ -704,27 +717,39 @@ burgerMenu.addEventListener("click", (e) => {
 		let burgerMenuItemMore = burgerSubMenuItem.querySelector(
 			".burger__menu-item-more"
 		);
-		burgerMenuItemMore.innerHTML = `
+
+		if (shiftObj.options) {
+			burgerMenuItemMore.innerHTML = `
 			<div class='burger__menu-reserve-shift-btn'>${
-				shiftObj.reserveShift.status ? "Убрать" : "Добавить"
+				shiftObj.options[0].status ? "Убрать" : "Добавить"
 			} резервную смену</div>
 		`;
+		}
+
 		if (burgerMenuItemMore) {
 			burgerMenuItemMore.classList.toggle("active");
 		}
 	}
 
 	if (target.closest(".burger__menu-reserve-shift-btn")) {
-		if (shiftObj.reserveShift.status) {
+		if (shiftObj.options[0].status) {
 			shiftObj.shiftsName.pop();
 			shiftObj.root.pop();
-			shiftObj.reserveShift.status = false;
+			shiftObj.options[0].status = false;
 		} else {
-			shiftObj.shiftsName.push(shiftObj.reserveShift.name);
+			shiftObj.shiftsName.push(shiftObj.options[0].name);
 			shiftObj.root.push([]);
-			shiftObj.reserveShift.status = true;
+			shiftObj.options[0].status = true;
 		}
+
+		choiceShifts.forEach((obj, index) => {
+			if (obj.name == shiftObj.name) {
+				choiceShifts[index] = shiftObj;
+			}
+		});
 		updateLocalStorage("userShift", shiftObj);
+		updateLocalStorage("choiceShifts", choiceShifts);
+		location.reload();
 	}
 
 	if (target.closest(".burger__menu-color")) {
@@ -1142,21 +1167,21 @@ calendarBody.addEventListener("click", (e) => {
 		popupContentBody.innerHTML = "";
 
 		shiftObj.namesContextMenu.forEach((item) => {
-			if (item.endCicle) {
-				popupContentBody.innerHTML += `
-			<div class="popup__content-item">
-				<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
-					<div class="right-click-menu-item__value">
-					${item.key}
-					</div>
-					<div class="right-click-menu-item__name">
-					${item.title}
-					</div>
-				</div>
-			</div>
-		`;
-			} else {
-				popupContentBody.innerHTML += `
+			// 	if (item.endCicle) {
+			// 		popupContentBody.innerHTML += `
+			// 	<div class="popup__content-item">
+			// 		<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
+			// 			<div class="right-click-menu-item__value">
+			// 			${item.key}
+			// 			</div>
+			// 			<div class="right-click-menu-item__name">
+			// 			${item.title}
+			// 			</div>
+			// 		</div>
+			// 	</div>
+			// `;
+			// 	} else {
+			popupContentBody.innerHTML += `
 				<div class="popup__content-item">
 					<div class="popup__add-shift-btn right-click-menu-item__btn">
 						<div class="right-click-menu-item__value">
@@ -1168,7 +1193,7 @@ calendarBody.addEventListener("click", (e) => {
 					</div>
 				</div>
 			`;
-			}
+			// 	}
 		});
 
 		let addShiftItem = `
@@ -1487,14 +1512,17 @@ const popupClose = () => {
 
 popupCloseBtn.addEventListener("click", popupClose);
 
+let myShiftsForLocalStorage = [];
+
 popup.addEventListener("click", (e) => {
 	if (e.target == popup) {
 		popupClose();
 	}
 	//добавляем смену в календарь в режиме создания графика
 	if (
-		e.target.closest(".popup__add-shift-btn") &&
-		!e.target.closest(".popup__add-shift-btn[data-end-cicle]")
+		e.target.closest(".popup__add-shift-btn")
+		// &&
+		// !e.target.closest(".popup__add-shift-btn[data-end-cicle]")
 	) {
 		let popupContentItem = e.target.closest(".popup__content-item");
 		let currentBtnKeyNote = popupContentItem.querySelector(
@@ -1509,9 +1537,9 @@ popup.addEventListener("click", (e) => {
 		targetItemInTable.setAttribute("data-key-note", currentBtnKeyNoteValue);
 		targetItemInTable.setAttribute("data-shift", "");
 
-		if (e.target.closest("[data-end-cicle]")) {
-			targetItemInTable.setAttribute("data-end-cicle", "");
-		}
+		// if (e.target.closest("[data-end-cicle]")) {
+		// 	targetItemInTable.setAttribute("data-end-cicle", "");
+		// }
 
 		popupClose();
 	}
@@ -1559,8 +1587,6 @@ popup.addEventListener("click", (e) => {
 		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
 		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
 
-		let myShiftsForLocalStorage = [];
-
 		myShiftsFinal.forEach((item, index) => {
 			let attr;
 
@@ -1576,29 +1602,54 @@ popup.addEventListener("click", (e) => {
 
 			myShiftsForLocalStorage.push(attr);
 
-			if (item.closest("[data-end-cicle]") && !item.closest("[data-shift]")) {
-				myShiftsForLocalStorage.splice(index, 1);
-			}
+			// if (item.closest("[data-end-cicle]") && !item.closest("[data-shift]")) {
+			// 	myShiftsForLocalStorage.splice(index, 1);
+			// }
 		});
 
-		if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
-			targetItemInTable.removeAttribute("data-shift", "");
-			shiftObj.root.unshift(myShiftsForLocalStorage);
-			shiftObj.namesContextMenu.pop();
+		// if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
+		// targetItemInTable.removeAttribute("data-shift", "");
+		// shiftObj.root.unshift(myShiftsForLocalStorage);
+		// shiftObj.namesContextMenu.pop();
 
-			//получаем день с которого начинается отсчет графика
+		// //получаем день с которого начинается отсчет графика
 
-			startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
-			shiftObj.startDate = startDay;
-			shiftObj.template = false;
-			updateLocalStorage("userShift", shiftObj);
+		// startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
+		// shiftObj.startDate = startDay;
+		// shiftObj.template = false;
+		// updateLocalStorage("userShift", shiftObj);
 
-			choiceShifts.unshift(shiftObj);
-			updateLocalStorage("choiceShifts", choiceShifts);
+		// choiceShifts.unshift(shiftObj);
+		// updateLocalStorage("choiceShifts", choiceShifts);
 
-			location.hash = "";
-			location.reload();
-		}
+		// location.hash = "";
+		// location.reload();
+		// }
+	}
+});
+
+calendar.addEventListener("click", (e) => {
+	if (
+		e.target.closest(".burger__end-cicle-wrapper") ||
+		e.target.closest(".burger__end-cicle-btn")
+	) {
+		console.log("ok");
+		// targetItemInTable.removeAttribute("data-shift", "");
+		shiftObj.root.unshift(myShiftsForLocalStorage);
+		shiftObj.namesContextMenu.pop();
+
+		//получаем день с которого начинается отсчет графика
+
+		startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
+		shiftObj.startDate = startDay;
+		shiftObj.template = false;
+		updateLocalStorage("userShift", shiftObj);
+
+		choiceShifts.unshift(shiftObj);
+		updateLocalStorage("choiceShifts", choiceShifts);
+
+		// location.hash = "";
+		// location.reload();
 	}
 });
 
@@ -1657,3 +1708,11 @@ function handleHash() {
 window.addEventListener("hashchange", handleHash);
 
 handleHash();
+
+if (shiftObj.template) {
+	burgerBtn.style.display = "none";
+	burgerWrapper.style.display = "none";
+} else {
+	burgerBtn.style.display = "block";
+	burgerWrapper.style.display = "block";
+}
