@@ -325,6 +325,9 @@ body.lock {
 	/* box-shadow: 0 0 8px var(--color-txt); */
 	border: 2px solid var(--color-txt);
 }
+.burger__end-cicle-wrapper {
+	left: 70px;
+}
 .calendar .burger__end-cicle-btn {
 	color: var(--color-txt);
 	text-align: center;
@@ -340,6 +343,9 @@ body.lock {
 	top: 18px;
 	left: 18px;
 	z-index: 5;
+}
+.burger__end-cicle-btn {
+	left: 80px;
 }
 .burger__btn span {
 	position: absolute;

@@ -45,7 +45,7 @@ function UserShift(
 let shiftTemplate = {
 	namesContextMenu: [
 		{ key: "", title: "Выходной" },
-		// { key: "&#10004;", title: "Закончить построение графика", endCicle: true },
+		{ key: "&#10004;", title: "Закончить построение графика", endCicle: true },
 	],
 	root: [[]],
 	template: true,
@@ -1167,21 +1167,21 @@ calendarBody.addEventListener("click", (e) => {
 		popupContentBody.innerHTML = "";
 
 		shiftObj.namesContextMenu.forEach((item) => {
-			// 	if (item.endCicle) {
-			// 		popupContentBody.innerHTML += `
-			// 	<div class="popup__content-item">
-			// 		<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
-			// 			<div class="right-click-menu-item__value">
-			// 			${item.key}
-			// 			</div>
-			// 			<div class="right-click-menu-item__name">
-			// 			${item.title}
-			// 			</div>
-			// 		</div>
-			// 	</div>
-			// `;
-			// 	} else {
-			popupContentBody.innerHTML += `
+			if (item.endCicle) {
+				popupContentBody.innerHTML += `
+				<div class="popup__content-item">
+					<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
+						<div class="right-click-menu-item__value">
+						${item.key}
+						</div>
+						<div class="right-click-menu-item__name">
+						${item.title}
+						</div>
+					</div>
+				</div>
+			`;
+			} else {
+				popupContentBody.innerHTML += `
 				<div class="popup__content-item">
 					<div class="popup__add-shift-btn right-click-menu-item__btn">
 						<div class="right-click-menu-item__value">
@@ -1193,7 +1193,7 @@ calendarBody.addEventListener("click", (e) => {
 					</div>
 				</div>
 			`;
-			// 	}
+			}
 		});
 
 		let addShiftItem = `
@@ -1520,9 +1520,8 @@ popup.addEventListener("click", (e) => {
 	}
 	//добавляем смену в календарь в режиме создания графика
 	if (
-		e.target.closest(".popup__add-shift-btn")
-		// &&
-		// !e.target.closest(".popup__add-shift-btn[data-end-cicle]")
+		e.target.closest(".popup__add-shift-btn") &&
+		!e.target.closest(".popup__add-shift-btn[data-end-cicle]")
 	) {
 		let popupContentItem = e.target.closest(".popup__content-item");
 		let currentBtnKeyNote = popupContentItem.querySelector(
@@ -1537,9 +1536,9 @@ popup.addEventListener("click", (e) => {
 		targetItemInTable.setAttribute("data-key-note", currentBtnKeyNoteValue);
 		targetItemInTable.setAttribute("data-shift", "");
 
-		// if (e.target.closest("[data-end-cicle]")) {
-		// 	targetItemInTable.setAttribute("data-end-cicle", "");
-		// }
+		if (e.target.closest("[data-end-cicle]")) {
+			targetItemInTable.setAttribute("data-end-cicle", "");
+		}
 
 		popupClose();
 	}
@@ -1602,56 +1601,56 @@ popup.addEventListener("click", (e) => {
 
 			myShiftsForLocalStorage.push(attr);
 
-			// if (item.closest("[data-end-cicle]") && !item.closest("[data-shift]")) {
-			// 	myShiftsForLocalStorage.splice(index, 1);
-			// }
+			if (item.closest("[data-end-cicle]") && !item.closest("[data-shift]")) {
+				myShiftsForLocalStorage.splice(index, 1);
+			}
 		});
 
-		// if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
-		// targetItemInTable.removeAttribute("data-shift", "");
-		// shiftObj.root.unshift(myShiftsForLocalStorage);
-		// shiftObj.namesContextMenu.pop();
+		if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
+			targetItemInTable.removeAttribute("data-shift", "");
+			shiftObj.root.unshift(myShiftsForLocalStorage);
+			shiftObj.namesContextMenu.pop();
 
-		// //получаем день с которого начинается отсчет графика
+			//получаем день с которого начинается отсчет графика
 
-		// startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
-		// shiftObj.startDate = startDay;
-		// shiftObj.template = false;
-		// updateLocalStorage("userShift", shiftObj);
+			startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
+			shiftObj.startDate = startDay;
+			shiftObj.template = false;
+			updateLocalStorage("userShift", shiftObj);
 
-		// choiceShifts.unshift(shiftObj);
-		// updateLocalStorage("choiceShifts", choiceShifts);
+			choiceShifts.unshift(shiftObj);
+			updateLocalStorage("choiceShifts", choiceShifts);
 
-		// location.hash = "";
-		// location.reload();
-		// }
+			location.hash = "";
+			location.reload();
+		}
 	}
 });
 
-calendar.addEventListener("click", (e) => {
-	if (
-		e.target.closest(".burger__end-cicle-wrapper") ||
-		e.target.closest(".burger__end-cicle-btn")
-	) {
-		console.log("ok");
-		// targetItemInTable.removeAttribute("data-shift", "");
-		shiftObj.root.unshift(myShiftsForLocalStorage);
-		shiftObj.namesContextMenu.pop();
+// calendar.addEventListener("click", (e) => {
+// 	if (
+// 		e.target.closest(".burger__end-cicle-wrapper") ||
+// 		e.target.closest(".burger__end-cicle-btn")
+// 	) {
+// 		console.log("ok");
+// 		// targetItemInTable.removeAttribute("data-shift", "");
+// 		shiftObj.root.unshift(myShiftsForLocalStorage);
+// 		shiftObj.namesContextMenu.pop();
 
-		//получаем день с которого начинается отсчет графика
+// 		//получаем день с которого начинается отсчет графика
 
-		startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
-		shiftObj.startDate = startDay;
-		shiftObj.template = false;
-		updateLocalStorage("userShift", shiftObj);
+// 		startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
+// 		shiftObj.startDate = startDay;
+// 		shiftObj.template = false;
+// 		updateLocalStorage("userShift", shiftObj);
 
-		choiceShifts.unshift(shiftObj);
-		updateLocalStorage("choiceShifts", choiceShifts);
+// 		choiceShifts.unshift(shiftObj);
+// 		updateLocalStorage("choiceShifts", choiceShifts);
 
-		// location.hash = "";
-		// location.reload();
-	}
-});
+// 		location.hash = "";
+// 		location.reload();
+// 	}
+// });
 
 document.addEventListener("keydown", (e) => {
 	if (e.keyCode == 27 && popup.classList.contains("show")) {
@@ -1708,11 +1707,3 @@ function handleHash() {
 window.addEventListener("hashchange", handleHash);
 
 handleHash();
-
-if (shiftObj.template) {
-	burgerBtn.style.display = "none";
-	burgerWrapper.style.display = "none";
-} else {
-	burgerBtn.style.display = "block";
-	burgerWrapper.style.display = "block";
-}
