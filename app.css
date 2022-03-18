@@ -67,11 +67,6 @@ body.lock {
 	grid-template-rows: 1fr;
 	gap: 0px 0px;
 }
-.calendar .calendar-end-cicle {
-	position: fixed;
-	bottom: 0;
-	border: 2px solid var(--color-txt);
-}
 
 .calendar-days {
 	color: var(--color-txt);
@@ -312,7 +307,7 @@ body.lock {
 		opacity: 1;
 	}
 }
-.burger__end-cicle-wrapper,
+
 .burger-wrapper {
 	width: 50px;
 	height: 42px;
@@ -322,19 +317,8 @@ body.lock {
 	z-index: 4;
 	background-color: var(--bg-main);
 	border-radius: 5px;
-	/* box-shadow: 0 0 8px var(--color-txt); */
-	border: 2px solid var(--color-txt);
+	box-shadow: 0 0 8px var(--color-txt);
 }
-.burger__end-cicle-wrapper {
-	left: 70px;
-}
-.calendar .burger__end-cicle-btn {
-	color: var(--color-txt);
-	text-align: center;
-	font-size: 30px;
-	top: 7px;
-}
-.burger__end-cicle-btn,
 .burger__btn {
 	display: block;
 	width: 30px;
@@ -343,9 +327,6 @@ body.lock {
 	top: 18px;
 	left: 18px;
 	z-index: 5;
-}
-.burger__end-cicle-btn {
-	left: 80px;
 }
 .burger__btn span {
 	position: absolute;
@@ -471,7 +452,6 @@ body.lock {
 .burger__submenu-item {
 	padding: 25px;
 }
-
 .burger__submenu-title {
 	display: flex;
 	align-items: center;
@@ -719,9 +699,8 @@ body.lock {
 
 .popup__window {
 	position: relative;
-	/* min-width: 300px; */
+	min-width: 300px;
 	margin: 10px;
-	width: 100%;
 }
 
 .popup__content {

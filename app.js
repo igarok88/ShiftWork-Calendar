@@ -55,7 +55,9 @@ let choiceShifts = [
 	{
 		name: "Запорожская АЭС",
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
-		options: [{ name: "E", status: false }],
+		options: {
+			reserveShift: { name: "E", status: false },
+		},
 		namesContextMenu: [
 			{ key: "7", title: "Смена с 07-00", color: "", count: true },
 			{ key: "15", title: "Смена с 15-00", color: "", count: true },
@@ -159,7 +161,9 @@ let choiceShifts = [
 	{
 		name: "Запорожская ТЭС",
 		shiftsName: ["А", "Б", "В", "Г"],
-		options: [{ name: "Д", status: false }],
+		options: {
+			reserveShift: { name: "Д", status: false },
+		},
 		namesContextMenu: [
 			{ key: "8", title: "Смена с 08-00", color: "", count: true },
 			{ key: "16", title: "Смена с 16-00", color: "", count: true },
@@ -218,7 +222,6 @@ choiceShifts.forEach((obj, index) => {
 			</div>
 		`;
 	}
-
 	let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
 	burgerMenuShifts.forEach((menuShift, index) => {
 		menuShift.addEventListener("click", (e) => {
@@ -698,14 +701,15 @@ burgerMenu.addEventListener("click", (e) => {
 
 		if (localStorage.userShift) {
 			shiftObj = JSON.parse(localStorage.getItem("userShift"));
+			let burgerSubmenuItems = document.querySelectorAll(
+				".burger__submenu-item"
+			);
+			burgerSubmenuItems.forEach((item, index) => {
+				if (item.textContent.trim() == shiftObj.name) {
+					burgerSubmenuItems[index].classList.add("focus");
+				}
+			});
 		}
-
-		let burgerSubmenuItems = document.querySelectorAll(".burger__submenu-item");
-		burgerSubmenuItems.forEach((item, index) => {
-			if (item.textContent.trim() == shiftObj.name) {
-				burgerSubmenuItems[index].classList.add("focus");
-			}
-		});
 	}
 
 	if (target.closest(".burger__menu-item-cross")) {
@@ -717,31 +721,26 @@ burgerMenu.addEventListener("click", (e) => {
 		let burgerMenuItemMore = burgerSubMenuItem.querySelector(
 			".burger__menu-item-more"
 		);
-
-		if (shiftObj.options) {
-			burgerMenuItemMore.innerHTML = `
+		burgerMenuItemMore.innerHTML = `
 			<div class='burger__menu-reserve-shift-btn'>${
-				shiftObj.options[0].status ? "Убрать" : "Добавить"
+				shiftObj.options.reserveShift.status ? "Убрать" : "Добавить"
 			} резервную смену</div>
 		`;
-		}
-
 		if (burgerMenuItemMore) {
 			burgerMenuItemMore.classList.toggle("active");
 		}
 	}
 
 	if (target.closest(".burger__menu-reserve-shift-btn")) {
-		if (shiftObj.options[0].status) {
+		if (shiftObj.options.reserveShift.status) {
 			shiftObj.shiftsName.pop();
 			shiftObj.root.pop();
-			shiftObj.options[0].status = false;
+			shiftObj.options.reserveShift.status = false;
 		} else {
-			shiftObj.shiftsName.push(shiftObj.options[0].name);
+			shiftObj.shiftsName.push(shiftObj.options.reserveShift.name);
 			shiftObj.root.push([]);
-			shiftObj.options[0].status = true;
+			shiftObj.options.reserveShift.status = true;
 		}
-
 		choiceShifts.forEach((obj, index) => {
 			if (obj.name == shiftObj.name) {
 				choiceShifts[index] = shiftObj;
@@ -977,7 +976,6 @@ const removeClassDescEventListener = () => {
 
 const addTask = (addTaskBtn) => {
 	addTaskBtn.addEventListener("click", () => {
-		// console.log(inputTodo);
 		if (inputTodo && inputTodo.value) {
 			tasks.push(new Task(inputTodo.value));
 			selectedTodoValue = tasks;
@@ -1169,17 +1167,17 @@ calendarBody.addEventListener("click", (e) => {
 		shiftObj.namesContextMenu.forEach((item) => {
 			if (item.endCicle) {
 				popupContentBody.innerHTML += `
-				<div class="popup__content-item">
-					<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
-						<div class="right-click-menu-item__value">
-						${item.key}
-						</div>
-						<div class="right-click-menu-item__name">
-						${item.title}
-						</div>
+			<div class="popup__content-item">
+				<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
+					<div class="right-click-menu-item__value">
+					${item.key}
+					</div>
+					<div class="right-click-menu-item__name">
+					${item.title}
 					</div>
 				</div>
-			`;
+			</div>
+		`;
 			} else {
 				popupContentBody.innerHTML += `
 				<div class="popup__content-item">
@@ -1512,8 +1510,6 @@ const popupClose = () => {
 
 popupCloseBtn.addEventListener("click", popupClose);
 
-let myShiftsForLocalStorage = [];
-
 popup.addEventListener("click", (e) => {
 	if (e.target == popup) {
 		popupClose();
@@ -1586,6 +1582,8 @@ popup.addEventListener("click", (e) => {
 		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
 		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
 
+		let myShiftsForLocalStorage = [];
+
 		myShiftsFinal.forEach((item, index) => {
 			let attr;
 
@@ -1626,31 +1624,6 @@ popup.addEventListener("click", (e) => {
 		}
 	}
 });
-
-// calendar.addEventListener("click", (e) => {
-// 	if (
-// 		e.target.closest(".burger__end-cicle-wrapper") ||
-// 		e.target.closest(".burger__end-cicle-btn")
-// 	) {
-// 		console.log("ok");
-// 		// targetItemInTable.removeAttribute("data-shift", "");
-// 		shiftObj.root.unshift(myShiftsForLocalStorage);
-// 		shiftObj.namesContextMenu.pop();
-
-// 		//получаем день с которого начинается отсчет графика
-
-// 		startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
-// 		shiftObj.startDate = startDay;
-// 		shiftObj.template = false;
-// 		updateLocalStorage("userShift", shiftObj);
-
-// 		choiceShifts.unshift(shiftObj);
-// 		updateLocalStorage("choiceShifts", choiceShifts);
-
-// 		location.hash = "";
-// 		location.reload();
-// 	}
-// });
 
 document.addEventListener("keydown", (e) => {
 	if (e.keyCode == 27 && popup.classList.contains("show")) {
