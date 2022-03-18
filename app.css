@@ -308,6 +308,7 @@ body.lock {
 	}
 }
 
+.end-cicle-btn,
 .burger-wrapper {
 	width: 50px;
 	height: 42px;
@@ -319,6 +320,14 @@ body.lock {
 	border-radius: 5px;
 	box-shadow: 0 0 8px var(--color-txt);
 }
+
+.end-cicle-btn {
+	left: 70px;
+	color: var(--color-txt);
+	font-size: 30px;
+	text-align: center;
+}
+
 .burger__btn {
 	display: block;
 	width: 30px;
@@ -381,6 +390,7 @@ body.lock {
 	border-radius: 10px;
 	position: relative;
 }
+
 .burger__menu-item .input-wrapper input {
 	padding: 20px 0;
 }
@@ -699,7 +709,7 @@ body.lock {
 
 .popup__window {
 	position: relative;
-	min-width: 300px;
+	min-width: 350px;
 	margin: 10px;
 }
 
@@ -794,11 +804,12 @@ body.lock {
 
 .right-click-menu__add-todo-wrapper {
 	margin: 20px 3px;
-	width: 100%;
+	/* width: 100%; */
 }
 .input-wrapper input {
 	font-size: 18px;
 	padding: 15px 6px;
+	margin: 10px 0px;
 	/* margin: 7px; */
 	width: 100%;
 	/* border-bottom: 1px solid black; */
