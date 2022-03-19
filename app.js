@@ -12,41 +12,42 @@ const updateLocalStorage = (name, data) => {
 	localStorage.setItem(name, JSON.stringify(data));
 };
 
-function UserShift(
-	name,
-	shiftsName = ["Моя смена"],
-	namesContextMenu = [],
-	root = [],
-	template,
-	startDate
-) {
-	//присваиваем стандартное имя предприятия
-	if (name == "") {
-		name = "Мое предприятие";
-	}
-	// если название совпадает, то добавляем индекс
-	choiceShifts.forEach((obj, index) => {
-		if (obj.name == name) {
-			name = `${name} ${index + 2}`;
-		}
-	});
+// function UserShift(
+// 	name,
+// 	shiftsName = ["Моя смена"],
+// 	namesContextMenu = [],
+// 	root = [],
+// 	template,
+// 	startDate
+// ) {
+// 	//присваиваем стандартное имя предприятия
+// 	if (name == "") {
+// 		name = "Мое предприятие";
+// 	}
+// 	// если название совпадает, то добавляем индекс
+// 	choiceShifts.forEach((obj, index) => {
+// 		if (obj.name == name) {
+// 			name = `${name} ${index + 2}`;
+// 		}
+// 	});
 
-	if (shiftsName == "") {
-		shiftsName = ["Моя смена"];
-	}
-	this.name = name;
-	this.shiftsName = shiftsName;
-	this.namesContextMenu = namesContextMenu;
-	this.root = root;
-	this.template = template;
-	this.startDate = startDate;
-}
+// 	if (shiftsName == "") {
+// 		shiftsName = ["Моя смена"];
+// 	}
+// 	this.name = name;
+// 	this.shiftsName = shiftsName;
+// 	this.namesContextMenu = namesContextMenu;
+// 	this.root = root;
+// 	this.template = template;
+// 	this.startDate = startDate;
+// }
 
 let shiftTemplate = {
 	namesContextMenu: [{ key: "", title: "Выходной" }],
 	root: [[]],
 	template: true,
 	endCicle: false,
+	options: { deleteSchedule: true },
 };
 
 let choiceShifts = [
@@ -712,6 +713,7 @@ burgerMenu.addEventListener("click", (e) => {
 
 	if (target.closest(".burger__menu-item-cross")) {
 		burgerSubMenuItem = target.closest(".burger__submenu-item");
+		console.log(burgerSubMenuItem);
 		let cross = burgerSubMenuItem.querySelector(".burger__menu-item-cross");
 		if (cross) {
 			cross.classList.toggle("active");
@@ -719,11 +721,21 @@ burgerMenu.addEventListener("click", (e) => {
 		let burgerMenuItemMore = burgerSubMenuItem.querySelector(
 			".burger__menu-item-more"
 		);
-		burgerMenuItemMore.innerHTML = `
+
+		if (shiftObj.options.reserveShift) {
+			burgerMenuItemMore.innerHTML = `
 			<div class='burger__menu-reserve-shift-btn'>${
 				shiftObj.options.reserveShift.status ? "Убрать" : "Добавить"
 			} резервную смену</div>
 		`;
+		}
+
+		if (shiftObj.options.deleteSchedule) {
+			burgerMenuItemMore.innerHTML = `
+			<div class='burger__menu-delete-shedule-btn'>Удалить график</div>
+		`;
+		}
+
 		if (burgerMenuItemMore) {
 			burgerMenuItemMore.classList.toggle("active");
 		}
@@ -751,8 +763,8 @@ burgerMenu.addEventListener("click", (e) => {
 
 	if (target.closest(".burger__menu-color")) {
 		let currentBurgerSubmenuItem = target.closest(".burger__menu-color");
-		let burgerSubmenuItems = document.querySelectorAll(".burger__menu-color");
-		burgerSubmenuItems.forEach((item) => {
+		let burgerMenuColors = document.querySelectorAll(".burger__menu-color");
+		burgerMenuColors.forEach((item) => {
 			if (item == currentBurgerSubmenuItem) {
 				item.classList.add("focus");
 			} else {
@@ -760,12 +772,23 @@ burgerMenu.addEventListener("click", (e) => {
 			}
 		});
 	}
+
+	let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
+	let currentBurgerSubmenuItem = target.closest(".burger__menu-shift");
+	if (target.closest(".burger__menu-delete-shedule-btn")) {
+		burgerMenuShifts.forEach((item, index) => {
+			if (item == currentBurgerSubmenuItem) {
+				choiceShifts.splice(index, 1);
+				let shiftObj = choiceShifts[0];
+				updateLocalStorage("userShift", shiftObj);
+				updateLocalStorage("choiceShifts", choiceShifts);
+			}
+		});
+	}
 	if (target.closest(".burger__menu-shift")) {
 		if (target.closest(".burger__menu-item-cross")) {
 		} else {
-			let currentBurgerSubmenuItem = target.closest(".burger__menu-shift");
-			let burgerSubmenuItems = document.querySelectorAll(".burger__menu-shift");
-			burgerSubmenuItems.forEach((item) => {
+			burgerMenuShifts.forEach((item) => {
 				if (item == currentBurgerSubmenuItem) {
 					item.classList.add("focus");
 				} else {
@@ -780,17 +803,28 @@ burgerMenu.addEventListener("click", (e) => {
 			".burger__menu-add-shift input"
 		);
 
-		updateLocalStorage(
-			"userShift",
-			new UserShift(
-				burgerMenuAddShiftInputs[0].value,
-				burgerMenuAddShiftInputs[1].value,
-				shiftTemplate.namesContextMenu,
-				shiftTemplate.root,
-				true,
-				startDay
-			)
-		);
+		shiftTemplate.name = burgerMenuAddShiftInputs[0].value;
+		shiftTemplate.shiftsName = burgerMenuAddShiftInputs[1].value;
+
+		//присваиваем стандартное имя предприятия
+		if (shiftTemplate.name == "") {
+			shiftTemplate.name = "Мое предприятие";
+		}
+		// если название совпадает, то добавляем индекс
+		let counter = 1;
+		choiceShifts.forEach((obj, index) => {
+			counter++;
+			if (obj.name == shiftTemplate.name) {
+				shiftTemplate.name = `${shiftTemplate.name} ${counter}`;
+			}
+		});
+
+		if (shiftTemplate.shiftsName == "") {
+			shiftTemplate.shiftsName = ["Моя смена"];
+		}
+
+		shiftObj = shiftTemplate;
+		updateLocalStorage("userShift", shiftObj);
 		location.hash = "";
 		location.reload();
 	}

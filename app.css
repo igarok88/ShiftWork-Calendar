@@ -487,7 +487,8 @@ body.lock {
 	transform: rotate(-45deg);
 	bottom: 9px;
 }
-.burger__menu-reserve-shift-btn {
+.burger__menu-reserve-shift-btn,
+.burger__menu-delete-shedule-btn {
 	padding: 25px;
 	margin-top: 15px;
 	background-color: var(--bg-main);
@@ -544,7 +545,7 @@ body.lock {
 	-o-transition: all 0.3s ease 0s;
 	transition: all 0.3s ease 0s;
 	overflow: auto;
-	z-index: 4;
+	z-index: 6;
 }
 .right-click-menu.active {
 	bottom: 0;
@@ -829,8 +830,9 @@ body.lock {
 	cursor: pointer;
 }
 .button-wrapper .cross {
-	top: 14px;
+	top: 22px;
 	left: 50%;
+	transform: rotate(45deg);
 }
 /* .add-task-btn .cross:before {
 	transform: rotate(0deg);
