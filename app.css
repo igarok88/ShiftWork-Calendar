@@ -488,7 +488,9 @@ body.lock {
 	bottom: 9px;
 }
 .burger__menu-reserve-shift-btn,
-.burger__menu-delete-shedule-btn {
+.burger__menu-delete-shedule-btn,
+.burger__menu-add-new-shift-btn,
+.burger__menu-add-new-shift-sub-btn {
 	padding: 25px;
 	margin-top: 15px;
 	background-color: var(--bg-main);

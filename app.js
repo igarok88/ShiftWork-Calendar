@@ -11,7 +11,22 @@ let startDay;
 const updateLocalStorage = (name, data) => {
 	localStorage.setItem(name, JSON.stringify(data));
 };
+const createEndCicleBtn = () => {
+	let endCicleBtn = document.querySelector(".end-cicle-btn");
+	if (endCicleBtn) {
+	} else {
+		let endCicleBtnHTML = `<div class="end-cicle-btn">&#10004;</div>`;
+		calendarBody.insertAdjacentHTML("afterbegin", endCicleBtnHTML);
+	}
+};
 
+const replaceShiftObjInChoiceShifts = () => {
+	choiceShifts.forEach((obj, index) => {
+		if (obj.name == shiftObj.name) {
+			choiceShifts[index] = shiftObj;
+		}
+	});
+};
 // function UserShift(
 // 	name,
 // 	shiftsName = ["Моя смена"],
@@ -47,7 +62,7 @@ let shiftTemplate = {
 	root: [[]],
 	template: true,
 	endCicle: false,
-	options: { deleteSchedule: true },
+	options: { deleteSchedule: true, addShift: true },
 };
 
 let choiceShifts = [
@@ -228,7 +243,9 @@ choiceShifts.forEach((obj, index) => {
 			if (currentShift == menuShift) {
 				if (
 					e.target.closest(".burger__menu-item-cross") ||
-					e.target.closest(".burger__menu-reserve-shift-btn")
+					e.target.closest(".burger__menu-add-new-shift-btn")
+					// ||
+					// e.target.closest(".burger__menu-reserve-shift-btn")
 				) {
 				} else {
 					shiftObj = choiceShifts[index];
@@ -713,31 +730,40 @@ burgerMenu.addEventListener("click", (e) => {
 
 	if (target.closest(".burger__menu-item-cross")) {
 		burgerSubMenuItem = target.closest(".burger__submenu-item");
-		console.log(burgerSubMenuItem);
-		let cross = burgerSubMenuItem.querySelector(".burger__menu-item-cross");
-		if (cross) {
-			cross.classList.toggle("active");
-		}
-		let burgerMenuItemMore = burgerSubMenuItem.querySelector(
-			".burger__menu-item-more"
-		);
+		if (burgerSubMenuItem) {
+			let cross = burgerSubMenuItem.querySelector(".burger__menu-item-cross");
+			//
+			//
+			if (cross) {
+				cross.classList.toggle("active");
+			}
+			let burgerMenuItemMore = burgerSubMenuItem.querySelector(
+				".burger__menu-item-more"
+			);
 
-		if (shiftObj.options.reserveShift) {
-			burgerMenuItemMore.innerHTML = `
+			if (shiftObj.options.reserveShift) {
+				burgerMenuItemMore.innerHTML = `
 			<div class='burger__menu-reserve-shift-btn'>${
 				shiftObj.options.reserveShift.status ? "Убрать" : "Добавить"
 			} резервную смену</div>
 		`;
-		}
+			}
 
-		if (shiftObj.options.deleteSchedule) {
-			burgerMenuItemMore.innerHTML = `
+			if (shiftObj.options.addShift) {
+				burgerMenuItemMore.innerHTML += `
+			<div class='burger__menu-add-new-shift-btn'>Добавить смену</div>
+		`;
+			}
+
+			if (shiftObj.options.deleteSchedule) {
+				burgerMenuItemMore.innerHTML += `
 			<div class='burger__menu-delete-shedule-btn'>Удалить график</div>
 		`;
-		}
+			}
 
-		if (burgerMenuItemMore) {
-			burgerMenuItemMore.classList.toggle("active");
+			if (burgerMenuItemMore) {
+				burgerMenuItemMore.classList.toggle("active");
+			}
 		}
 	}
 
@@ -751,11 +777,9 @@ burgerMenu.addEventListener("click", (e) => {
 			shiftObj.root.push([]);
 			shiftObj.options.reserveShift.status = true;
 		}
-		choiceShifts.forEach((obj, index) => {
-			if (obj.name == shiftObj.name) {
-				choiceShifts[index] = shiftObj;
-			}
-		});
+
+		replaceShiftObjInChoiceShifts();
+
 		updateLocalStorage("userShift", shiftObj);
 		updateLocalStorage("choiceShifts", choiceShifts);
 		location.reload();
@@ -775,11 +799,63 @@ burgerMenu.addEventListener("click", (e) => {
 
 	let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
 	let currentBurgerSubmenuItem = target.closest(".burger__menu-shift");
+
+	if (target.closest(".burger__menu-add-new-shift-btn")) {
+		let burgerMenuAddNewShiftBtn = document.querySelector(
+			".burger__menu-add-new-shift-btn"
+		);
+		// console.log(burgerMenuAddNewShiftBtn);
+
+		let burgerMenuAddNewShiftInput =
+			burgerMenuAddNewShiftBtn.querySelector(".input-wrapper");
+		// console.log(burgerMenuAddNewShiftInput);
+
+		if (burgerMenuAddNewShiftInput) {
+		} else {
+			burgerMenuAddNewShiftBtn.innerHTML = `
+				<div class='burger__menu-add-new-shift-input'>
+					<div class="input-wrapper">
+						<input type="text" placeholder="Укажите название смены">
+					</div>
+					<div class="burger__menu-add-new-shift-sub-btn">Добавить</div>
+				</div>
+			`;
+		}
+	}
+
+	if (target.closest(".burger__menu-add-new-shift-sub-btn")) {
+		let burgerMenuAddNewShiftInput = target.closest(
+			".burger__menu-add-new-shift-input"
+		);
+		console.log(burgerMenuAddNewShiftInput);
+		let input = burgerMenuAddNewShiftInput.querySelector("input");
+		console.log(input);
+
+		if (input.value == "") {
+			input.value = ["Моя смена"];
+		}
+
+		// если название совпадает, то добавляем индекс
+		let counter = 1;
+		shiftObj.shiftsName.forEach((item) => {
+			counter++;
+			if (item == input.value) {
+				input.value = `${input.value} ${counter}`;
+			}
+		});
+		shiftObj.template = true;
+		shiftObj.shiftsName.push(input.value);
+		shiftObj.root.push([""]);
+		updateLocalStorage("userShift", shiftObj);
+		location.hash = "";
+		location.reload();
+	}
+
 	if (target.closest(".burger__menu-delete-shedule-btn")) {
 		burgerMenuShifts.forEach((item, index) => {
 			if (item == currentBurgerSubmenuItem) {
 				choiceShifts.splice(index, 1);
-				let shiftObj = choiceShifts[0];
+				shiftObj = choiceShifts[0];
 				updateLocalStorage("userShift", shiftObj);
 				updateLocalStorage("choiceShifts", choiceShifts);
 			}
@@ -1197,7 +1273,7 @@ calendarBody.addEventListener("click", (e) => {
 		updateLocalStorage("userShift", shiftObj);
 	}
 
-	if (target.closest(".end-cicle-btn")) {
+	if (target.closest(".end-cicle-btn") && myShiftsForLocalStorage) {
 		// popupContentWrapper.style.display = "none";
 		// popupContentEndCicleWrapper.style.display = "flex";
 
@@ -1206,9 +1282,11 @@ calendarBody.addEventListener("click", (e) => {
 		// updateLocalStorage("userShift", shiftObj);
 
 		// popupOpen(e);
+		shiftObj.root.pop();
+		shiftObj.root.push(myShiftsForLocalStorage);
 
-		shiftObj.root.unshift(myShiftsForLocalStorage);
-		shiftObj.namesContextMenu.pop();
+		// shiftObj.root.unshift(myShiftsForLocalStorage);
+		// shiftObj.namesContextMenu.pop();
 
 		//получаем день с которого начинается отсчет графика
 
@@ -1217,7 +1295,13 @@ calendarBody.addEventListener("click", (e) => {
 		shiftObj.template = false;
 		updateLocalStorage("userShift", shiftObj);
 
-		choiceShifts.unshift(shiftObj);
+		if (shiftObj.shiftsName.length > 1) {
+		} else {
+			choiceShifts.unshift(shiftObj);
+		}
+
+		replaceShiftObjInChoiceShifts();
+
 		updateLocalStorage("choiceShifts", choiceShifts);
 
 		location.hash = "";
@@ -1482,10 +1566,10 @@ rightClickMenu.addEventListener("click", (e) => {
 	}
 });
 
-if (shiftObj.template) {
-	let endCicleBtnHTML = `<div class="end-cicle-btn">&#10004;</div>`;
-	calendarBody.insertAdjacentHTML("afterbegin", endCicleBtnHTML);
-}
+// if (shiftObj.template) {
+// 	let endCicleBtnHTML = `<div class="end-cicle-btn">&#10004;</div>`;
+// 	calendarBody.insertAdjacentHTML("afterbegin", endCicleBtnHTML);
+// }
 
 //popup
 let btns;
@@ -1616,6 +1700,8 @@ popup.addEventListener("click", (e) => {
 		// }
 
 		popupClose();
+
+		createEndCicleBtn();
 	}
 	//добавляем новую смену
 
@@ -1640,6 +1726,8 @@ popup.addEventListener("click", (e) => {
 
 			updateLocalStorage("userShift", shiftObj);
 			popupClose();
+
+			createEndCicleBtn();
 		} else {
 			addShiftInputs[0].setAttribute("placeholder", "Заполните это поле");
 			addShiftInputs[0].style.boxShadow = "inset 0 0 8px red";
