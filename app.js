@@ -7,6 +7,8 @@ let calendarCountShift = calendar.querySelector(".calendar-count");
 let arrForUserNotes;
 let firstElemIndex;
 let startDay;
+let differenceDays;
+let arrDifferenceDays = [0];
 
 const updateLocalStorage = (name, data) => {
 	localStorage.setItem(name, JSON.stringify(data));
@@ -207,6 +209,9 @@ if (localStorage.userShift) {
 
 if (localStorage.choiceShifts) {
 	choiceShifts = JSON.parse(localStorage.getItem("choiceShifts"));
+}
+if (localStorage.arrDifferenceDays) {
+	arrDifferenceDays = JSON.parse(localStorage.getItem("arrDifferenceDays"));
 }
 
 choiceShifts.forEach((obj, index) => {
@@ -453,14 +458,23 @@ const generateCalendar = (month, year) => {
 		// console.log(`dayYear ${dayYear}`);
 		//заполняем поля смен
 
-		const fillDay = (shift, calendarCount, arrForCount, nameShift, root) => {
+		const fillDay = (
+			shift,
+			calendarCount,
+			arrForCount,
+			nameShift,
+			root,
+			activeTemplate,
+			differenceDays
+		) => {
 			let lenShift = root.length;
+
 			let residual = dayYear % lenShift;
 			let day = document.createElement("div");
 			day.classList.add("calendar-day");
 			day.classList.add("calendar-context-menu");
 
-			if (shiftObj.template) {
+			if (shiftObj.template && activeTemplate) {
 				day.classList.add("calendar-day-create-shift");
 			}
 
@@ -471,17 +485,26 @@ const generateCalendar = (month, year) => {
 			if (root) {
 				if (root.length == 0) {
 				} else {
-					while (root.length < 50) {
+					while (root.length < 80) {
 						multiplyRoot();
 					}
 				}
-
+				// console.log(residual);
+				// console.log(lenShift);
+				// console.log(differenceDays);
+				// console.log(differenceDays % lenShift);
+				differenceDays = differenceDays % lenShift;
 				//заполняем колонку смен
-
-				day.innerHTML = root[residual + i + lenShift];
+				let index;
+				if (differenceDays) {
+					index = residual + i + lenShift + differenceDays;
+				} else {
+					index = residual + i + lenShift;
+				}
+				day.innerHTML = root[index];
 
 				shift.appendChild(day);
-				if (root[residual + i + lenShift] == undefined) {
+				if (root[index] == undefined) {
 					//
 					//
 					//
@@ -561,13 +584,31 @@ const generateCalendar = (month, year) => {
 		);
 
 		shiftsName.forEach((item, index) => {
-			fillDay(
-				calendarShifts[index],
-				calendarCountShifts[index],
-				arrForCount[index],
-				shiftsName[index],
-				root[index]
-			);
+			let activeTemplate;
+
+			if (index == shiftsName.length - 1) {
+				activeTemplate = true;
+				fillDay(
+					calendarShifts[index],
+					calendarCountShifts[index],
+					arrForCount[index],
+					shiftsName[index],
+					root[index],
+					activeTemplate,
+					arrDifferenceDays[index]
+				);
+			} else {
+				activeTemplate = false;
+				fillDay(
+					calendarShifts[index],
+					calendarCountShifts[index],
+					arrForCount[index],
+					shiftsName[index],
+					root[index],
+					activeTemplate,
+					arrDifferenceDays[index]
+				);
+			}
 		});
 
 		//вешаем класс curr-date на сегодняшнюю дату
@@ -827,9 +868,7 @@ burgerMenu.addEventListener("click", (e) => {
 		let burgerMenuAddNewShiftInput = target.closest(
 			".burger__menu-add-new-shift-input"
 		);
-		console.log(burgerMenuAddNewShiftInput);
 		let input = burgerMenuAddNewShiftInput.querySelector("input");
-		console.log(input);
 
 		if (input.value == "") {
 			input.value = ["Моя смена"];
@@ -1290,8 +1329,27 @@ calendarBody.addEventListener("click", (e) => {
 
 		//получаем день с которого начинается отсчет графика
 
-		startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
-		shiftObj.startDate = startDay;
+		if (shiftObj.shiftsName.length == 1) {
+			startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
+			console.log(startDay);
+			shiftObj.startDate = startDay;
+			// arrDifferenceDays[0] = 0;
+		} else {
+			let newStartDay = new Date(
+				currYear.value,
+				currMonth.value,
+				firstElemIndex + 1
+			);
+			differenceDays = Math.round((startDay - newStartDay) / 86400000);
+			shiftObj.shiftsName.forEach((item, index) => {
+				if (index == shiftObj.shiftsName.length - 1) {
+					arrDifferenceDays.push(differenceDays);
+				}
+			});
+			// console.log(differenceDays);
+			updateLocalStorage("arrDifferenceDays", arrDifferenceDays);
+		}
+
 		shiftObj.template = false;
 		updateLocalStorage("userShift", shiftObj);
 
