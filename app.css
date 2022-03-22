@@ -735,6 +735,10 @@ body.lock {
 	flex-direction: column;
 }
 
+.popup__content .delete-task-btn .cross {
+	transform: rotate(0deg);
+}
+
 .popup__content-body {
 	width: 100%;
 }

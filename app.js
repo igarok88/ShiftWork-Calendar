@@ -8,7 +8,6 @@ let arrForUserNotes;
 let firstElemIndex;
 let startDay;
 let differenceDays;
-let arrDifferenceDays = [0];
 
 const updateLocalStorage = (name, data) => {
 	localStorage.setItem(name, JSON.stringify(data));
@@ -65,6 +64,7 @@ let shiftTemplate = {
 	template: true,
 	endCicle: false,
 	options: { deleteSchedule: true, addShift: true },
+	arrDifferenceDays: [0],
 };
 
 let choiceShifts = [
@@ -210,9 +210,9 @@ if (localStorage.userShift) {
 if (localStorage.choiceShifts) {
 	choiceShifts = JSON.parse(localStorage.getItem("choiceShifts"));
 }
-if (localStorage.arrDifferenceDays) {
-	arrDifferenceDays = JSON.parse(localStorage.getItem("arrDifferenceDays"));
-}
+// if (localStorage.arrDifferenceDays) {
+// 	arrDifferenceDays = JSON.parse(localStorage.getItem("arrDifferenceDays"));
+// }
 
 choiceShifts.forEach((obj, index) => {
 	let burgerMenuChoiceShifts = document.querySelector(
@@ -586,6 +586,11 @@ const generateCalendar = (month, year) => {
 		shiftsName.forEach((item, index) => {
 			let activeTemplate;
 
+			if (shiftObj.arrDifferenceDays) {
+			} else {
+				shiftObj.arrDifferenceDays = [0];
+			}
+
 			if (index == shiftsName.length - 1) {
 				activeTemplate = true;
 				fillDay(
@@ -595,7 +600,7 @@ const generateCalendar = (month, year) => {
 					shiftsName[index],
 					root[index],
 					activeTemplate,
-					arrDifferenceDays[index]
+					shiftObj.arrDifferenceDays[index]
 				);
 			} else {
 				activeTemplate = false;
@@ -606,7 +611,7 @@ const generateCalendar = (month, year) => {
 					shiftsName[index],
 					root[index],
 					activeTemplate,
-					arrDifferenceDays[index]
+					shiftObj.arrDifferenceDays[index]
 				);
 			}
 		});
@@ -1343,11 +1348,12 @@ calendarBody.addEventListener("click", (e) => {
 			differenceDays = Math.round((startDay - newStartDay) / 86400000);
 			shiftObj.shiftsName.forEach((item, index) => {
 				if (index == shiftObj.shiftsName.length - 1) {
-					arrDifferenceDays.push(differenceDays);
+					console.log(shiftObj);
+					shiftObj.arrDifferenceDays.push(differenceDays);
 				}
 			});
 			// console.log(differenceDays);
-			updateLocalStorage("arrDifferenceDays", arrDifferenceDays);
+			// updateLocalStorage("arrDifferenceDays", arrDifferenceDays);
 		}
 
 		shiftObj.template = false;
@@ -1421,6 +1427,22 @@ calendarBody.addEventListener("click", (e) => {
 			</div>
 		`;
 		popupContentBody.insertAdjacentHTML("beforeend", addShiftItem);
+
+		if (e.target.closest("[data-shift]")) {
+			const deleteShiftItem = `
+				<div class="close-menu right-click-menu-item__btn delete-task-btn">
+					<div class="right-click-menu-item__value">
+						<span class="cross"></span>
+					</div>
+					<div class="right-click-menu-item__name button-wrapper ">
+						Удалить смену
+					</div>
+				</div>
+			`;
+
+			const popupCreateShift = document.querySelector(".popup__create-shift");
+			popupCreateShift.insertAdjacentHTML("beforeend", deleteShiftItem);
+		}
 	} else {
 		let columns = document.querySelectorAll(".calendar-column");
 		columns.forEach((column) => {
@@ -1792,6 +1814,15 @@ popup.addEventListener("click", (e) => {
 		}
 	}
 
+	if (e.target.closest(".popup__content-item .delete-task-btn")) {
+		targetItemInTable.innerHTML = "";
+		targetItemInTable.removeAttribute("data-key-note");
+		targetItemInTable.removeAttribute("data-shift");
+		targetItemInTable.style.backgroundColor = "var(--bg-div)";
+
+		popupClose();
+	}
+
 	if (shiftObj.template) {
 		let myShiftsNodeList = document.querySelectorAll(
 			".calendar-day-create-shift"
@@ -1799,22 +1830,24 @@ popup.addEventListener("click", (e) => {
 		let myShiftsArr = Array.prototype.slice.call(myShiftsNodeList);
 
 		firstElemIndex = myShiftsArr.findIndex((item) =>
-			item.closest("[data-key-note]")
+			item.closest("[data-shift]")
 		);
 		let myShiftsArrReverse = myShiftsArr.slice().reverse();
 
 		let myShiftsArrReverseIndex = myShiftsArrReverse.findIndex((item) =>
-			item.closest("[data-key-note]")
+			item.closest("[data-shift]")
 		);
 
 		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
 		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
 
+		console.log(firstElemIndex);
+		console.log(lastElemIndex);
 		myShiftsForLocalStorage = [];
 
 		myShiftsFinal.forEach((item, index) => {
 			let attr;
-
+			item.setAttribute("data-shift", "");
 			if (item.closest("[data-key-note]")) {
 				attr = item.getAttribute("data-key-note");
 				item.style.backgroundColor = "red";
