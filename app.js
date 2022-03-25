@@ -63,7 +63,7 @@ let shiftTemplate = {
 	root: [[]],
 	template: true,
 	endCicle: false,
-	options: { deleteSchedule: true, addShift: true },
+	options: { deleteSchedule: true, addShift: true, deleteShift: true },
 	arrDifferenceDays: [0],
 };
 
@@ -248,7 +248,8 @@ choiceShifts.forEach((obj, index) => {
 			if (currentShift == menuShift) {
 				if (
 					e.target.closest(".burger__menu-item-cross") ||
-					e.target.closest(".burger__menu-add-new-shift-btn")
+					e.target.closest(".burger__menu-add-new-shift-btn") ||
+					e.target.closest(".burger__menu-delete-shift-btn")
 					// ||
 					// e.target.closest(".burger__menu-reserve-shift-btn")
 				) {
@@ -789,21 +790,27 @@ burgerMenu.addEventListener("click", (e) => {
 
 			if (shiftObj.options.reserveShift) {
 				burgerMenuItemMore.innerHTML = `
-			<div class='burger__menu-reserve-shift-btn'>${
+			<div class='burger__menu-btn burger__menu-reserve-shift-btn'>${
 				shiftObj.options.reserveShift.status ? "Убрать" : "Добавить"
 			} резервную смену</div>
 		`;
 			}
 
 			if (shiftObj.options.addShift) {
+				burgerMenuItemMore.innerHTML = `
+			<div class='burger__menu-btn burger__menu-add-new-shift-btn'>Добавить смену</div>
+		`;
+			}
+
+			if (shiftObj.options.deleteShift && shiftObj.shiftsName.length > 1) {
 				burgerMenuItemMore.innerHTML += `
-			<div class='burger__menu-add-new-shift-btn'>Добавить смену</div>
+			<div class='burger__menu-btn burger__menu-delete-shift-btn'>Удалить смену</div>
 		`;
 			}
 
 			if (shiftObj.options.deleteSchedule) {
 				burgerMenuItemMore.innerHTML += `
-			<div class='burger__menu-delete-shedule-btn'>Удалить график</div>
+			<div class='burger__menu-btn burger__menu-delete-shedule-btn'>Удалить график</div>
 		`;
 			}
 
@@ -863,7 +870,7 @@ burgerMenu.addEventListener("click", (e) => {
 					<div class="input-wrapper">
 						<input type="text" placeholder="Укажите название смены">
 					</div>
-					<div class="burger__menu-add-new-shift-sub-btn">Добавить</div>
+					<div class="burger__menu-btn burger__menu-add-new-shift-sub-btn">Добавить</div>
 				</div>
 			`;
 		}
@@ -873,26 +880,51 @@ burgerMenu.addEventListener("click", (e) => {
 		let burgerMenuAddNewShiftInput = target.closest(
 			".burger__menu-add-new-shift-input"
 		);
-		let input = burgerMenuAddNewShiftInput.querySelector("input");
+		let inputValue = burgerMenuAddNewShiftInput.querySelector("input").value;
 
-		if (input.value == "") {
-			input.value = ["Моя смена"];
+		if (inputValue == "") {
+			inputValue = "Моя смена";
 		}
 
 		// если название совпадает, то добавляем индекс
 		let counter = 1;
-		shiftObj.shiftsName.forEach((item) => {
-			counter++;
-			if (item == input.value) {
-				input.value = `${input.value} ${counter}`;
+		shiftObj.shiftsName.forEach((item, index) => {
+			if (item == inputValue) {
+				counter++;
+				inputValue = `${inputValue} ${counter}`;
 			}
 		});
 		shiftObj.template = true;
-		shiftObj.shiftsName.push(input.value);
+		shiftObj.shiftsName.push(inputValue);
 		shiftObj.root.push([""]);
 		updateLocalStorage("userShift", shiftObj);
 		location.hash = "";
 		location.reload();
+	}
+	if (target.closest(".burger__menu-delete-shift-btn")) {
+		const burgerMenuDeleteShiftBtn = document.querySelector(
+			".burger__menu-delete-shift-btn"
+		);
+		burgerMenuDeleteShiftBtn.innerHTML = `Какую смену хотите удалить?`;
+		shiftObj.shiftsName.forEach((item) => {
+			burgerMenuDeleteShiftBtn.innerHTML += `
+			<div class='burger__menu-btn burger__menu-select-shift'>${item}</div>
+			`;
+		});
+	}
+
+	if (target.closest(".burger__menu-select-shift")) {
+		shiftObj.shiftsName.forEach((item, index) => {
+			if (item == e.target.textContent) {
+				shiftObj.shiftsName.splice(index, 1);
+				shiftObj.root.splice(index, 1);
+				shiftObj.arrDifferenceDays.splice(index, 1);
+			}
+			replaceShiftObjInChoiceShifts();
+			updateLocalStorage("userShift", shiftObj);
+			updateLocalStorage("choiceShifts", choiceShifts);
+			location.reload();
+		});
 	}
 
 	if (target.closest(".burger__menu-delete-shedule-btn")) {
@@ -932,7 +964,7 @@ burgerMenu.addEventListener("click", (e) => {
 		}
 		// если название совпадает, то добавляем индекс
 		let counter = 1;
-		choiceShifts.forEach((obj, index) => {
+		choiceShifts.forEach((obj) => {
 			counter++;
 			if (obj.name == shiftTemplate.name) {
 				shiftTemplate.name = `${shiftTemplate.name} ${counter}`;
@@ -1802,7 +1834,8 @@ popup.addEventListener("click", (e) => {
 			targetItemInTable.setAttribute("data-key-note", addShiftInputs[0].value);
 			targetItemInTable.setAttribute("data-shift", "");
 
-			targetItemInTable.style.backgroundColor = "red";
+			// targetItemInTable.style.backgroundColor = "red";
+			targetItemInTable.classList.add("create-shift-selected");
 
 			updateLocalStorage("userShift", shiftObj);
 			popupClose();
@@ -1818,12 +1851,17 @@ popup.addEventListener("click", (e) => {
 		targetItemInTable.innerHTML = "";
 		targetItemInTable.removeAttribute("data-key-note");
 		targetItemInTable.removeAttribute("data-shift");
-		targetItemInTable.style.backgroundColor = "var(--bg-div)";
+		// targetItemInTable.style.backgroundColor = "var(--bg-div)";
+		targetItemInTable.classList.remove("create-shift-selected");
 
 		popupClose();
 	}
 
-	if (shiftObj.template) {
+	if (
+		shiftObj.template &&
+		(e.target.closest(".add-task-btn") ||
+			e.target.closest(".popup__add-shift-btn"))
+	) {
 		let myShiftsNodeList = document.querySelectorAll(
 			".calendar-day-create-shift"
 		);
@@ -1850,12 +1888,14 @@ popup.addEventListener("click", (e) => {
 			item.setAttribute("data-shift", "");
 			if (item.closest("[data-key-note]")) {
 				attr = item.getAttribute("data-key-note");
-				item.style.backgroundColor = "red";
+				// item.style.backgroundColor = "red";
+				item.classList.add("create-shift-selected");
 			} else {
 				item.innerHTML = "";
 				//
 				//
-				item.style.backgroundColor = "red";
+				// item.style.backgroundColor = "red";
+				item.classList.add("create-shift-selected");
 
 				attr = "";
 			}

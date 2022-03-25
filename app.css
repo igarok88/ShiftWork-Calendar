@@ -318,7 +318,7 @@ body.lock {
 	z-index: 4;
 	background-color: var(--bg-main);
 	border-radius: 5px;
-	box-shadow: 0 0 8px var(--color-txt);
+	border: 2px solid var(--color-txt);
 }
 
 .end-cicle-btn {
@@ -424,7 +424,12 @@ body.lock {
 .burger__submenu-item .burger__menu-item-cross {
 	padding: 30px;
 }
-
+.burger__submenu-title .burger__menu-item-cross {
+	border: 2px solid var(--color-txt);
+	background-color: var(--bg-main);
+	border-radius: 50%;
+	padding: 20px;
+}
 .burger__submenu-item .burger__menu-item-cross .cross {
 	top: calc(50% - 10px);
 	left: calc(50% - 10px);
@@ -487,10 +492,7 @@ body.lock {
 	transform: rotate(-45deg);
 	bottom: 9px;
 }
-.burger__menu-reserve-shift-btn,
-.burger__menu-delete-shedule-btn,
-.burger__menu-add-new-shift-btn,
-.burger__menu-add-new-shift-sub-btn {
+.burger__menu-btn {
 	padding: 25px;
 	margin-top: 15px;
 	background-color: var(--bg-main);
@@ -953,4 +955,7 @@ input[type="checkbox"]:checked + label:before {
 	-ms-transform: rotate(-45deg);
 	transform: rotate(-45deg);
 	bottom: 9px;
+}
+.create-shift-selected {
+	background-color: rgb(94, 13, 13);
 }
