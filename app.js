@@ -8,7 +8,6 @@ let arrForUserNotes;
 let firstElemIndex;
 let startDay;
 let differenceDays;
-let activeTemplate = [];
 
 const updateLocalStorage = (name, data) => {
 	localStorage.setItem(name, JSON.stringify(data));
@@ -186,9 +185,6 @@ if (localStorage.userShift) {
 
 if (localStorage.choiceShifts) {
 	choiceShifts = JSON.parse(localStorage.getItem("choiceShifts"));
-}
-if (localStorage.activeTemplate) {
-	activeTemplate = JSON.parse(localStorage.getItem("activeTemplate"));
 }
 
 choiceShifts.forEach((obj, index) => {
@@ -455,6 +451,7 @@ const generateCalendar = (month, year) => {
 
 			if (shiftObj.template && activeTemplate) {
 				day.classList.add("calendar-day-create-shift");
+				shift.classList.add("calendar-column-create-shift");
 			}
 
 			const multiplyRoot = () => {
@@ -468,10 +465,7 @@ const generateCalendar = (month, year) => {
 						multiplyRoot();
 					}
 				}
-				// console.log(residual);
-				// console.log(lenShift);
-				// console.log(differenceDays);
-				// console.log(differenceDays % lenShift);
+
 				differenceDays = differenceDays % lenShift;
 				//заполняем колонку смен
 				let index;
@@ -484,9 +478,6 @@ const generateCalendar = (month, year) => {
 
 				shift.appendChild(day);
 				if (root[index] == undefined) {
-					//
-					//
-					//
 					day.innerHTML = "";
 					shift.appendChild(day);
 				}
@@ -563,37 +554,23 @@ const generateCalendar = (month, year) => {
 		);
 
 		shiftsName.forEach((item, index) => {
-			// activeTemplate[index] = false;
-			console.log(activeTemplate);
-
 			if (shiftObj.arrDifferenceDays) {
 			} else {
 				shiftObj.arrDifferenceDays = [0];
 			}
-
-			if (index == shiftsName.length - 1) {
-				activeTemplate[index] = true;
-				fillDay(
-					calendarShifts[index],
-					calendarCountShifts[index],
-					arrForCount[index],
-					shiftsName[index],
-					root[index],
-					activeTemplate[index],
-					shiftObj.arrDifferenceDays[index]
-				);
+			if (shiftObj.activeTemplate) {
 			} else {
-				fillDay(
-					calendarShifts[index],
-					calendarCountShifts[index],
-					arrForCount[index],
-					shiftsName[index],
-					root[index],
-					activeTemplate[index],
-					shiftObj.arrDifferenceDays[index]
-				);
+				shiftObj.activeTemplate = [false];
 			}
-			console.log(activeTemplate);
+			fillDay(
+				calendarShifts[index],
+				calendarCountShifts[index],
+				arrForCount[index],
+				shiftsName[index],
+				root[index],
+				shiftObj.activeTemplate[index],
+				shiftObj.arrDifferenceDays[index]
+			);
 		});
 
 		//вешаем класс curr-date на сегодняшнюю дату
@@ -874,12 +851,14 @@ burgerMenu.addEventListener("click", (e) => {
 		// если название совпадает, то добавляем индекс
 		let counter = 1;
 		shiftObj.shiftsName.forEach((item, index) => {
+			shiftObj.activeTemplate[index] = false;
 			if (item == inputValue) {
 				counter++;
 				inputValue = `${inputValue} ${counter}`;
 			}
 		});
 		shiftObj.template = true;
+		shiftObj.activeTemplate.push(true);
 		shiftObj.shiftsName.push(inputValue);
 		shiftObj.root.push([""]);
 		updateLocalStorage("userShift", shiftObj);
@@ -901,13 +880,14 @@ burgerMenu.addEventListener("click", (e) => {
 
 	if (target.closest(".burger__menu-edit-select-shift")) {
 		shiftObj.shiftsName.forEach((item, index) => {
-			activeTemplate[index] = false;
+			shiftObj.activeTemplate[index] = false;
 			if (item == e.target.textContent) {
-				activeTemplate[index] = true;
+				shiftObj.activeTemplate[index] = true;
+				shiftObj.root[index] = [];
 			}
-
+			shiftObj.editTemplate = true;
+			shiftObj.template = true;
 			replaceShiftObjInChoiceShifts();
-			updateLocalStorage("activeTemplate", activeTemplate);
 			updateLocalStorage("userShift", shiftObj);
 			updateLocalStorage("choiceShifts", choiceShifts);
 			location.hash = "";
@@ -930,6 +910,8 @@ burgerMenu.addEventListener("click", (e) => {
 	if (target.closest(".burger__menu-delete-select-shift")) {
 		shiftObj.shiftsName.forEach((item, index) => {
 			if (item == e.target.textContent) {
+				shiftObj.activeTemplate = [false];
+				shiftObj.template = false;
 				shiftObj.shiftsName.splice(index, 1);
 				shiftObj.root.splice(index, 1);
 				shiftObj.arrDifferenceDays.splice(index, 1);
@@ -964,13 +946,14 @@ burgerMenu.addEventListener("click", (e) => {
 		}
 	}
 
-	if (target.closest(".burger__menu-add-shift-btn")) {
+	if (target.closest(".burger__menu-add-shedule-btn")) {
 		let burgerMenuAddShiftInputs = document.querySelectorAll(
 			".burger__menu-add-shift input"
 		);
 
 		shiftTemplate.name = burgerMenuAddShiftInputs[0].value;
-		shiftTemplate.shiftsName = burgerMenuAddShiftInputs[1].value;
+		shiftTemplate.shiftsName = [burgerMenuAddShiftInputs[1].value];
+		shiftTemplate.activeTemplate = [true];
 
 		//присваиваем стандартное имя предприятия
 		if (shiftTemplate.name == "") {
@@ -984,7 +967,6 @@ burgerMenu.addEventListener("click", (e) => {
 				shiftTemplate.name = `${shiftTemplate.name} ${counter}`;
 			}
 		});
-
 		if (shiftTemplate.shiftsName == "") {
 			shiftTemplate.shiftsName = ["Моя смена"];
 		}
@@ -1364,25 +1346,18 @@ calendarBody.addEventListener("click", (e) => {
 	}
 
 	if (target.closest(".end-cicle-btn") && myShiftsForLocalStorage) {
-		// popupContentWrapper.style.display = "none";
-		// popupContentEndCicleWrapper.style.display = "flex";
-
-		// shiftObj.endCicle = true;
-
-		// updateLocalStorage("userShift", shiftObj);
-
-		// popupOpen(e);
-		shiftObj.root.pop();
-		shiftObj.root.push(myShiftsForLocalStorage);
-
-		// shiftObj.root.unshift(myShiftsForLocalStorage);
-		// shiftObj.namesContextMenu.pop();
+		// shiftObj.root.pop();
+		shiftObj.activeTemplate.forEach((item, index) => {
+			if (item == true) {
+				shiftObj.root[index] = myShiftsForLocalStorage;
+			}
+		});
 
 		//получаем день с которого начинается отсчет графика
 
 		if (shiftObj.shiftsName.length == 1) {
 			startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
-			console.log(startDay);
+
 			shiftObj.startDate = startDay;
 			// arrDifferenceDays[0] = 0;
 		} else {
@@ -1392,24 +1367,35 @@ calendarBody.addEventListener("click", (e) => {
 				firstElemIndex + 1
 			);
 			differenceDays = Math.round((startDay - newStartDay) / 86400000);
-			shiftObj.shiftsName.forEach((item, index) => {
-				if (index == shiftObj.shiftsName.length - 1) {
-					console.log(shiftObj);
-					shiftObj.arrDifferenceDays.push(differenceDays);
+			// shiftObj.shiftsName.forEach((item, index) => {
+			//
+			//
+			// shiftObj.activeTemplate[index] = false;
+			//
+			//
+			// if (index == shiftObj.shiftsName.length - 1) {
+			// 	console.log(shiftObj);
+			// 	shiftObj.arrDifferenceDays.push(differenceDays);
+			// }
+			// });
+			shiftObj.activeTemplate.forEach((item, index) => {
+				if (item == true) {
+					shiftObj.arrDifferenceDays[index] = differenceDays;
 				}
 			});
-			// console.log(differenceDays);
-			// updateLocalStorage("arrDifferenceDays", arrDifferenceDays);
 		}
 
 		shiftObj.template = false;
-		updateLocalStorage("userShift", shiftObj);
 
 		if (shiftObj.shiftsName.length > 1) {
 		} else {
-			choiceShifts.unshift(shiftObj);
+			if (shiftObj.editTemplate) {
+			} else {
+				choiceShifts.unshift(shiftObj);
+			}
 		}
-
+		shiftObj.editTemplate = false;
+		updateLocalStorage("userShift", shiftObj);
 		replaceShiftObjInChoiceShifts();
 
 		updateLocalStorage("choiceShifts", choiceShifts);
