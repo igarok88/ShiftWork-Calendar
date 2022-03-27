@@ -852,11 +852,16 @@ burgerMenu.addEventListener("click", (e) => {
 		let counter = 1;
 		shiftObj.shiftsName.forEach((item, index) => {
 			shiftObj.activeTemplate[index] = false;
+
+			console.log(item);
+			console.log(inputValue);
+			console.log(counter);
 			if (item == inputValue) {
 				counter++;
-				inputValue = `${inputValue} ${counter}`;
 			}
+			inputValue = `${inputValue} ${counter}`;
 		});
+
 		shiftObj.template = true;
 		shiftObj.activeTemplate.push(true);
 		shiftObj.shiftsName.push(inputValue);
@@ -1879,8 +1884,8 @@ popup.addEventListener("click", (e) => {
 		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
 		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
 
-		console.log(firstElemIndex);
-		console.log(lastElemIndex);
+		// console.log(firstElemIndex);
+		// console.log(lastElemIndex);
 		myShiftsForLocalStorage = [];
 
 		myShiftsFinal.forEach((item, index) => {
