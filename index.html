@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Calendar</title>
+		<title>Shedule Shifts</title>
 		<link rel="stylesheet" href="lib/coloris.min.css" />
 		<link rel="stylesheet" href="theme.css" />
 		<link rel="stylesheet" href="app.css" />
@@ -19,8 +19,8 @@
 					<div class="burger-wrapper"></div>
 					<nav class="burger__menu">
 						<div class="burger__menu-item">
-							<div class="burger__menu-item-title">
-								<h2>Выбрать график</h2>
+							<div class="burger__menu-item-title burger__menu-select-shedule">
+								<h2>Select shedule</h2>
 								<div class="burger__menu-item-cross">
 									<span class="cross"></span>
 								</div>
@@ -32,7 +32,7 @@
 						</div>
 						<div class="burger__menu-item burger__menu-create-shift">
 							<div class="burger__menu-item-title">
-								<h2>Создать график</h2>
+								<h2>Сreate a schedule</h2>
 								<div class="burger__menu-item-cross">
 									<span class="cross"></span>
 								</div>
@@ -42,41 +42,40 @@
 							>
 								<div class="burger__submenu-item burger__menu-add-shift">
 									<div>
-										<h2>Укажите название предприяти</h2>
+										<h2>Enter company name</h2>
 										<div class="input-wrapper">
 											<input
 												type="text"
-												placeholder="пример: 'Запорожская АЭС'"
+												placeholder="example: 'Heysham nuclear power station'"
 											/>
 										</div>
-										<h2>Укажите название смены</h2>
+										<h2>Enter shift name</h2>
 										<div class="input-wrapper">
-											<input type="text" placeholder="пример: 'см. А'" />
+											<input type="text" placeholder="example: 'А'" />
 										</div>
 									</div>
 									<div class="burger__menu-btn burger__menu-add-shedule-btn">
-										Создать график
+										Сreate a schedule
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="burger__menu-item burger__menu-select-language">
 							<div class="burger__menu-item-title">
-								<h2>Выбрать язык</h2>
+								<h2>Select language</h2>
 								<div class="burger__menu-item-cross">
 									<span class="cross"></span>
 								</div>
 							</div>
 							<div class="burger__menu-item-more">
-								<div class="burger__submenu-item">
-									<div class="burger__menu-btn">Русский</div>
-									<div class="burger__menu-btn">Украинский</div>
-								</div>
+								<div
+									class="burger__submenu-item burger__submenu-language"
+								></div>
 							</div>
 						</div>
 						<div class="burger__menu-item burger__menu-theme">
 							<div class="burger__menu-item-title">
-								<h2>Цветовые темы</h2>
+								<h2>Color themes</h2>
 								<div class="burger__menu-item-cross">
 									<span class="cross"></span>
 								</div>
@@ -127,7 +126,7 @@
 						<div
 							class="remove-local-storage burger__menu-item burger__menu-item-title"
 						>
-							Сброс настроек
+							Reset user settings
 						</div>
 					</nav>
 				</header>
@@ -164,7 +163,7 @@
 						<span class="arrow" id="prev-month">
 							<pre>&lt;</pre>
 						</span>
-						<span class="month-name" id="month-picker">February</span>
+						<span class="month-name" id="month-picker"></span>
 						<span class="arrow" id="next-month">
 							<pre>&gt;</pre>
 						</span>
@@ -174,7 +173,7 @@
 						<span class="arrow" id="prev-year">
 							<pre>&lt;</pre>
 						</span>
-						<span id="year">2021</span>
+						<span id="year"></span>
 						<span class="arrow" id="next-year">
 							<pre>&gt;</pre>
 						</span>
@@ -199,7 +198,7 @@
 							<div class="menu-header__shift"></div>
 						</div>
 						<div class="popup__content-body">
-							<h2>Задачи на день:</h2>
+							<h2>Tasks for the day</h2>
 
 							<ul class="right-click-menu__todos-wrapper"></ul>
 
@@ -209,7 +208,7 @@
 								<div class="input-wrapper for-create-shift"></div>
 								<div class="input-wrapper">
 									<input
-										placeholder="Новый пункт"
+										placeholder="New task"
 										type="text"
 										class="new-description-task"
 									/>
@@ -220,7 +219,6 @@
 							</div>
 						</div>
 					</div>
-					<!-- <div class="popup__content-end-cicle-wrapper"></div> -->
 				</div>
 			</div>
 		</div>

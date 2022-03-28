@@ -327,7 +327,7 @@ body.lock {
 .end-cicle-btn {
 	left: 70px;
 	color: var(--color-txt);
-	font-size: 30px;
+	font-size: 25px;
 	text-align: center;
 }
 
@@ -392,6 +392,7 @@ body.lock {
 	color: var(--color-txt);
 	border-radius: 10px;
 	position: relative;
+	border: 2px solid var(--color-txt);
 }
 
 .burger__menu-item .input-wrapper input {
@@ -408,12 +409,13 @@ body.lock {
 
 .burger__menu-item-cross {
 	width: 20px;
-	transform: rotate(45deg);
+
 	height: 20px;
 	position: relative;
-	transition: all 0.5s ease 0s;
 }
 .burger__menu-item-cross .cross {
+	transition: all 0.5s ease 0s;
+	transform: rotate(45deg);
 	top: 0px;
 	left: 0px;
 }
@@ -421,7 +423,7 @@ body.lock {
 .burger__menu-item-cross .cross::after {
 	background-color: var(--color-txt);
 }
-.burger__menu-item-cross.active {
+.burger__menu-item-cross.active .cross {
 	transform: rotate(-90deg);
 }
 .burger__submenu-item .burger__menu-item-cross {
@@ -430,7 +432,7 @@ body.lock {
 .burger__submenu-title .burger__menu-item-cross {
 	border: 2px solid var(--color-txt);
 	background-color: var(--bg-main);
-	border-radius: 50%;
+	border-radius: 10px;
 	padding: 20px;
 }
 .burger__submenu-item .burger__menu-item-cross .cross {
@@ -449,7 +451,7 @@ body.lock {
 }
 .burger__menu-item-more.active {
 	margin: 0;
-	padding: 2px;
+	/* padding: 2px; */
 	opacity: 1;
 	visibility: visible;
 	height: inherit;
@@ -502,6 +504,15 @@ body.lock {
 	border-radius: 10px;
 	border: 2px solid var(--color-txt);
 	text-align: center;
+}
+.burger__menu-add-shedule-btn {
+	margin-top: 0;
+}
+.burger__submenu-language {
+	padding-top: 0;
+}
+.burger__submenu-language-item:first-child {
+	margin-top: 0;
 }
 
 /* .burger__date {
@@ -751,10 +762,6 @@ body.lock {
 .popup__content-body h2 {
 	margin: 0;
 }
-.popup__content-item {
-	/* border-top: 5px solid var(--focus); */
-}
-
 .popup__content-item .cross {
 	top: 13px;
 	left: 23px;

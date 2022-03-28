@@ -4,7 +4,60 @@ const calendarBody = document.querySelector(".calendar-body");
 
 const languageApp = [
 	{
+		name: "Українська",
+		key: "ua",
+		dayNames: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+		monthNames: [
+			"Січень",
+			"Лютий",
+			"Березень",
+			"Квітень",
+			"Травень",
+			"Червень",
+			"Липень",
+			"Серпень",
+			"Вересень",
+			"Жовтень",
+			"Листопад",
+			"Грудень",
+		],
+		otherWords: {
+			add: "Додати",
+			remove: "Прибрати",
+			reserveShift: "резервну зміну",
+			addShift: "Додати зміну",
+			editShift: "Замінити зміну",
+			deleteShift: "Видалити зміну",
+			deleteShedule: "Видалити графік",
+			setNameShift: "Вкажіть назву зміни",
+			myShift: "Моя зміна",
+			whatShiftRemove: "Яку зміну бажаєте видалити?",
+			whatShiftEdit: "Яку зміну бажаєте замінити?",
+			myCompany: "Моє підприємство",
+			tasksDay: "Завдання на день",
+			newTask: "Новий пункт",
+			shift: "Зміна",
+			shiftFrom: "Зміна з",
+			shiftName: "Назва зміни (коротко)",
+			example: "Приклад",
+			shiftDescription: "Опис зміни",
+			fillField: "Заповніть це поле",
+			dayOff: "Вихідний",
+			selectSchedule: "Обрати графік",
+			createSchedule: "Створити графік",
+			enterCompanyName: "Вкажіть назву підприємства",
+			enterShiftName: "Вкажіть назву зміни",
+			exampleNPP: "приклад: 'Запорізька АЕС'",
+			exampleShift: "приклад: 'зм. А'",
+			selectLanguage: "Обрати мову",
+			colorThemes: "Кольорові теми",
+			resetUserSettings: "Скинути налаштування",
+			total: "Усього:",
+		},
+	},
+	{
 		name: "English",
+		key: "en",
 		dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 		monthNames: [
 			"January",
@@ -31,17 +84,32 @@ const languageApp = [
 			setNameShift: "Set name shift",
 			myShift: "My shift",
 			whatShiftRemove: "What shift do you want to remove?",
+			whatShiftEdit: "What shift to change?",
 			myCompany: "My company",
 			tasksDay: "Tasks for the day",
 			newTask: "New task",
 			shift: "Shift",
+			shiftFrom: "Shift from",
 			shiftName: "Shift name (short)",
 			example: "Example",
 			shiftDescription: "Shift description",
+			fillField: "Fill in this field",
+			dayOff: "Day off",
+			selectSchedule: "Select shedule",
+			createSchedule: "Сreate a schedule",
+			enterCompanyName: "Enter company name",
+			enterShiftName: "Enter shift name",
+			exampleNPP: "example: 'Heysham nuclear power station'",
+			exampleShift: "example: 'А'",
+			selectLanguage: "Select language",
+			colorThemes: "Color themes",
+			resetUserSettings: "Reset user settings",
+			total: "Total:",
 		},
 	},
 	{
 		name: "Русский",
+		key: "ru",
 		dayNames: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
 		monthNames: [
 			"Январь",
@@ -68,21 +136,136 @@ const languageApp = [
 			setNameShift: "Укажите название смены",
 			myShift: "Моя смена",
 			whatShiftRemove: "Какую смену хотите удалить?",
+			whatShiftEdit: "Какую смену хотите изменить?",
 			myCompany: "Мое предприятие",
 			tasksDay: "Задачи на день",
 			newTask: "Новый пункт",
 			shift: "Смена",
+			shiftFrom: "Смена с",
 			shiftName: "Название смены (коротко)",
 			example: "Пример",
 			shiftDescription: "Описание смены",
+			fillField: "Заполните это поле",
+			dayOff: "Выходной",
+			selectSchedule: "Выбрать график",
+			createSchedule: "Создать график",
+			enterCompanyName: "Укажите название предприятия",
+			enterShiftName: "Укажите название смены",
+			exampleNPP: "пример: 'Запорожская АЭС'",
+			exampleShift: "пример: 'см. А'",
+			selectLanguage: "Выбрать язык",
+			colorThemes: "Цветовые темы",
+			resetUserSettings: "Сбросить настройки",
+			total: "Всего:",
 		},
 	},
 ];
 
-let currentLanguage = languageApp[0];
-console.log(currentLanguage);
+const burgerSubmenuLanguage = document.querySelector(
+	".burger__submenu-language"
+);
+let currentLanguage;
+languageApp.forEach((obj, index) => {
+	burgerSubmenuLanguage.innerHTML += `
+		<div class="burger__menu-btn burger__submenu-language-item">
+			${obj.name}
+		</div>
+	`;
+});
+
+let userSettings = {};
+if (localStorage.userSettings) {
+	userSettings = JSON.parse(localStorage.getItem("userSettings"));
+	if (userSettings.theme) {
+		body.className = "";
+		body.classList.add(userSettings.theme);
+	}
+
+	if (userSettings.language) {
+		languageApp.forEach((obj, index) => {
+			if (obj.name == userSettings.language) {
+				currentLanguage = languageApp[index];
+			}
+		});
+	}
+} else {
+	let language = window.navigator
+		? window.navigator.language ||
+		  window.navigator.systemLanguage ||
+		  window.navigator.userLanguage
+		: "en";
+	language = language.substr(0, 2).toLowerCase();
+	console.log(language);
+
+	languageApp.forEach((obj, index) => {
+		if (obj.key == language) {
+			currentLanguage = languageApp[index];
+		}
+	});
+}
 
 const { dayNames, monthNames, otherWords } = currentLanguage;
+
+const removeLocalStorage = document.querySelector(".remove-local-storage");
+
+if (currentLanguage == languageApp[1]) {
+} else {
+	removeLocalStorage.innerHTML = otherWords.resetUserSettings;
+
+	const burgerMenuSelectSheduleTitle = document.querySelector(
+		".burger__menu-select-shedule h2"
+	);
+	burgerMenuSelectSheduleTitle.innerHTML = otherWords.selectSchedule;
+	const burgerMenuCreateScheduleTitle = document.querySelector(
+		".burger__menu-create-shift h2"
+	);
+	burgerMenuCreateScheduleTitle.innerHTML = otherWords.createSchedule;
+	const burgerMenuAddShiftTitles = document.querySelectorAll(
+		".burger__menu-add-shift h2"
+	);
+	burgerMenuAddShiftTitles[0].innerHTML = otherWords.enterCompanyName;
+	burgerMenuAddShiftTitles[1].innerHTML = otherWords.enterShiftName;
+
+	const burgerMenuAddShiftInputs = document.querySelectorAll(
+		".burger__menu-add-shift input"
+	);
+	burgerMenuAddShiftInputs[0].setAttribute(
+		"placeholder",
+		otherWords.exampleNPP
+	);
+	burgerMenuAddShiftInputs[1].setAttribute(
+		"placeholder",
+		otherWords.exampleShift
+	);
+	const burgerMenuAddSheduleBtn = document.querySelector(
+		".burger__menu-add-shedule-btn"
+	);
+	burgerMenuAddSheduleBtn.innerHTML = otherWords.createSchedule;
+	const burgerMenuThemeTitle = document.querySelector(".burger__menu-theme h2");
+	burgerMenuThemeTitle.innerHTML = otherWords.colorThemes;
+	const burgerMenuSelectLanguageTitle = document.querySelector(
+		".burger__menu-select-language h2"
+	);
+	burgerMenuSelectLanguageTitle.innerHTML = otherWords.selectLanguage;
+
+	const calendarCountTotal = document.querySelector(".calendar-count-total");
+	calendarCountTotal.innerHTML = otherWords.total;
+	const popupContentBodyTitle = document.querySelector(
+		".popup__content-body h2"
+	);
+	popupContentBodyTitle.innerHTML = `${otherWords.tasksDay}:`;
+	const popupContentBodyInput = document.querySelector(
+		".popup__content-body input"
+	);
+	popupContentBodyInput.setAttribute("placeholder", otherWords.newTask);
+}
+removeLocalStorage.addEventListener("click", () => {
+	localStorage.removeItem("userShift");
+	localStorage.removeItem("choiceShifts");
+	localStorage.removeItem("userSettings");
+
+	location.reload();
+});
 
 let calendarCountShift = calendar.querySelector(".calendar-count");
 let arrForUserNotes;
@@ -111,7 +294,7 @@ const replaceShiftObjInChoiceShifts = () => {
 };
 
 let shiftTemplate = {
-	namesContextMenu: [{ key: "", title: "Выходной" }],
+	namesContextMenu: [{ key: "", title: otherWords.dayOff }],
 	root: [[]],
 	template: true,
 	endCicle: false,
@@ -256,15 +439,167 @@ let choiceShifts = [
 		],
 		startDate: "2022-01-01",
 	},
+	{
+		name: "Ровенская АЭС",
+		shiftsName: ["А", "Б", "В", "Г", "Д"],
+		options: {
+			reserveShift: { name: "E", status: false },
+		},
+		namesContextMenu: [
+			{ key: "8", title: "Смена с 08-00", color: "", count: true },
+			{ key: "16", title: "Смена с 16-00", color: "", count: true },
+			{ key: "0", title: "Смена с 00-00", color: "", count: true },
+			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
+			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
+			{ key: "Э", title: "Экзамен", color: "#d62828" },
+			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
+			{ key: "&nbsp;", title: "Выходной", color: "" },
+			{ key: "З", title: "Заметка", color: "#e9c46a" },
+		],
+		root: [
+			["8", "8", "", "", "0", "0", "0", "", "", "16", "16", "16", "", "", "8"],
+			["0", "", "", "16", "16", "16", "", "", "8", "8", "8", "", "", "0", "0"],
+			["", "", "8", "8", "8", "", "", "0", "0", "0", "", "", "16", "16", "16"],
+			["", "0", "0", "0", "", "", "16", "16", "16", "", "", "8", "8", "8", ""],
+			["16", "16", "16", "", "", "8", "8", "8", "", "", "0", "0", "0", "", ""],
+		],
+		startDate: "2022-01-01",
+	},
+	{
+		name: "Хмельницкая АЭС",
+		shiftsName: ["А", "Б", "В", "Г", "Д"],
+		options: {
+			reserveShift: { name: "E", status: false },
+		},
+		namesContextMenu: [
+			{ key: "7", title: "Смена с 07-00", color: "", count: true },
+			{ key: "15", title: "Смена с 15-00", color: "", count: true },
+			{ key: "23", title: "Смена с 23-00", color: "", count: true },
+			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
+			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
+			{ key: "Э", title: "Экзамен", color: "#d62828" },
+			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
+			{ key: "&nbsp;", title: "Выходной", color: "" },
+			{ key: "З", title: "Заметка", color: "#e9c46a" },
+		],
+		root: [
+			[
+				"",
+				"23",
+				"23",
+				"23",
+				"",
+				"",
+				"15",
+				"15",
+				"15",
+				"",
+				"",
+				"7",
+				"7",
+				"7",
+				"",
+			],
+			[
+				"",
+				"",
+				"7",
+				"7",
+				"7",
+				"",
+				"",
+				"23",
+				"23",
+				"23",
+				"",
+				"",
+				"15",
+				"15",
+				"15",
+			],
+			[
+				"7",
+				"7",
+				"",
+				"",
+				"23",
+				"23",
+				"23",
+				"",
+				"",
+				"15",
+				"15",
+				"15",
+				"",
+				"",
+				"7",
+			],
+			[
+				"23",
+				"",
+				"",
+				"15",
+				"15",
+				"15",
+				"",
+				"",
+				"7",
+				"7",
+				"7",
+				"",
+				"",
+				"23",
+				"23",
+			],
+			[
+				"15",
+				"15",
+				"15",
+				"",
+				"",
+				"7",
+				"7",
+				"7",
+				"",
+				"",
+				"23",
+				"23",
+				"23",
+				"",
+				"",
+			],
+		],
+		startDate: "2022-01-01",
+	},
+	{
+		name: "Южно-Украинская АЭС",
+		shiftsName: ["А", "Б", "В", "Г", "Д"],
+		options: {
+			reserveShift: { name: "E", status: false },
+		},
+		namesContextMenu: [
+			{ key: "8", title: "Смена с 08-00", color: "", count: true },
+			{ key: "16", title: "Смена с 16-00", color: "", count: true },
+			{ key: "0", title: "Смена с 00-00", color: "", count: true },
+			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
+			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
+			{ key: "Э", title: "Экзамен", color: "#d62828" },
+			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
+			{ key: "&nbsp;", title: "Выходной", color: "" },
+			{ key: "З", title: "Заметка", color: "#e9c46a" },
+		],
+		root: [
+			["8", "8", "", "", "0", "0", "0", "", "", "16", "16", "16", "", "", "8"],
+			["16", "16", "16", "", "", "8", "8", "8", "", "", "0", "0", "0", "", ""],
+			["0", "", "", "16", "16", "16", "", "", "8", "8", "8", "", "", "0", "0"],
+			["", "0", "0", "0", "", "", "16", "16", "16", "", "", "8", "8", "8", ""],
+			["", "", "8", "8", "8", "", "", "0", "0", "0", "", "", "16", "16", "16"],
+		],
+		startDate: "2022-01-01",
+	},
 ];
 //шаблон объекта смен
 let shiftObj = choiceShifts[0];
-
-if (localStorage.userSettings) {
-	let userSettings = JSON.parse(localStorage.getItem("userSettings"));
-	body.className = "";
-	body.classList.add(userSettings.theme);
-}
 
 if (localStorage.userShift) {
 	shiftObj = JSON.parse(localStorage.getItem("userShift"));
@@ -279,16 +614,6 @@ if (shiftObj.userNotes) {
 } else {
 	arrForUserNotes = [];
 }
-
-let removeLocalStorage = document.querySelector(".remove-local-storage");
-removeLocalStorage.addEventListener("click", () => {
-	localStorage.removeItem("userShift");
-	localStorage.removeItem("choiceShifts");
-	localStorage.removeItem("userSettings");
-	// generateCalendar(currMonth.value, currYear.value);
-	// location.href = location.href;
-	location.reload();
-});
 
 choiceShifts.forEach((obj, index) => {
 	let burgerMenuChoiceShifts = document.querySelector(
@@ -458,6 +783,9 @@ const generateCalendar = (month, year) => {
 		setWidthFooter();
 		setWidthHeaderDay();
 	});
+	if (shiftObj.template) {
+		calendarCountShift.style.display = "none";
+	}
 
 	for (let i = 0; i < daysOfMonth[month]; i++) {
 		let iDay = new Date(year, month, i + 1);
@@ -784,16 +1112,6 @@ burgerMenu.addEventListener("click", (e) => {
 			burgerMenuItemMore.classList.toggle("active");
 		}
 
-		if (localStorage.userSettings) {
-			let userSettings = JSON.parse(localStorage.getItem("userSettings"));
-			body.className = "";
-			body.classList.add(userSettings.theme);
-			let selectedBurgerSubmenuItem = document.querySelector(
-				`.burger__submenu-item#${userSettings.theme}`
-			);
-			selectedBurgerSubmenuItem.classList.add("focus");
-		}
-
 		if (localStorage.userShift) {
 			shiftObj = JSON.parse(localStorage.getItem("userShift"));
 			let burgerSubmenuItems = document.querySelectorAll(
@@ -850,7 +1168,9 @@ burgerMenu.addEventListener("click", (e) => {
 
 			if (shiftObj.options.deleteSchedule) {
 				burgerMenuItemMore.innerHTML += `
-			<div class='burger__menu-btn burger__menu-delete-shedule-btn'>${otherWords.deleteShedule}</div>
+			<div class='burger__menu-btn burger__menu-delete-shedule-btn'>
+				${otherWords.deleteShedule}
+			</div>
 		`;
 			}
 
@@ -879,6 +1199,19 @@ burgerMenu.addEventListener("click", (e) => {
 	}
 
 	if (target.closest(".burger__menu-color")) {
+		if (localStorage.userSettings) {
+			userSettings = JSON.parse(localStorage.getItem("userSettings"));
+			if (userSettings.theme) {
+				body.className = "";
+				body.classList.add(userSettings.theme);
+				body.classList.add("lock");
+				let selectedBurgerSubmenuItem = document.querySelector(
+					`.burger__submenu-item#${userSettings.theme}`
+				);
+				selectedBurgerSubmenuItem.classList.add("focus");
+			}
+		}
+
 		let currentBurgerSubmenuItem = target.closest(".burger__menu-color");
 		let burgerMenuColors = document.querySelectorAll(".burger__menu-color");
 		burgerMenuColors.forEach((item) => {
@@ -951,7 +1284,7 @@ burgerMenu.addEventListener("click", (e) => {
 		const burgerMenuEditShiftBtn = document.querySelector(
 			".burger__menu-edit-shift-btn"
 		);
-		burgerMenuEditShiftBtn.innerHTML = `Какую смену хотите изменить?`;
+		burgerMenuEditShiftBtn.innerHTML = `${otherWords.whatShiftEdit}`;
 		shiftObj.shiftsName.forEach((item) => {
 			burgerMenuEditShiftBtn.innerHTML += `
 			<div class='burger__menu-btn burger__menu-edit-select-shift'>${item}</div>
@@ -1058,13 +1391,26 @@ burgerMenu.addEventListener("click", (e) => {
 		location.reload();
 	}
 
+	if (target.closest(".burger__submenu-language-item")) {
+		const currentLanguage = target
+			.closest(".burger__submenu-language-item")
+			.textContent.trim();
+		languageApp.forEach((obj) => {
+			if (obj.name == currentLanguage) {
+				userSettings.language = currentLanguage;
+				updateLocalStorage("userSettings", userSettings);
+				location.reload();
+			}
+		});
+	}
+
 	const selectTheme = (target, nameTheme) => {
 		if (target.closest(`#${nameTheme}`)) {
 			body.className = "";
 			body.classList.add(nameTheme);
 			body.classList.toggle("lock");
-
-			updateLocalStorage("userSettings", new UserSettings(nameTheme));
+			userSettings.theme = nameTheme;
+			updateLocalStorage("userSettings", userSettings);
 		}
 	};
 
@@ -1211,9 +1557,9 @@ function UserNotes(date, shift, color, desc, key) {
 	this.keyNote = key;
 }
 
-function UserSettings(theme) {
-	this.theme = theme;
-}
+// function UserSettings(theme) {
+// 	this.theme = theme;
+// }
 
 const filterTasks = () => {
 	const activeTasks =
@@ -1405,7 +1751,7 @@ function UserNameShift(key, title) {
 	this.key = key;
 
 	if (title == "") {
-		title = `${otherWords.shift} '${key}'`;
+		title = `${otherWords.shiftFrom} '${key}'`;
 	}
 
 	this.title = title;
@@ -1544,7 +1890,7 @@ calendarBody.addEventListener("click", (e) => {
 					<h3>${otherWords.shiftDescription}:</h3>
 					<div class="input-wrapper">
 						<input
-							placeholder="${otherWords.example}: '${otherWords.shift} 23-00'"
+							placeholder="${otherWords.example}: '${otherWords.shiftFrom} 23-00'"
 							type="text"
 							class="new-description-task"
 						/>
@@ -1571,7 +1917,7 @@ calendarBody.addEventListener("click", (e) => {
 						<span class="cross"></span>
 					</div>
 					<div class="right-click-menu-item__name button-wrapper ">
-						Удалить смену
+						${otherWords.deleteShift}
 					</div>
 				</div>
 			`;
@@ -1956,7 +2302,7 @@ popup.addEventListener("click", (e) => {
 
 			createEndCicleBtn();
 		} else {
-			addShiftInputs[0].setAttribute("placeholder", "Заполните это поле");
+			addShiftInputs[0].setAttribute("placeholder", `${otherWords.fillField}`);
 			addShiftInputs[0].style.boxShadow = "inset 0 0 8px red";
 		}
 	}
