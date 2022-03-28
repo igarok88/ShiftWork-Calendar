@@ -1,7 +1,88 @@
 const body = document.querySelector("body");
 const calendar = document.querySelector(".calendar");
 const calendarBody = document.querySelector(".calendar-body");
-const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const languageApp = [
+	{
+		name: "English",
+		dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+		monthNames: [
+			"January",
+			"February",
+			"March",
+			"April",
+			"May",
+			"June",
+			"July",
+			"August",
+			"September",
+			"October",
+			"November",
+			"December",
+		],
+		otherWords: {
+			add: "Add",
+			remove: "Remove",
+			reserveShift: "reserve shift",
+			addShift: "Add shift",
+			editShift: "Edit shift",
+			deleteShift: "Delete shift",
+			deleteShedule: "Delete shedule",
+			setNameShift: "Set name shift",
+			myShift: "My shift",
+			whatShiftRemove: "What shift do you want to remove?",
+			myCompany: "My company",
+			tasksDay: "Tasks for the day",
+			newTask: "New task",
+			shift: "Shift",
+			shiftName: "Shift name (short)",
+			example: "Example",
+			shiftDescription: "Shift description",
+		},
+	},
+	{
+		name: "Русский",
+		dayNames: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+		monthNames: [
+			"Январь",
+			"Февраль",
+			"Март",
+			"Апрель",
+			"Май",
+			"Июнь",
+			"Июль",
+			"Август",
+			"Сентябрь",
+			"Октябрь",
+			"Ноябрь",
+			"Декабрь",
+		],
+		otherWords: {
+			add: "Добавить",
+			remove: "Убрать",
+			reserveShift: "резервную смену",
+			addShift: "Добавить смену",
+			editShift: "Изменить смену",
+			deleteShift: "Удалить смену",
+			deleteShedule: "Удалить график",
+			setNameShift: "Укажите название смены",
+			myShift: "Моя смена",
+			whatShiftRemove: "Какую смену хотите удалить?",
+			myCompany: "Мое предприятие",
+			tasksDay: "Задачи на день",
+			newTask: "Новый пункт",
+			shift: "Смена",
+			shiftName: "Название смены (коротко)",
+			example: "Пример",
+			shiftDescription: "Описание смены",
+		},
+	},
+];
+
+let currentLanguage = languageApp[0];
+console.log(currentLanguage);
+
+const { dayNames, monthNames, otherWords } = currentLanguage;
 
 let calendarCountShift = calendar.querySelector(".calendar-count");
 let arrForUserNotes;
@@ -179,6 +260,12 @@ let choiceShifts = [
 //шаблон объекта смен
 let shiftObj = choiceShifts[0];
 
+if (localStorage.userSettings) {
+	let userSettings = JSON.parse(localStorage.getItem("userSettings"));
+	body.className = "";
+	body.classList.add(userSettings.theme);
+}
+
 if (localStorage.userShift) {
 	shiftObj = JSON.parse(localStorage.getItem("userShift"));
 }
@@ -186,6 +273,22 @@ if (localStorage.userShift) {
 if (localStorage.choiceShifts) {
 	choiceShifts = JSON.parse(localStorage.getItem("choiceShifts"));
 }
+
+if (shiftObj.userNotes) {
+	arrForUserNotes = shiftObj.userNotes;
+} else {
+	arrForUserNotes = [];
+}
+
+let removeLocalStorage = document.querySelector(".remove-local-storage");
+removeLocalStorage.addEventListener("click", () => {
+	localStorage.removeItem("userShift");
+	localStorage.removeItem("choiceShifts");
+	localStorage.removeItem("userSettings");
+	// generateCalendar(currMonth.value, currYear.value);
+	// location.href = location.href;
+	location.reload();
+});
 
 choiceShifts.forEach((obj, index) => {
 	let burgerMenuChoiceShifts = document.querySelector(
@@ -258,39 +361,12 @@ shiftsName.forEach((item, index) => {
 	let countGridColumnsStr = countGridColumns.join(" ");
 	calendarCountShift.style.gridTemplateColumns = `2fr ${countGridColumnsStr}`;
 });
-const monthNames = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December",
-];
 
-let removeLocalStorage = document.querySelector(".remove-local-storage");
-removeLocalStorage.addEventListener("click", () => {
-	localStorage.removeItem("userNotes");
-	generateCalendar(currMonth.value, currYear.value);
-	location.href = location.href;
-});
-
-if (localStorage.userSettings) {
-	let userSettings = JSON.parse(localStorage.getItem("userSettings"));
-	body.className = "";
-	body.classList.add(userSettings.theme);
-}
-
-if (!localStorage.userNotes) {
-	arrForUserNotes = [];
-} else {
-	arrForUserNotes = JSON.parse(localStorage.getItem("userNotes"));
-}
+// if (!localStorage.userNotes) {
+// 	arrForUserNotes = [];
+// } else {
+// 	arrForUserNotes = JSON.parse(localStorage.getItem("userNotes"));
+// }
 
 const getZero = (num) => {
 	if (num >= 0 && num < 10) {
@@ -747,32 +823,34 @@ burgerMenu.addEventListener("click", (e) => {
 			if (shiftObj.options.reserveShift) {
 				burgerMenuItemMore.innerHTML = `
 			<div class='burger__menu-btn burger__menu-reserve-shift-btn'>${
-				shiftObj.options.reserveShift.status ? "Убрать" : "Добавить"
-			} резервную смену</div>
+				shiftObj.options.reserveShift.status
+					? `${otherWords.remove}`
+					: `${otherWords.add}`
+			} ${otherWords.reserveShift}</div>
 		`;
 			}
 
 			if (shiftObj.options.addShift) {
 				burgerMenuItemMore.innerHTML = `
-			<div class='burger__menu-btn burger__menu-add-new-shift-btn'>Добавить смену</div>
+			<div class='burger__menu-btn burger__menu-add-new-shift-btn'>${otherWords.addShift}</div>
 		`;
 			}
 
 			if (shiftObj.options.editShift) {
 				burgerMenuItemMore.innerHTML += `
-			<div class='burger__menu-btn burger__menu-edit-shift-btn'>Изменить смену</div>
+			<div class='burger__menu-btn burger__menu-edit-shift-btn'>${otherWords.editShift}</div>
 		`;
 			}
 
 			if (shiftObj.options.deleteShift && shiftObj.shiftsName.length > 1) {
 				burgerMenuItemMore.innerHTML += `
-			<div class='burger__menu-btn burger__menu-delete-shift-btn'>Удалить смену</div>
+			<div class='burger__menu-btn burger__menu-delete-shift-btn'>${otherWords.deleteShift}</div>
 		`;
 			}
 
 			if (shiftObj.options.deleteSchedule) {
 				burgerMenuItemMore.innerHTML += `
-			<div class='burger__menu-btn burger__menu-delete-shedule-btn'>Удалить график</div>
+			<div class='burger__menu-btn burger__menu-delete-shedule-btn'>${otherWords.deleteShedule}</div>
 		`;
 			}
 
@@ -830,9 +908,9 @@ burgerMenu.addEventListener("click", (e) => {
 			burgerMenuAddNewShiftBtn.innerHTML = `
 				<div class='burger__menu-add-new-shift-input'>
 					<div class="input-wrapper">
-						<input type="text" placeholder="Укажите название смены">
+						<input type="text" placeholder="${otherWords.setNameShift}">
 					</div>
-					<div class="burger__menu-btn burger__menu-add-new-shift-sub-btn">Добавить</div>
+					<div class="burger__menu-btn burger__menu-add-new-shift-sub-btn">${otherWords.add}</div>
 				</div>
 			`;
 		}
@@ -845,21 +923,19 @@ burgerMenu.addEventListener("click", (e) => {
 		let inputValue = burgerMenuAddNewShiftInput.querySelector("input").value;
 
 		if (inputValue == "") {
-			inputValue = "Моя смена";
+			inputValue = otherWords.myShift;
 		}
 
 		// если название совпадает, то добавляем индекс
 		let counter = 1;
+
 		shiftObj.shiftsName.forEach((item, index) => {
 			shiftObj.activeTemplate[index] = false;
 
-			console.log(item);
-			console.log(inputValue);
-			console.log(counter);
 			if (item == inputValue) {
 				counter++;
+				inputValue = `${inputValue} ${counter}`;
 			}
-			inputValue = `${inputValue} ${counter}`;
 		});
 
 		shiftObj.template = true;
@@ -904,7 +980,7 @@ burgerMenu.addEventListener("click", (e) => {
 		const burgerMenuDeleteShiftBtn = document.querySelector(
 			".burger__menu-delete-shift-btn"
 		);
-		burgerMenuDeleteShiftBtn.innerHTML = `Какую смену хотите удалить?`;
+		burgerMenuDeleteShiftBtn.innerHTML = otherWords.whatShiftRemove;
 		shiftObj.shiftsName.forEach((item) => {
 			burgerMenuDeleteShiftBtn.innerHTML += `
 			<div class='burger__menu-btn burger__menu-delete-select-shift'>${item}</div>
@@ -962,18 +1038,18 @@ burgerMenu.addEventListener("click", (e) => {
 
 		//присваиваем стандартное имя предприятия
 		if (shiftTemplate.name == "") {
-			shiftTemplate.name = "Мое предприятие";
+			shiftTemplate.name = otherWords.myCompany;
 		}
 		// если название совпадает, то добавляем индекс
 		let counter = 1;
 		choiceShifts.forEach((obj) => {
-			counter++;
 			if (obj.name == shiftTemplate.name) {
+				counter++;
 				shiftTemplate.name = `${shiftTemplate.name} ${counter}`;
 			}
 		});
 		if (shiftTemplate.shiftsName == "") {
-			shiftTemplate.shiftsName = ["Моя смена"];
+			shiftTemplate.shiftsName = [otherWords.myShift];
 		}
 
 		shiftObj = shiftTemplate;
@@ -1042,7 +1118,7 @@ namesContextMenu.forEach((obj) => {
 	liForTodo.classList.add("right-click-menu__todo");
 
 	liForTodo.innerHTML = `
-			<h2>Задачи на день:</h2>
+			<h2>${otherWords.tasksDay}:</h2>
 			
 			<ul class="right-click-menu__todos-wrapper">
 			</ul>
@@ -1050,7 +1126,7 @@ namesContextMenu.forEach((obj) => {
 			<div class="right-click-menu__add-todo-wrapper right-click-menu-item">
 				<div></div>
 				<div class="input-wrapper">
-					<input placeholder="Новый пункт" type="text" class="new-description-task" />
+					<input placeholder="${otherWords.newTask}" type="text" class="new-description-task" />
 				</div>
 				<div class="button-wrapper add-task-btn" >
 					<span class="cross"></span>
@@ -1170,7 +1246,12 @@ const addTask = (addTaskBtn) => {
 
 		pushObjInArr();
 		filterArr(arrForUserNotes);
-		updateLocalStorage("userNotes", arrForUserNotes);
+		// updateLocalStorage("userNotes", arrForUserNotes);
+		shiftObj.userNotes = arrForUserNotes;
+		updateLocalStorage("userShift", shiftObj);
+		replaceShiftObjInChoiceShifts();
+
+		updateLocalStorage("choiceShifts", choiceShifts);
 
 		fillHtmlList();
 	});
@@ -1232,6 +1313,14 @@ const fillHtmlList = () => {
 				selectedTodoValue = tasks;
 
 				fillHtmlList();
+
+				pushObjInArr();
+				filterArr(arrForUserNotes);
+				shiftObj.userNotes = arrForUserNotes;
+				updateLocalStorage("userShift", shiftObj);
+				replaceShiftObjInChoiceShifts();
+
+				updateLocalStorage("choiceShifts", choiceShifts);
 			});
 
 			let btnDel = item.querySelector(".btn-delete");
@@ -1240,6 +1329,14 @@ const fillHtmlList = () => {
 				selectedTodoValue = tasks;
 				fillHtmlList();
 				setAttrCurCell(targetItemInTable, tasks);
+
+				pushObjInArr();
+				filterArr(arrForUserNotes);
+				shiftObj.userNotes = arrForUserNotes;
+				updateLocalStorage("userShift", shiftObj);
+				replaceShiftObjInChoiceShifts();
+
+				updateLocalStorage("choiceShifts", choiceShifts);
 			});
 		});
 		editDescription();
@@ -1308,7 +1405,7 @@ function UserNameShift(key, title) {
 	this.key = key;
 
 	if (title == "") {
-		title = `Смена '${key}'`;
+		title = `${otherWords.shift} '${key}'`;
 	}
 
 	this.title = title;
@@ -1436,18 +1533,18 @@ calendarBody.addEventListener("click", (e) => {
 						popup__create-shift
 					"
 				>
-					<h3>Название смены (коротко)*:</h3>
+					<h3>${otherWords.shiftName}*:</h3>
 					<div class="input-wrapper">
 						<input
-							placeholder="пример: '23'
+							placeholder="${otherWords.example}: '23'
 							type="text"
 							class="new-description-task"
 						/>
 					</div>
-					<h3>Описание смены:</h3>
+					<h3>${otherWords.shiftDescription}:</h3>
 					<div class="input-wrapper">
 						<input
-							placeholder="пример: 'Смена с 23-00'"
+							placeholder="${otherWords.example}: '${otherWords.shift} 23-00'"
 							type="text"
 							class="new-description-task"
 						/>
@@ -1457,12 +1554,14 @@ calendarBody.addEventListener("click", (e) => {
 							<span class="cross"></span>
 						</div>
 						<div class="right-click-menu-item__name button-wrapper ">
-							Добавить смену
+						${otherWords.addShift}
 						</div>
 					</div>
 				</div>
 			</div>
 		`;
+		//
+		//
 		popupContentBody.insertAdjacentHTML("beforeend", addShiftItem);
 
 		if (e.target.closest("[data-shift]")) {
@@ -1591,7 +1690,12 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 		filterArr(arrForUserNotes);
 
-		updateLocalStorage("userNotes", arrForUserNotes);
+		// updateLocalStorage("userNotes", arrForUserNotes);
+		shiftObj.userNotes = arrForUserNotes;
+		updateLocalStorage("userShift", shiftObj);
+		replaceShiftObjInChoiceShifts();
+
+		updateLocalStorage("choiceShifts", choiceShifts);
 
 		removeActiveArrowsTodos();
 		clearAllTodosWrappers();
@@ -1780,7 +1884,12 @@ const popupClose = () => {
 			setAttrCurCell(targetItemInTable, tasks);
 			pushObjInArr();
 			filterArr(arrForUserNotes);
-			updateLocalStorage("userNotes", arrForUserNotes);
+			// updateLocalStorage("userNotes", arrForUserNotes);
+			shiftObj.userNotes = arrForUserNotes;
+			updateLocalStorage("userShift", shiftObj);
+			replaceShiftObjInChoiceShifts();
+
+			updateLocalStorage("choiceShifts", choiceShifts);
 			removeClassDescEventListener();
 		}
 	}
