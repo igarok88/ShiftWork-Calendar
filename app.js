@@ -53,6 +53,9 @@ const languageApp = [
 			colorThemes: "Кольорові теми",
 			resetUserSettings: "Скинути налаштування",
 			total: "Усього:",
+			feedback: "Зворотній зв'язок",
+			feedbackDescription:
+				"Спасибі за користування цією програмою. Пишіть ваші пропозиції в соцмережі:",
 		},
 	},
 	{
@@ -105,6 +108,9 @@ const languageApp = [
 			colorThemes: "Color themes",
 			resetUserSettings: "Reset user settings",
 			total: "Total:",
+			feedback: "Feedback",
+			feedbackDescription:
+				"Thank you for using this program. Write your suggestions on social networks:",
 		},
 	},
 	{
@@ -157,6 +163,9 @@ const languageApp = [
 			colorThemes: "Цветовые темы",
 			resetUserSettings: "Сбросить настройки",
 			total: "Всего:",
+			feedback: "Обратная связь",
+			feedbackDescription:
+				"Спасибо за пользование этой программой. Пишите ваши предложения в соцсети:",
 		},
 	},
 ];
@@ -258,6 +267,12 @@ if (currentLanguage == languageApp[1]) {
 		".popup__content-body input"
 	);
 	popupContentBodyInput.setAttribute("placeholder", otherWords.newTask);
+	const burgerMenuFeedbackTitle = document.querySelector(
+		".burger__menu-feedback h2"
+	);
+	burgerMenuFeedbackTitle.innerHTML = otherWords.feedback;
+	const burgerDescription = document.querySelector(".burger__description");
+	burgerDescription.innerHTML = otherWords.feedbackDescription;
 }
 removeLocalStorage.addEventListener("click", () => {
 	localStorage.removeItem("userShift");
@@ -687,12 +702,6 @@ shiftsName.forEach((item, index) => {
 	calendarCountShift.style.gridTemplateColumns = `2fr ${countGridColumnsStr}`;
 });
 
-// if (!localStorage.userNotes) {
-// 	arrForUserNotes = [];
-// } else {
-// 	arrForUserNotes = JSON.parse(localStorage.getItem("userNotes"));
-// }
-
 const getZero = (num) => {
 	if (num >= 0 && num < 10) {
 		return `0${num}`;
@@ -776,7 +785,11 @@ const generateCalendar = (month, year) => {
 		calendarNav.style.position = "fixed";
 	};
 	const setWidthHeaderDay = () => {
-		// headerDay.style.width = headerDay.offsetWidth + "px";
+		let calendarShiftName = document.querySelectorAll(".calendar-header-day");
+		let calendarDay = document.querySelector(".calendar-day");
+		calendarShiftName.forEach((item) => {
+			item.style.width = calendarDay.offsetWidth + 3 + "px";
+		});
 	};
 
 	window.addEventListener(`resize`, () => {
@@ -908,7 +921,6 @@ const generateCalendar = (month, year) => {
 				let headerDay = shift.querySelector(".calendar-header-day");
 				headerDay.style.width = headerDay.offsetWidth + "px";
 				headerDay.style.position = "fixed";
-				// setWidthHeaderDay();
 
 				setWidthFooter();
 			}
@@ -1415,9 +1427,33 @@ burgerMenu.addEventListener("click", (e) => {
 	};
 
 	selectTheme(target, "dark");
-	selectTheme(target, "light");
 	selectTheme(target, "dark-2");
+	selectTheme(target, "light");
+	selectTheme(target, "light-2");
 });
+const fillTheme = (nameTheme) => {
+	const burgerMenuChoiceTheme = document.querySelector(
+		".burger__menu-choice-theme"
+	);
+	burgerMenuChoiceTheme.innerHTML += `
+		<div id="${nameTheme}" class="burger__submenu-item burger__menu-color">
+			<div class="color color-1"></div>
+			<div class="color color-2"></div>
+			<div class="color color-3"></div>
+			<div class="color color-4"></div>
+			<div class="color color-5"></div>
+			<div class="color color-6"></div>
+			<div class="color color-7"></div>
+			<div class="color color-8"></div>
+			<div class="color color-9"></div>
+			<div class="color color-10"></div>
+		</div>
+	`;
+};
+fillTheme("dark");
+fillTheme("dark-2");
+fillTheme("light");
+fillTheme("light-2");
 
 //Контекстное меню
 
@@ -1807,7 +1843,6 @@ calendarBody.addEventListener("click", (e) => {
 			startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
 
 			shiftObj.startDate = startDay;
-			// arrDifferenceDays[0] = 0;
 		} else {
 			let newStartDay = new Date(
 				currYear.value,
@@ -1815,17 +1850,7 @@ calendarBody.addEventListener("click", (e) => {
 				firstElemIndex + 1
 			);
 			differenceDays = Math.round((startDay - newStartDay) / 86400000);
-			// shiftObj.shiftsName.forEach((item, index) => {
-			//
-			//
-			// shiftObj.activeTemplate[index] = false;
-			//
-			//
-			// if (index == shiftObj.shiftsName.length - 1) {
-			// 	console.log(shiftObj);
-			// 	shiftObj.arrDifferenceDays.push(differenceDays);
-			// }
-			// });
+
 			shiftObj.activeTemplate.forEach((item, index) => {
 				if (item == true) {
 					shiftObj.arrDifferenceDays[index] = differenceDays;
@@ -2230,7 +2255,6 @@ const popupClose = () => {
 			setAttrCurCell(targetItemInTable, tasks);
 			pushObjInArr();
 			filterArr(arrForUserNotes);
-			// updateLocalStorage("userNotes", arrForUserNotes);
 			shiftObj.userNotes = arrForUserNotes;
 			updateLocalStorage("userShift", shiftObj);
 			replaceShiftObjInChoiceShifts();
@@ -2267,10 +2291,6 @@ popup.addEventListener("click", (e) => {
 		targetItemInTable.setAttribute("data-key-note", currentBtnKeyNoteValue);
 		targetItemInTable.setAttribute("data-shift", "");
 
-		// if (e.target.closest("[data-end-cicle]")) {
-		// 	targetItemInTable.setAttribute("data-end-cicle", "");
-		// }
-
 		popupClose();
 
 		createEndCicleBtn();
@@ -2294,7 +2314,6 @@ popup.addEventListener("click", (e) => {
 			targetItemInTable.setAttribute("data-key-note", addShiftInputs[0].value);
 			targetItemInTable.setAttribute("data-shift", "");
 
-			// targetItemInTable.style.backgroundColor = "red";
 			targetItemInTable.classList.add("create-shift-selected");
 
 			updateLocalStorage("userShift", shiftObj);
@@ -2311,7 +2330,6 @@ popup.addEventListener("click", (e) => {
 		targetItemInTable.innerHTML = "";
 		targetItemInTable.removeAttribute("data-key-note");
 		targetItemInTable.removeAttribute("data-shift");
-		// targetItemInTable.style.backgroundColor = "var(--bg-div)";
 		targetItemInTable.classList.remove("create-shift-selected");
 
 		popupClose();
@@ -2339,8 +2357,6 @@ popup.addEventListener("click", (e) => {
 		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
 		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
 
-		// console.log(firstElemIndex);
-		// console.log(lastElemIndex);
 		myShiftsForLocalStorage = [];
 
 		myShiftsFinal.forEach((item, index) => {
@@ -2348,43 +2364,17 @@ popup.addEventListener("click", (e) => {
 			item.setAttribute("data-shift", "");
 			if (item.closest("[data-key-note]")) {
 				attr = item.getAttribute("data-key-note");
-				// item.style.backgroundColor = "red";
 				item.classList.add("create-shift-selected");
 			} else {
 				item.innerHTML = "";
-				//
-				//
-				// item.style.backgroundColor = "red";
+
 				item.classList.add("create-shift-selected");
 
 				attr = "";
 			}
 
 			myShiftsForLocalStorage.push(attr);
-
-			// if (item.closest("[data-end-cicle]") && !item.closest("[data-shift]")) {
-			// 	myShiftsForLocalStorage.splice(index, 1);
-			// }
 		});
-
-		// if (e.target.closest(".popup__add-shift-btn[data-end-cicle]")) {
-		// 	// targetItemInTable.removeAttribute("data-shift", "");
-		// 	shiftObj.root.unshift(myShiftsForLocalStorage);
-		// 	shiftObj.namesContextMenu.pop();
-
-		// 	//получаем день с которого начинается отсчет графика
-
-		// 	startDay = new Date(currYear.value, currMonth.value, firstElemIndex + 1);
-		// 	shiftObj.startDate = startDay;
-		// 	shiftObj.template = false;
-		// 	updateLocalStorage("userShift", shiftObj);
-
-		// 	choiceShifts.unshift(shiftObj);
-		// 	updateLocalStorage("choiceShifts", choiceShifts);
-
-		// 	location.hash = "";
-		// 	location.reload();
-		// }
 	}
 });
 
@@ -2443,3 +2433,7 @@ function handleHash() {
 window.addEventListener("hashchange", handleHash);
 
 handleHash();
+
+//текущая дата в центр экрана
+const currDateForScroll = document.querySelector(".curr-date");
+currDateForScroll.scrollIntoView({ block: "center", behavior: "smooth" });

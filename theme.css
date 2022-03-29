@@ -34,15 +34,29 @@
 	--light-hover: #edf0f5;
 	--light-text: #151426;
 	/* --light-bg-div: #c8d9e9; */
+	/* --light-bg-div: #effffd; */
 	--light-bg-div: #f3f7fa;
-	--light-day-off: rgba(255, 30, 0, 0.562);
-	--light-curr-day: #0000ffa2;
+	--light-day-off: #85f4ff;
+	--light-curr-day: #42c2ff;
 	--light-curr-day-text-color: #fff;
 	--light-desc: rgb(55, 98, 163);
 	--light-focus: rgba(139, 145, 145, 0.384);
-	--light-selected: rgba(202, 192, 192, 0.74);
+	--light-selected: #61a4bc;
 
-	/* --shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px; */
+	--light-2-body: #f3f8fe;
+	--light-2-main: #f2f5c8;
+	--light-2-second: rgba(0, 0, 0, 0.7);
+	--light-2-hover: #edf0f5;
+	--light-2-text: #151426;
+	/* --light-bg-div: #c8d9e9; */
+	/* --light-bg-div: #effffd; */
+	--light-2-bg-div: #e8e8a6;
+	--light-2-day-off: #c1deae;
+	--light-2-curr-day: #219f94;
+	--light-2-curr-day-text-color: #fff;
+	--light-2-desc: #65c18c;
+	--light-2-focus: rgba(139, 145, 145, 0.384);
+	--light-2-selected: #54bab9;
 
 	--font-family: Arial;
 }
@@ -91,6 +105,21 @@
 	--selected: var(--light-selected);
 }
 
+.light-2 {
+	--bg-body: var(--light-2-body);
+	--bg-div: var(--light-2-bg-div);
+	--bg-main: var(--light-2-main);
+	--bg-second: var(--light-2-second);
+	--color-hover: var(--light-2-hover);
+	--color-txt: var(--light-2-text);
+	--day-off: var(--light-2-day-off);
+	--curr-day: var(--light-2-curr-day);
+	--curr-day-text-color: var(--light-2-curr-day-text-color);
+	--desc: var(--light-2-desc);
+	--focus: var(--light-2-focus);
+	--selected: var(--light-2-selected);
+}
+
 .burger__menu-color {
 	display: flex;
 }
@@ -134,6 +163,7 @@
 #dark .color-10 {
 	background-color: var(--dark-desc);
 }
+
 #light .color-1 {
 	background-color: var(--light-body);
 }
@@ -194,4 +224,35 @@
 }
 #dark-2 .color-10 {
 	background-color: var(--dark-2-desc);
+}
+
+#light-2 .color-1 {
+	background-color: var(--light-2-body);
+}
+#light-2 .color-2 {
+	background-color: var(--light-2-main);
+}
+#light-2 .color-3 {
+	background-color: var(--light-2-second);
+}
+#light-2 .color-4 {
+	background-color: var(--light-2-hover);
+}
+#light-2 .color-5 {
+	background-color: var(--light-2-text);
+}
+#light-2 .color-6 {
+	background-color: var(--light-2-bg-div);
+}
+#light-2 .color-7 {
+	background-color: var(--light-2-day-off);
+}
+#light-2 .color-8 {
+	background-color: var(--light-2-curr-day);
+}
+#light-2 .color-9 {
+	background-color: var(--light-2-curr-day-text-color);
+}
+#light-2 .color-10 {
+	background-color: var(--light-2-desc);
 }

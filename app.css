@@ -84,8 +84,8 @@ body.lock {
 	align-items: center;
 	justify-content: center;
 	position: relative;
-	border-radius: 4px;
-	margin: 3px;
+	border-radius: 3px;
+	margin: 3px 2px;
 }
 .calendar-day,
 .menu-header div,
@@ -126,8 +126,8 @@ body.lock {
 }
 .calendar-day-off,
 .curr-date {
-	margin: 3px 0;
-	border-radius: 0;
+	/* margin: 3px 0;
+	border-radius: 0; */
 }
 .calendar-column-create-shift {
 	box-shadow: inset 0 0 100px red;
@@ -760,6 +760,7 @@ body.lock {
 }
 
 .popup__content-body h2 {
+	text-align: center;
 	margin: 0;
 }
 .popup__content-item .cross {
