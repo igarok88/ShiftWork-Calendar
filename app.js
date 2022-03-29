@@ -165,7 +165,7 @@ const languageApp = [
 			total: "Всего:",
 			feedback: "Обратная связь",
 			feedbackDescription:
-				"Спасибо за пользование этой программой. Пишите ваши предложения в соцсети:",
+				"Спасибо за пользование этой программи. Пишите ваши предложения в соцсети:",
 		},
 	},
 ];
@@ -183,20 +183,22 @@ languageApp.forEach((obj, index) => {
 });
 
 let userSettings = {};
+
 if (localStorage.userSettings) {
 	userSettings = JSON.parse(localStorage.getItem("userSettings"));
-	if (userSettings.theme) {
-		body.className = "";
-		body.classList.add(userSettings.theme);
-	}
+}
 
-	if (userSettings.language) {
-		languageApp.forEach((obj, index) => {
-			if (obj.name == userSettings.language) {
-				currentLanguage = languageApp[index];
-			}
-		});
-	}
+if (userSettings.theme) {
+	body.className = "";
+	body.classList.add(userSettings.theme);
+}
+
+if (userSettings.language) {
+	languageApp.forEach((obj, index) => {
+		if (obj.name == userSettings.language) {
+			currentLanguage = languageApp[index];
+		}
+	});
 } else {
 	let language = window.navigator
 		? window.navigator.language ||
@@ -204,7 +206,6 @@ if (localStorage.userSettings) {
 		  window.navigator.userLanguage
 		: "en";
 	language = language.substr(0, 2).toLowerCase();
-	console.log(language);
 
 	languageApp.forEach((obj, index) => {
 		if (obj.key == language) {
@@ -901,12 +902,16 @@ const generateCalendar = (month, year) => {
 			}
 
 			//вешаем класс curr-date на сегодняшнюю дату
-			if (
-				i + 1 === currDate.getDate() &&
-				year === currDate.getFullYear() &&
-				month === currDate.getMonth()
-			) {
-				day.classList.add("curr-date");
+			if (shiftObj.template) {
+			} else {
+				if (
+					i + 1 === currDate.getDate() &&
+					year === currDate.getFullYear() &&
+					month === currDate.getMonth()
+				) {
+					day.classList.add("curr-date");
+					dayWeek.classList.add("curr-date");
+				}
 			}
 
 			//вешаем класс calendar-day-off на выходной
@@ -990,13 +995,16 @@ const generateCalendar = (month, year) => {
 		});
 
 		//вешаем класс curr-date на сегодняшнюю дату
-		if (
-			i + 1 === currDate.getDate() &&
-			year === currDate.getFullYear() &&
-			month === currDate.getMonth()
-		) {
-			day.classList.add("curr-date");
-			dayWeek.classList.add("curr-date");
+		if (shiftObj.template) {
+		} else {
+			if (
+				i + 1 === currDate.getDate() &&
+				year === currDate.getFullYear() &&
+				month === currDate.getMonth()
+			) {
+				day.classList.add("curr-date");
+				dayWeek.classList.add("curr-date");
+			}
 		}
 	}
 };
@@ -2322,7 +2330,8 @@ popup.addEventListener("click", (e) => {
 			createEndCicleBtn();
 		} else {
 			addShiftInputs[0].setAttribute("placeholder", `${otherWords.fillField}`);
-			addShiftInputs[0].style.boxShadow = "inset 0 0 8px red";
+			addShiftInputs[0].style.boxShadow =
+				"inset 0 0 8px var(--light-2-focus-in-template)";
 		}
 	}
 
