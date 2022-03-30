@@ -658,29 +658,29 @@ choiceShifts.forEach((obj, index) => {
 			</div>
 		`;
 	}
-	let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
-	burgerMenuShifts.forEach((menuShift, index) => {
-		menuShift.addEventListener("click", (e) => {
-			let currentShift = e.target.closest(".burger__menu-shift");
-			if (currentShift == menuShift) {
-				if (
-					e.target.closest(".burger__menu-item-cross") ||
-					e.target.closest(".burger__menu-add-new-shift-btn") ||
-					e.target.closest(".burger__menu-delete-shift-btn") ||
-					e.target.closest(".burger__menu-edit-shift-btn")
-					// ||
-					// e.target.closest(".burger__menu-reserve-shift-btn")
-				) {
-				} else {
-					shiftObj = choiceShifts[index];
-					updateLocalStorage("userShift", shiftObj);
-					location.hash = "";
-					location.reload();
-				}
-			}
-		});
-	});
 });
+// let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
+// burgerMenuShifts.forEach((menuShift, index) => {
+// 	menuShift.addEventListener("click", (e) => {
+// 		let currentShift = e.target.closest(".burger__menu-shift");
+// 		if (currentShift == menuShift) {
+// 			if (
+// 				e.target.closest(".burger__menu-item-cross") ||
+// 				e.target.closest(".burger__menu-add-new-shift-btn") ||
+// 				e.target.closest(".burger__menu-delete-shift-btn") ||
+// 				e.target.closest(".burger__menu-edit-shift-btn")
+// 				// ||
+// 				// e.target.closest(".burger__menu-reserve-shift-btn")
+// 			) {
+// 			} else {
+// 				shiftObj = choiceShifts[index];
+// 				updateLocalStorage("userShift", shiftObj);
+// 				location.hash = "";
+// 				location.reload();
+// 			}
+// 		}
+// 	});
+// });
 let { shiftsName, namesContextMenu, root } = shiftObj;
 
 let countGridColumns = [];
@@ -1215,7 +1215,7 @@ burgerMenu.addEventListener("click", (e) => {
 
 		updateLocalStorage("userShift", shiftObj);
 		updateLocalStorage("choiceShifts", choiceShifts);
-		location.reload();
+		// location.reload();
 	}
 
 	if (target.closest(".burger__menu-color")) {
@@ -1245,6 +1245,36 @@ burgerMenu.addEventListener("click", (e) => {
 
 	let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
 	let currentBurgerSubmenuItem = target.closest(".burger__menu-shift");
+
+	if (target.closest(".burger__menu-shift")) {
+		if (target.closest(".burger__menu-item-cross")) {
+		} else {
+			burgerMenuShifts.forEach((item, index) => {
+				if (item == currentBurgerSubmenuItem) {
+					console.log(item);
+					console.log(index);
+					item.classList.add("focus");
+
+					if (
+						e.target.closest(".burger__menu-item-cross") ||
+						e.target.closest(".burger__menu-add-new-shift-btn") ||
+						e.target.closest(".burger__menu-delete-shift-btn") ||
+						e.target.closest(".burger__menu-edit-shift-btn")
+						// ||
+						// e.target.closest(".burger__menu-reserve-shift-btn")
+					) {
+					} else {
+						shiftObj = choiceShifts[index];
+						updateLocalStorage("userShift", shiftObj);
+						location.hash = "";
+						location.reload();
+					}
+				} else {
+					item.classList.remove("focus");
+				}
+			});
+		}
+	}
 
 	if (target.closest(".burger__menu-add-new-shift-btn")) {
 		let burgerMenuAddNewShiftBtn = document.querySelector(
@@ -1319,14 +1349,25 @@ burgerMenu.addEventListener("click", (e) => {
 				shiftObj.activeTemplate[index] = true;
 				shiftObj.root[index] = [];
 			}
-			shiftObj.editTemplate = true;
-			shiftObj.template = true;
-			replaceShiftObjInChoiceShifts();
-			updateLocalStorage("userShift", shiftObj);
-			updateLocalStorage("choiceShifts", choiceShifts);
-			location.hash = "";
-			location.reload();
 		});
+		if (shiftObj.userNotes) {
+			shiftObj.userNotes.forEach((obj, index) => {
+				if (
+					obj.shift ==
+					target.closest(".burger__menu-edit-select-shift").textContent
+				) {
+					shiftObj.userNotes.splice(index, 1);
+				}
+			});
+		}
+
+		shiftObj.editTemplate = true;
+		shiftObj.template = true;
+		replaceShiftObjInChoiceShifts();
+		updateLocalStorage("userShift", shiftObj);
+		updateLocalStorage("choiceShifts", choiceShifts);
+		location.hash = "";
+		location.reload();
 	}
 
 	if (target.closest(".burger__menu-delete-shift-btn")) {
@@ -1366,18 +1407,6 @@ burgerMenu.addEventListener("click", (e) => {
 				updateLocalStorage("choiceShifts", choiceShifts);
 			}
 		});
-	}
-	if (target.closest(".burger__menu-shift")) {
-		if (target.closest(".burger__menu-item-cross")) {
-		} else {
-			burgerMenuShifts.forEach((item) => {
-				if (item == currentBurgerSubmenuItem) {
-					item.classList.add("focus");
-				} else {
-					item.classList.remove("focus");
-				}
-			});
-		}
 	}
 
 	if (target.closest(".burger__menu-add-shedule-btn")) {
@@ -2330,8 +2359,10 @@ popup.addEventListener("click", (e) => {
 			createEndCicleBtn();
 		} else {
 			addShiftInputs[0].setAttribute("placeholder", `${otherWords.fillField}`);
-			addShiftInputs[0].style.boxShadow =
-				"inset 0 0 8px var(--light-2-focus-in-template)";
+			// addShiftInputs[0].style.boxShadow =
+			// 	"inset 0 0 8px var(--light-2-focus-in-template)";
+			addShiftInputs[0].style.border =
+				"2px solid var(--light-2-focus-in-template)";
 		}
 	}
 
@@ -2343,10 +2374,9 @@ popup.addEventListener("click", (e) => {
 
 		popupClose();
 	}
-
 	if (
 		shiftObj.template &&
-		(e.target.closest(".add-task-btn") ||
+		((addShiftInputs[0].value && e.target.closest(".add-task-btn")) ||
 			e.target.closest(".popup__add-shift-btn"))
 	) {
 		let myShiftsNodeList = document.querySelectorAll(
@@ -2365,6 +2395,9 @@ popup.addEventListener("click", (e) => {
 
 		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
 		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
+
+		console.log(firstElemIndex);
+		console.log(lastElemIndex);
 
 		myShiftsForLocalStorage = [];
 
@@ -2445,4 +2478,6 @@ handleHash();
 
 //текущая дата в центр экрана
 const currDateForScroll = document.querySelector(".curr-date");
-currDateForScroll.scrollIntoView({ block: "center", behavior: "smooth" });
+if (currDateForScroll) {
+	currDateForScroll.scrollIntoView({ block: "center", behavior: "smooth" });
+}

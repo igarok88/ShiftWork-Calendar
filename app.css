@@ -457,10 +457,10 @@ body.lock {
 	height: inherit;
 }
 
-.burger__menu-item .burger__submenu-title {
+/* .burger__menu-item .burger__submenu-title {
 	display: flex;
 	justify-content: space-between;
-}
+} */
 
 .burger__menu-add-shift-btn {
 	padding: 25px;
@@ -475,6 +475,11 @@ body.lock {
 .burger__submenu-title {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
+}
+.burger__submenu-name {
+	width: 250px;
+	overflow: hidden;
 }
 .burger__menu-create-shift .burger__submenu-item {
 	padding: 0 25px 25px 25px;
@@ -508,6 +513,7 @@ body.lock {
 .burger__menu-add-shedule-btn {
 	margin-top: 0;
 }
+
 .burger__submenu-language {
 	padding-top: 0;
 }
