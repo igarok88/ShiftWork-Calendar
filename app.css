@@ -836,7 +836,7 @@ body.lock {
 }
 
 .right-click-menu__add-todo-wrapper {
-	margin: 20px 3px;
+	/* margin: 20px 3px; */
 	/* width: 100%; */
 }
 .input-wrapper input {

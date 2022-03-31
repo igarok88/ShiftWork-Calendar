@@ -5,7 +5,7 @@ const calendarBody = document.querySelector(".calendar-body");
 const languageApp = [
 	{
 		name: "Українська",
-		key: "ua",
+		key: "uk",
 		dayNames: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
 		monthNames: [
 			"Січень",
@@ -210,6 +210,10 @@ if (userSettings.language) {
 	languageApp.forEach((obj, index) => {
 		if (obj.key == language) {
 			currentLanguage = languageApp[index];
+		}
+		if (currentLanguage) {
+		} else {
+			currentLanguage = languageApp[1];
 		}
 	});
 }
@@ -1096,20 +1100,22 @@ const burgerWrapper = document.querySelector(".burger-wrapper");
 const docHeight = document.documentElement.scrollHeight;
 const winHeight = document.documentElement.clientHeight;
 
-burgerBtn.addEventListener("click", () => {
-	burgerBtn.classList.toggle("active");
-	burgerMenu.classList.toggle("active");
-	body.classList.toggle("lock");
-	if (docHeight > winHeight && burgerBtn.className.includes("active")) {
-		body.style.paddingRight = scrollWidth + "px";
-	} else {
-		body.style.paddingRight = 0;
-	}
+calendar.addEventListener("click", (e) => {
+	if (e.target.closest(".burger__btn") || e.target.closest(".burger-wrapper")) {
+		burgerBtn.classList.toggle("active");
+		burgerMenu.classList.toggle("active");
+		body.classList.toggle("lock");
+		// if (docHeight > winHeight && burgerBtn.className.includes("active")) {
+		// 	body.style.paddingRight = scrollWidth + "px";
+		// } else {
+		// 	body.style.paddingRight = 0;
+		// }
 
-	if (burgerBtn.className.includes("active")) {
-		location.hash = "menu";
-	} else {
-		location.hash = "";
+		if (burgerBtn.className.includes("active")) {
+			location.hash = "menu";
+		} else {
+			location.hash = "";
+		}
 	}
 });
 
@@ -1251,8 +1257,6 @@ burgerMenu.addEventListener("click", (e) => {
 		} else {
 			burgerMenuShifts.forEach((item, index) => {
 				if (item == currentBurgerSubmenuItem) {
-					console.log(item);
-					console.log(index);
 					item.classList.add("focus");
 
 					if (
@@ -1343,6 +1347,17 @@ burgerMenu.addEventListener("click", (e) => {
 	}
 
 	if (target.closest(".burger__menu-edit-select-shift")) {
+		const burgerMenuSelectShiftName = target.closest(
+			".burger__menu-edit-select-shift"
+		).textContent;
+		if (shiftObj.userNotes) {
+			console.log(shiftObj.userNotes);
+			shiftObj.userNotes.forEach((obj, index) => {
+				if (obj.shift == burgerMenuSelectShiftName) {
+					shiftObj.userNotes.splice(index, 1);
+				}
+			});
+		}
 		shiftObj.shiftsName.forEach((item, index) => {
 			shiftObj.activeTemplate[index] = false;
 			if (item == e.target.textContent) {
@@ -1350,16 +1365,6 @@ burgerMenu.addEventListener("click", (e) => {
 				shiftObj.root[index] = [];
 			}
 		});
-		if (shiftObj.userNotes) {
-			shiftObj.userNotes.forEach((obj, index) => {
-				if (
-					obj.shift ==
-					target.closest(".burger__menu-edit-select-shift").textContent
-				) {
-					shiftObj.userNotes.splice(index, 1);
-				}
-			});
-		}
 
 		shiftObj.editTemplate = true;
 		shiftObj.template = true;
@@ -1998,67 +2003,70 @@ calendarBody.addEventListener("click", (e) => {
 	}
 });
 
-calendarBody.addEventListener("contextmenu", (e) => {
-	const menuHeaderShift = rightClickMenu.querySelector(".menu-header__shift");
-	const menuHeaderDay = rightClickMenu.querySelector(".menu-header__day");
-	const menuHeaderMonth = rightClickMenu.querySelector(".menu-header__month");
-	const menuHeaderYear = rightClickMenu.querySelector(".menu-header__year");
-	const menuHeaderDayWeek = rightClickMenu.querySelector(
-		".menu-header__day-week"
-	);
-
-	//ячейка в таблице
-	targetItemInTable = e.target;
-
-	//заполняем шапку в контекстном меню
-	if (targetItemInTable.closest(".calendar-context-menu")) {
-		e.preventDefault();
-		rightClickMenu.classList.add("active");
-		body.classList.add("lock");
-
-		getInfoFromTable(
-			targetItemInTable,
-			menuHeaderShift,
-			menuHeaderDay,
-			menuHeaderMonth,
-			menuHeaderYear,
-			menuHeaderDayWeek
+if (shiftObj.template) {
+} else {
+	calendarBody.addEventListener("contextmenu", (e) => {
+		const menuHeaderShift = rightClickMenu.querySelector(".menu-header__shift");
+		const menuHeaderDay = rightClickMenu.querySelector(".menu-header__day");
+		const menuHeaderMonth = rightClickMenu.querySelector(".menu-header__month");
+		const menuHeaderYear = rightClickMenu.querySelector(".menu-header__year");
+		const menuHeaderDayWeek = rightClickMenu.querySelector(
+			".menu-header__day-week"
 		);
-	}
-	tasks = [];
-	// находим куда надо вставить todo из localstorage
-	if (arrForUserNotes.length > 0) {
-		arrForUserNotes.forEach((item) => {
-			if (selectedDate == item.date && selectedShift == item.shift) {
-				let rightClickMenuItemValue = rightClickMenuItems.querySelectorAll(
-					".right-click-menu-item__value"
-				);
-				rightClickMenuItemValue.forEach((menuItem) => {
-					if (menuItem.getAttribute("data-value") == item.keyNote) {
-						if (item.desc && item.desc.length > 0) {
-							let rightClickMenuItem = menuItem.parentNode.parentNode;
-							currentTodo = rightClickMenuItem.nextSibling;
-							todosWrapper = currentTodo.querySelector(
-								".right-click-menu__todos-wrapper"
-							);
-							todosWrapper.innerHTML = "";
-							inputTodo = currentTodo.querySelector(".new-description-task");
-							addTaskBtn = currentTodo.querySelector(".add-task-btn");
-							tasks = item.desc.slice();
-							fillHtmlList();
-							let arrow = rightClickMenuItem.querySelector(
-								".right-click-menu-item__desc-arrow"
-							);
-							arrow.classList.add("active");
-							currentTodo.classList.add("active");
-							addTask(addTaskBtn);
+
+		//ячейка в таблице
+		targetItemInTable = e.target;
+
+		//заполняем шапку в контекстном меню
+		if (targetItemInTable.closest(".calendar-context-menu")) {
+			e.preventDefault();
+			rightClickMenu.classList.add("active");
+			body.classList.add("lock");
+
+			getInfoFromTable(
+				targetItemInTable,
+				menuHeaderShift,
+				menuHeaderDay,
+				menuHeaderMonth,
+				menuHeaderYear,
+				menuHeaderDayWeek
+			);
+		}
+		tasks = [];
+		// находим куда надо вставить todo из localstorage
+		if (arrForUserNotes.length > 0) {
+			arrForUserNotes.forEach((item) => {
+				if (selectedDate == item.date && selectedShift == item.shift) {
+					let rightClickMenuItemValue = rightClickMenuItems.querySelectorAll(
+						".right-click-menu-item__value"
+					);
+					rightClickMenuItemValue.forEach((menuItem) => {
+						if (menuItem.getAttribute("data-value") == item.keyNote) {
+							if (item.desc && item.desc.length > 0) {
+								let rightClickMenuItem = menuItem.parentNode.parentNode;
+								currentTodo = rightClickMenuItem.nextSibling;
+								todosWrapper = currentTodo.querySelector(
+									".right-click-menu__todos-wrapper"
+								);
+								todosWrapper.innerHTML = "";
+								inputTodo = currentTodo.querySelector(".new-description-task");
+								addTaskBtn = currentTodo.querySelector(".add-task-btn");
+								tasks = item.desc.slice();
+								fillHtmlList();
+								let arrow = rightClickMenuItem.querySelector(
+									".right-click-menu-item__desc-arrow"
+								);
+								arrow.classList.add("active");
+								currentTodo.classList.add("active");
+								addTask(addTaskBtn);
+							}
 						}
-					}
-				});
-			}
-		});
-	}
-});
+					});
+				}
+			});
+		}
+	});
+}
 
 rightClickMenuItems.addEventListener("click", (e) => {
 	let target = e.target;
