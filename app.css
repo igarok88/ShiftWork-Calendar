@@ -307,10 +307,10 @@ body.lock {
 		opacity: 1;
 	}
 }
-.wrapper-check {
+.check-wrapper {
 	position: relative;
 	top: 21px;
-	left: 5px;
+	left: 8px;
 }
 
 .check-sign {
@@ -319,17 +319,17 @@ body.lock {
 }
 
 #check-part-1 {
-	width: 17px;
+	width: 15px;
 	height: 3px;
 	transform: rotate(45deg);
 }
 
 #check-part-2 {
-	width: 28px;
+	width: 26px;
 	height: 3px;
 	transform: rotate(-45deg);
-	left: 9px;
-	top: -3px;
+	left: 7px;
+	top: -4px;
 }
 
 .end-cicle-btn,

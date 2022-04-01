@@ -1,5 +1,5 @@
 @font-face {
-	font-family: "San-Francisco-Display-Thin";
+	font-family: "San-Francisco-Display-Regular";
 	src: url("./fonts/SanFranciscoDisplayRegular.woff") format("truetype");
 	font-style: normal;
 	font-weight: normal;
@@ -68,10 +68,10 @@
 	--light-2-focus-in-template: #ea5c2b;
 	--light-2-selected: #54bab9;
 
-	--font-family: "San-Francisco-Display-Thin";
+	--font-family: "San-Francisco-Display-Regular";
 }
 
-.dark {
+.theme-dark {
 	--bg-body: var(--dark-body);
 	--bg-div: var(--dark-bg-div);
 	--bg-main: var(--dark-main);
@@ -86,7 +86,7 @@
 	--selected: var(--dark-selected);
 	--focus-in-template: var(--dark-focus-in-template);
 }
-.dark-2 {
+.theme-dark-2 {
 	--bg-body: var(--dark-2-body);
 	--bg-div: var(--dark-2-bg-div);
 	--bg-main: var(--dark-2-main);
@@ -101,7 +101,7 @@
 	--selected: var(--dark-2-selected);
 }
 
-.light {
+.theme-light {
 	--bg-body: var(--light-body);
 	--bg-div: var(--light-bg-div);
 	--bg-main: var(--light-main);
@@ -116,7 +116,7 @@
 	--selected: var(--light-selected);
 }
 
-.light-2 {
+.theme-light-2 {
 	--bg-body: var(--light-2-body);
 	--bg-div: var(--light-2-bg-div);
 	--bg-main: var(--light-2-main);
@@ -144,126 +144,126 @@
 	width: 10%;
 	height: 25px;
 }
-#dark .color-1 {
+#theme-dark .color-1 {
 	background-color: var(--dark-body);
 }
-#dark .color-2 {
+#theme-dark .color-2 {
 	background-color: var(--dark-main);
 }
-#dark .color-3 {
+#theme-dark .color-3 {
 	background-color: var(--dark-second);
 }
-#dark .color-4 {
+#theme-dark .color-4 {
 	background-color: var(--dark-hover);
 }
-#dark .color-5 {
+#theme-dark .color-5 {
 	background-color: var(--dark-text);
 }
-#dark .color-6 {
+#theme-dark .color-6 {
 	background-color: var(--dark-bg-div);
 }
-#dark .color-7 {
+#theme-dark .color-7 {
 	background-color: var(--dark-day-off);
 }
-#dark .color-8 {
+#theme-dark .color-8 {
 	background-color: var(--dark-curr-day);
 }
-#dark .color-9 {
+#theme-dark .color-9 {
 	background-color: var(--dark-curr-day-text-color);
 }
-#dark .color-10 {
+#theme-dark .color-10 {
 	background-color: var(--dark-desc);
 }
 
-#light .color-1 {
+#theme-light .color-1 {
 	background-color: var(--light-body);
 }
-#light .color-2 {
+#theme-light .color-2 {
 	background-color: var(--light-main);
 }
-#light .color-3 {
+#theme-light .color-3 {
 	background-color: var(--light-second);
 }
-#light .color-4 {
+#theme-light .color-4 {
 	background-color: var(--light-hover);
 }
-#light .color-5 {
+#theme-light .color-5 {
 	background-color: var(--light-text);
 }
-#light .color-6 {
+#theme-light .color-6 {
 	background-color: var(--light-bg-div);
 }
-#light .color-7 {
+#theme-light .color-7 {
 	background-color: var(--light-day-off);
 }
-#light .color-8 {
+#theme-light .color-8 {
 	background-color: var(--light-curr-day);
 }
-#light .color-9 {
+#theme-light .color-9 {
 	background-color: var(--light-curr-day-text-color);
 }
-#light .color-10 {
+#theme-light .color-10 {
 	background-color: var(--light-desc);
 }
 
-#dark-2 .color-1 {
+#theme-dark-2 .color-1 {
 	background-color: var(--dark-2-body);
 }
-#dark-2 .color-2 {
+#theme-dark-2 .color-2 {
 	background-color: var(--dark-2-main);
 }
-#dark-2 .color-3 {
+#theme-dark-2 .color-3 {
 	background-color: var(--dark-2-second);
 }
-#dark-2 .color-4 {
+#theme-dark-2 .color-4 {
 	background-color: var(--dark-2-hover);
 }
-#dark-2 .color-5 {
+#theme-dark-2 .color-5 {
 	background-color: var(--dark-2-text);
 }
-#dark-2 .color-6 {
+#theme-dark-2 .color-6 {
 	background-color: var(--dark-2-bg-div);
 }
-#dark-2 .color-7 {
+#theme-dark-2 .color-7 {
 	background-color: var(--dark-2-day-off);
 }
-#dark-2 .color-8 {
+#theme-dark-2 .color-8 {
 	background-color: var(--dark-2-curr-day);
 }
-#dark-2 .color-9 {
+#theme-dark-2 .color-9 {
 	background-color: var(--dark-2-curr-day-text-color);
 }
-#dark-2 .color-10 {
+#theme-dark-2 .color-10 {
 	background-color: var(--dark-2-desc);
 }
 
-#light-2 .color-1 {
+#theme-light-2 .color-1 {
 	background-color: var(--light-2-body);
 }
-#light-2 .color-2 {
+#theme-light-2 .color-2 {
 	background-color: var(--light-2-main);
 }
-#light-2 .color-3 {
+#theme-light-2 .color-3 {
 	background-color: var(--light-2-second);
 }
-#light-2 .color-4 {
+#theme-light-2 .color-4 {
 	background-color: var(--light-2-hover);
 }
-#light-2 .color-5 {
+#theme-light-2 .color-5 {
 	background-color: var(--light-2-text);
 }
-#light-2 .color-6 {
+#theme-light-2 .color-6 {
 	background-color: var(--light-2-bg-div);
 }
-#light-2 .color-7 {
+#theme-light-2 .color-7 {
 	background-color: var(--light-2-day-off);
 }
-#light-2 .color-8 {
+#theme-light-2 .color-8 {
 	background-color: var(--light-2-curr-day);
 }
-#light-2 .color-9 {
+#theme-light-2 .color-9 {
 	background-color: var(--light-2-curr-day-text-color);
 }
-#light-2 .color-10 {
+#theme-light-2 .color-10 {
 	background-color: var(--light-2-desc);
 }

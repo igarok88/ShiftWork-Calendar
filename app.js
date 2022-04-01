@@ -306,7 +306,7 @@ const createEndCicleBtn = () => {
 	} else {
 		let endCicleBtnHTML = `
 			<div class="end-cicle-btn">
-				<div class="wrapper-check">
+				<div class="check-wrapper">
 					<div id="check-part-1" class="check-sign"></div>
 					<div id="check-part-2" class="check-sign"></div>
 				</div>
@@ -674,28 +674,7 @@ choiceShifts.forEach((obj, index) => {
 		`;
 	}
 });
-// let burgerMenuShifts = document.querySelectorAll(".burger__menu-shift");
-// burgerMenuShifts.forEach((menuShift, index) => {
-// 	menuShift.addEventListener("click", (e) => {
-// 		let currentShift = e.target.closest(".burger__menu-shift");
-// 		if (currentShift == menuShift) {
-// 			if (
-// 				e.target.closest(".burger__menu-item-cross") ||
-// 				e.target.closest(".burger__menu-add-new-shift-btn") ||
-// 				e.target.closest(".burger__menu-delete-shift-btn") ||
-// 				e.target.closest(".burger__menu-edit-shift-btn")
-// 				// ||
-// 				// e.target.closest(".burger__menu-reserve-shift-btn")
-// 			) {
-// 			} else {
-// 				shiftObj = choiceShifts[index];
-// 				updateLocalStorage("userShift", shiftObj);
-// 				location.hash = "";
-// 				location.reload();
-// 			}
-// 		}
-// 	});
-// });
+
 let { shiftsName, namesContextMenu, root } = shiftObj;
 
 let countGridColumns = [];
@@ -1160,6 +1139,40 @@ burgerMenu.addEventListener("click", (e) => {
 				}
 			});
 		}
+
+		const burgerMenuColors = document.querySelectorAll(".burger__menu-color");
+		if (localStorage.userSettings) {
+			if (userSettings.theme) {
+				burgerMenuColors.forEach((item) => {
+					const itemId = item.getAttribute("id");
+					if (itemId == userSettings.theme) {
+						item.classList.add("focus");
+					} else {
+						item.classList.remove("focus");
+					}
+				});
+			}
+		} else {
+			const bodyClasses = body.getAttribute("class");
+			const firstIndexBodyThemeName = bodyClasses.indexOf("theme-");
+			const lastIndexBodyThemeName = bodyClasses.indexOf(
+				" ",
+				firstIndexBodyThemeName
+			);
+			const bodyThemeName = bodyClasses.slice(
+				firstIndexBodyThemeName,
+				lastIndexBodyThemeName
+			);
+
+			burgerMenuColors.forEach((item) => {
+				const itemId = item.getAttribute("id");
+				if (itemId == bodyThemeName) {
+					item.classList.add("focus");
+				} else {
+					item.classList.remove("focus");
+				}
+			});
+		}
 	}
 
 	if (target.closest(".burger__menu-item-cross")) {
@@ -1362,16 +1375,15 @@ burgerMenu.addEventListener("click", (e) => {
 			".burger__menu-edit-select-shift"
 		).textContent;
 		if (shiftObj.userNotes) {
-			console.log(shiftObj.userNotes);
-			const searshUserNotes = () => {
+			const searchUserNotes = () => {
 				shiftObj.userNotes.forEach((obj, index) => {
 					if (obj.shift == burgerMenuSelectShiftName) {
 						shiftObj.userNotes.splice(index, 1);
-						searshUserNotes();
+						searchUserNotes();
 					}
 				});
 			};
-			searshUserNotes();
+			searchUserNotes();
 		}
 		shiftObj.shiftsName.forEach((item, index) => {
 			shiftObj.activeTemplate[index] = false;
@@ -1483,10 +1495,10 @@ burgerMenu.addEventListener("click", (e) => {
 		}
 	};
 
-	selectTheme(target, "dark");
-	selectTheme(target, "dark-2");
-	selectTheme(target, "light");
-	selectTheme(target, "light-2");
+	selectTheme(target, "theme-dark");
+	selectTheme(target, "theme-dark-2");
+	selectTheme(target, "theme-light");
+	selectTheme(target, "theme-light-2");
 });
 const fillTheme = (nameTheme) => {
 	const burgerMenuChoiceTheme = document.querySelector(
@@ -1507,10 +1519,10 @@ const fillTheme = (nameTheme) => {
 		</div>
 	`;
 };
-fillTheme("dark");
-fillTheme("dark-2");
-fillTheme("light");
-fillTheme("light-2");
+fillTheme("theme-dark");
+fillTheme("theme-dark-2");
+fillTheme("theme-light");
+fillTheme("theme-light-2");
 
 //Контекстное меню
 
@@ -1653,10 +1665,6 @@ function UserNotes(date, shift, color, desc, key) {
 	this.desc = desc;
 	this.keyNote = key;
 }
-
-// function UserSettings(theme) {
-// 	this.theme = theme;
-// }
 
 const filterTasks = () => {
 	const activeTasks =
