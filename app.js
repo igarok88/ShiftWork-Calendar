@@ -55,7 +55,8 @@ const languageApp = [
 			total: "Усього:",
 			feedback: "Зворотній зв'язок",
 			feedbackDescription:
-				"Спасибі за користування цією програмою. Пишіть ваші пропозиції в соцмережі:",
+				"Спасибі за користування цією програмою. Пишіть ваші пропозиції:",
+			reset: "Скинути",
 		},
 	},
 	{
@@ -110,7 +111,8 @@ const languageApp = [
 			total: "Total:",
 			feedback: "Feedback",
 			feedbackDescription:
-				"Thank you for using this program. Write your suggestions on social networks:",
+				"Thank you for using this program. Write your suggestions:",
+			reset: "Reset",
 		},
 	},
 	{
@@ -165,7 +167,8 @@ const languageApp = [
 			total: "Всего:",
 			feedback: "Обратная связь",
 			feedbackDescription:
-				"Спасибо за пользование этой программи. Пишите ваши предложения в соцсети:",
+				"Спасибо за пользование этой программы. Пишите ваши предложения:",
+			reset: "Сброс",
 		},
 	},
 ];
@@ -211,11 +214,12 @@ if (userSettings.language) {
 		if (obj.key == language) {
 			currentLanguage = languageApp[index];
 		}
-		if (currentLanguage) {
-		} else {
-			currentLanguage = languageApp[1];
-		}
 	});
+}
+
+if (currentLanguage) {
+} else {
+	currentLanguage = languageApp[1];
 }
 
 const { dayNames, monthNames, otherWords } = currentLanguage;
@@ -224,7 +228,7 @@ const removeLocalStorage = document.querySelector(".remove-local-storage");
 
 if (currentLanguage == languageApp[1]) {
 } else {
-	removeLocalStorage.innerHTML = otherWords.resetUserSettings;
+	removeLocalStorage.innerHTML = `<h2>${otherWords.resetUserSettings}</h2>`;
 
 	const burgerMenuSelectSheduleTitle = document.querySelector(
 		".burger__menu-select-shedule h2"
@@ -300,7 +304,14 @@ const createEndCicleBtn = () => {
 	let endCicleBtn = document.querySelector(".end-cicle-btn");
 	if (endCicleBtn) {
 	} else {
-		let endCicleBtnHTML = `<div class="end-cicle-btn">&#10004;</div>`;
+		let endCicleBtnHTML = `
+			<div class="end-cicle-btn">
+				<div class="wrapper-check">
+					<div id="check-part-1" class="check-sign"></div>
+					<div id="check-part-2" class="check-sign"></div>
+				</div>
+			</div>
+		`;
 		calendarBody.insertAdjacentHTML("afterbegin", endCicleBtnHTML);
 	}
 };
@@ -1352,11 +1363,15 @@ burgerMenu.addEventListener("click", (e) => {
 		).textContent;
 		if (shiftObj.userNotes) {
 			console.log(shiftObj.userNotes);
-			shiftObj.userNotes.forEach((obj, index) => {
-				if (obj.shift == burgerMenuSelectShiftName) {
-					shiftObj.userNotes.splice(index, 1);
-				}
-			});
+			const searshUserNotes = () => {
+				shiftObj.userNotes.forEach((obj, index) => {
+					if (obj.shift == burgerMenuSelectShiftName) {
+						shiftObj.userNotes.splice(index, 1);
+						searshUserNotes();
+					}
+				});
+			};
+			searshUserNotes();
 		}
 		shiftObj.shiftsName.forEach((item, index) => {
 			shiftObj.activeTemplate[index] = false;
@@ -1511,8 +1526,12 @@ namesContextMenu.forEach((obj) => {
 
 	let desc = document.createElement("div");
 	desc.classList.add("right-click-menu-item__desc");
-	desc.innerHTML =
-		'<div class="right-click-menu-item__desc-arrow"><pre>&gt;</pre></div>';
+	desc.innerHTML = `<div class="right-click-menu-item__desc-arrow">
+			<div class="arrow-wrapper right">
+				<div class="arrow-sign arrow-part-1"></div>
+				<div class="arrow-sign arrow-part-2"></div>
+			</div>
+		</div>`;
 	li.appendChild(desc);
 
 	let btn = document.createElement("div");
@@ -2159,6 +2178,9 @@ rightClickMenuItems.addEventListener("click", (e) => {
 			let color = target.value;
 			target.setAttribute("value", color);
 		});
+		const resetBtn = document.querySelector(".clr-clear");
+		resetBtn.innerHTML = otherWords.reset;
+		console.log(resetBtn);
 	}
 
 	//открываем todo в контекстном меню
