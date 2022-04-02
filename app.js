@@ -57,6 +57,21 @@ const languageApp = [
 			feedbackDescription:
 				"Спасибі за користування цією програмою. Пишіть ваші пропозиції:",
 			reset: "Скинути",
+			zaporizhzhiaNPP: "Запорізька АЕС",
+			zaporizhzhiaTPP: "Запорізька ТЕС",
+			rivneNPP: "Рівненська АЕС",
+			khmelnytskyiNPP: "Хмельницька АЕС",
+			southUkraineNPP: "Южно-Українська АЕС",
+			rework: "Доробка",
+			reworkWord: "Д",
+			studiesTraining: "Навчання/Тренування",
+			studiesTrainingWord: "Н",
+			exam: "Іспит",
+			examWord: "І",
+			compensatoryHoliday: "Відгул",
+			compensatoryHolidayWord: "В",
+			note: "Примітка",
+			noteWord: "П",
 		},
 	},
 	{
@@ -113,6 +128,21 @@ const languageApp = [
 			feedbackDescription:
 				"Thank you for using this program. Write your suggestions:",
 			reset: "Reset",
+			zaporizhzhiaNPP: "Zaporizhzhia NPP",
+			zaporizhzhiaTPP: "Zaporizhzhia TPP",
+			rivneNPP: "Rivne NPP",
+			khmelnytskyiNPP: "Khmelnytskyi NPP",
+			southUkraineNPP: "South Ukraine NPP",
+			rework: "Rework",
+			reworkWord: "R",
+			studiesTraining: "Studies/Training",
+			studiesTrainingWord: "S",
+			exam: "Exam",
+			examWord: "E",
+			compensatoryHoliday: "Compensatory holiday",
+			compensatoryHolidayWord: "С",
+			note: "Note",
+			noteWord: "N",
 		},
 	},
 	{
@@ -169,6 +199,21 @@ const languageApp = [
 			feedbackDescription:
 				"Спасибо за пользование этой программы. Пишите ваши предложения:",
 			reset: "Сброс",
+			zaporizhzhiaNPP: "Запорожская АЭС",
+			zaporizhzhiaTPP: "Запорожская ТЭС",
+			rivneNPP: "Ровенская АЭС",
+			khmelnytskyiNPP: "Хмельницкая АЭС",
+			southUkraineNPP: "Южно-Українська АЕС",
+			rework: "Доработка",
+			reworkWord: "Д",
+			studiesTraining: "Учеба/Тренировка",
+			studiesTrainingWord: "У",
+			exam: "Экзамен",
+			examWord: "Э",
+			compensatoryHoliday: "Отгул",
+			compensatoryHolidayWord: "О",
+			note: "Заметка",
+			noteWord: "З",
 		},
 	},
 ];
@@ -293,7 +338,9 @@ removeLocalStorage.addEventListener("click", () => {
 
 let calendarCountShift = calendar.querySelector(".calendar-count");
 let arrForUserNotes;
+
 let firstElemIndex;
+
 let startDay;
 let differenceDays;
 
@@ -338,23 +385,56 @@ let shiftTemplate = {
 	arrDifferenceDays: [0],
 };
 
+const generalContextMenu = [
+	{
+		key: otherWords.reworkWord,
+		title: otherWords.rework,
+		color: "#00b4d880",
+		count: true,
+	},
+	{
+		key: otherWords.studiesTrainingWord,
+		title: otherWords.studiesTraining,
+		color: "#e76f51",
+		count: true,
+	},
+	{ key: otherWords.examWord, title: otherWords.exam, color: "#d62828" },
+	{
+		key: otherWords.compensatoryHolidayWord,
+		title: otherWords.compensatoryHoliday,
+		color: "#2a9d8f",
+	},
+	{ key: "&nbsp;", title: otherWords.dayOff, color: "" },
+	{ key: otherWords.noteWord, title: otherWords.note, color: "#e9c46a" },
+];
+
 let choiceShifts = [
 	{
-		name: "Запорожская АЭС",
+		name: otherWords.zaporizhzhiaNPP,
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
 		options: {
 			reserveShift: { name: "E", status: false },
 		},
+
 		namesContextMenu: [
-			{ key: "7", title: "Смена с 07-00", color: "", count: true },
-			{ key: "15", title: "Смена с 15-00", color: "", count: true },
-			{ key: "23", title: "Смена с 23-00", color: "", count: true },
-			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
-			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
-			{ key: "Э", title: "Экзамен", color: "#d62828" },
-			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
-			{ key: "&nbsp;", title: "Выходной", color: "" },
-			{ key: "З", title: "Заметка", color: "#e9c46a" },
+			{
+				key: "7",
+				title: `${otherWords.shiftFrom} 07-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "15",
+				title: `${otherWords.shiftFrom} 15-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "23",
+				title: `${otherWords.shiftFrom} 23-00`,
+				color: "",
+				count: true,
+			},
 		],
 		root: [
 			[
@@ -446,21 +526,30 @@ let choiceShifts = [
 		startDate: "2022-01-01",
 	},
 	{
-		name: "Запорожская ТЭС",
+		name: otherWords.zaporizhzhiaTPP,
 		shiftsName: ["А", "Б", "В", "Г"],
 		options: {
 			reserveShift: { name: "Д", status: false },
 		},
 		namesContextMenu: [
-			{ key: "8", title: "Смена с 08-00", color: "", count: true },
-			{ key: "16", title: "Смена с 16-00", color: "", count: true },
-			{ key: "0", title: "Смена с 00-00", color: "", count: true },
-			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
-			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
-			{ key: "Э", title: "Экзамен", color: "#d62828" },
-			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
-			{ key: "&nbsp;", title: "Выходной", color: "" },
-			{ key: "З", title: "Заметка", color: "#e9c46a" },
+			{
+				key: "8",
+				title: `${otherWords.shiftFrom} 08-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "16",
+				title: `${otherWords.shiftFrom} 16-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "0",
+				title: `${otherWords.shiftFrom} 00-00`,
+				color: "",
+				count: true,
+			},
 		],
 		root: [
 			["0", "0", "", "16", "16", "", "8", "8"],
@@ -471,21 +560,30 @@ let choiceShifts = [
 		startDate: "2022-01-01",
 	},
 	{
-		name: "Ровенская АЭС",
+		name: otherWords.rivneNPP,
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
 		options: {
 			reserveShift: { name: "E", status: false },
 		},
 		namesContextMenu: [
-			{ key: "8", title: "Смена с 08-00", color: "", count: true },
-			{ key: "16", title: "Смена с 16-00", color: "", count: true },
-			{ key: "0", title: "Смена с 00-00", color: "", count: true },
-			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
-			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
-			{ key: "Э", title: "Экзамен", color: "#d62828" },
-			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
-			{ key: "&nbsp;", title: "Выходной", color: "" },
-			{ key: "З", title: "Заметка", color: "#e9c46a" },
+			{
+				key: "8",
+				title: `${otherWords.shiftFrom} 08-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "16",
+				title: `${otherWords.shiftFrom} 16-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "0",
+				title: `${otherWords.shiftFrom} 00-00`,
+				color: "",
+				count: true,
+			},
 		],
 		root: [
 			["8", "8", "", "", "0", "0", "0", "", "", "16", "16", "16", "", "", "8"],
@@ -497,21 +595,30 @@ let choiceShifts = [
 		startDate: "2022-01-01",
 	},
 	{
-		name: "Хмельницкая АЭС",
+		name: otherWords.khmelnytskyiNPP,
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
 		options: {
 			reserveShift: { name: "E", status: false },
 		},
 		namesContextMenu: [
-			{ key: "7", title: "Смена с 07-00", color: "", count: true },
-			{ key: "15", title: "Смена с 15-00", color: "", count: true },
-			{ key: "23", title: "Смена с 23-00", color: "", count: true },
-			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
-			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
-			{ key: "Э", title: "Экзамен", color: "#d62828" },
-			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
-			{ key: "&nbsp;", title: "Выходной", color: "" },
-			{ key: "З", title: "Заметка", color: "#e9c46a" },
+			{
+				key: "7",
+				title: `${otherWords.shiftFrom} 07-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "15",
+				title: `${otherWords.shiftFrom} 15-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "23",
+				title: `${otherWords.shiftFrom} 23-00`,
+				color: "",
+				count: true,
+			},
 		],
 		root: [
 			[
@@ -603,21 +710,30 @@ let choiceShifts = [
 		startDate: "2022-01-01",
 	},
 	{
-		name: "Южно-Украинская АЭС",
+		name: otherWords.southUkraineNPP,
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
 		options: {
 			reserveShift: { name: "E", status: false },
 		},
 		namesContextMenu: [
-			{ key: "8", title: "Смена с 08-00", color: "", count: true },
-			{ key: "16", title: "Смена с 16-00", color: "", count: true },
-			{ key: "0", title: "Смена с 00-00", color: "", count: true },
-			{ key: "Д", title: "Доработка", color: "#00b4d880", count: true },
-			{ key: "У", title: "Учеба/Тренировка", color: "#e76f51", count: true },
-			{ key: "Э", title: "Экзамен", color: "#d62828" },
-			{ key: "О", title: "Отгулы", color: "#2a9d8f" },
-			{ key: "&nbsp;", title: "Выходной", color: "" },
-			{ key: "З", title: "Заметка", color: "#e9c46a" },
+			{
+				key: "8",
+				title: `${otherWords.shiftFrom} 08-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "16",
+				title: `${otherWords.shiftFrom} 16-00`,
+				color: "",
+				count: true,
+			},
+			{
+				key: "0",
+				title: `${otherWords.shiftFrom} 00-00`,
+				color: "",
+				count: true,
+			},
 		],
 		root: [
 			["8", "8", "", "", "0", "0", "0", "", "", "16", "16", "16", "", "", "8"],
@@ -629,11 +745,15 @@ let choiceShifts = [
 		startDate: "2022-01-01",
 	},
 ];
+const choiceShifts2 = choiceShifts.slice();
 //шаблон объекта смен
-let shiftObj = choiceShifts[0];
+let shiftObj;
 
 if (localStorage.userShift) {
 	shiftObj = JSON.parse(localStorage.getItem("userShift"));
+	console.log(shiftObj);
+} else {
+	shiftObj = choiceShifts[0];
 }
 
 if (localStorage.choiceShifts) {
@@ -646,6 +766,8 @@ if (shiftObj.userNotes) {
 	arrForUserNotes = [];
 }
 
+let { shiftsName, namesContextMenu, root } = shiftObj;
+console.log(namesContextMenu);
 choiceShifts.forEach((obj, index) => {
 	let burgerMenuChoiceShifts = document.querySelector(
 		".burger__menu-choice-shift"
@@ -673,9 +795,13 @@ choiceShifts.forEach((obj, index) => {
 			</div>
 		`;
 	}
+	// if (obj.name == shiftObj.name) {
+	// 	shiftObj.namesContextMenu = choiceShifts2[index].namesContextMenu;
+	// 	console.log(shiftObj.namesContextMenu);
+	// }
 });
-
-let { shiftsName, namesContextMenu, root } = shiftObj;
+namesContextMenu = namesContextMenu.concat(generalContextMenu);
+console.log(namesContextMenu);
 
 let countGridColumns = [];
 shiftsName.forEach((item, index) => {
@@ -1338,20 +1464,32 @@ burgerMenu.addEventListener("click", (e) => {
 		}
 
 		// если название совпадает, то добавляем индекс
-		let counter = 1;
 
+		let counter = 1;
+		let arrCountForName = [];
 		shiftObj.shiftsName.forEach((item, index) => {
 			shiftObj.activeTemplate[index] = false;
-
+			const firstIndexShiftsName = item.indexOf(inputValue);
+			const lastIndexShiftsName = firstIndexShiftsName + inputValue.length;
+			const shiftsNameFinal = item.slice(
+				firstIndexShiftsName,
+				lastIndexShiftsName
+			);
+			arrCountForName.push(shiftsNameFinal);
+		});
+		arrCountForName.forEach((item) => {
 			if (item == inputValue) {
 				counter++;
-				inputValue = `${inputValue} ${counter}`;
 			}
 		});
+		if (counter == 1) {
+			shiftObj.shiftsName.push(inputValue);
+		} else {
+			shiftObj.shiftsName.push(`${inputValue} ${counter}`);
+		}
 
 		shiftObj.template = true;
 		shiftObj.activeTemplate.push(true);
-		shiftObj.shiftsName.push(inputValue);
 		shiftObj.root.push([""]);
 		updateLocalStorage("userShift", shiftObj);
 		location.hash = "";
@@ -1456,12 +1594,28 @@ burgerMenu.addEventListener("click", (e) => {
 		}
 		// если название совпадает, то добавляем индекс
 		let counter = 1;
+		let arrCountForName = [];
 		choiceShifts.forEach((obj) => {
-			if (obj.name == shiftTemplate.name) {
+			const firstIndexShiftsName = obj.name.indexOf(shiftTemplate.name);
+			const lastIndexShiftsName =
+				firstIndexShiftsName + shiftTemplate.name.length;
+			const shiftsNameFinal = obj.name.slice(
+				firstIndexShiftsName,
+				lastIndexShiftsName
+			);
+			arrCountForName.push(shiftsNameFinal);
+		});
+		arrCountForName.forEach((item) => {
+			if (item == shiftTemplate.name) {
 				counter++;
-				shiftTemplate.name = `${shiftTemplate.name} ${counter}`;
 			}
 		});
+		if (counter == 1) {
+			shiftTemplate.name = shiftTemplate.name;
+		} else {
+			shiftTemplate.name = `${shiftTemplate.name} ${counter}`;
+		}
+
 		if (shiftTemplate.shiftsName == "") {
 			shiftTemplate.shiftsName = [otherWords.myShift];
 		}
@@ -1694,16 +1848,12 @@ const addTask = (addTaskBtn) => {
 			inputTodo.value = "";
 		}
 		setAttrCurCell(targetItemInTable, tasks);
-
 		pushObjInArr();
 		filterArr(arrForUserNotes);
-		// updateLocalStorage("userNotes", arrForUserNotes);
 		shiftObj.userNotes = arrForUserNotes;
 		updateLocalStorage("userShift", shiftObj);
 		replaceShiftObjInChoiceShifts();
-
 		updateLocalStorage("choiceShifts", choiceShifts);
-
 		fillHtmlList();
 	});
 };
@@ -1856,7 +2006,7 @@ function UserNameShift(key, title) {
 	this.key = key;
 
 	if (title == "") {
-		title = `${otherWords.shiftFrom} '${key}'`;
+		title = `${otherWords.shift} '${key}'`;
 	}
 
 	this.title = title;
@@ -2193,14 +2343,18 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 	//открываем todo в контекстном меню
 	if (target.closest(".right-click-menu-item__desc")) {
-		removeActiveArrowsTodos();
-
 		let rightClickMenuItem = target.closest(".right-click-menu-item");
-		rightClickMenuItemBtn = rightClickMenuItem.querySelector(
-			".right-click-menu-item__btn"
-		);
 		let arrow = rightClickMenuItem.querySelector(
 			".right-click-menu-item__desc-arrow"
+		);
+
+		if (arrow.classList.contains("active")) {
+		} else {
+			removeActiveArrowsTodos();
+		}
+
+		rightClickMenuItemBtn = rightClickMenuItem.querySelector(
+			".right-click-menu-item__btn"
 		);
 
 		arrow.classList.toggle("active");
@@ -2322,21 +2476,20 @@ const popupClose = () => {
 
 	if (shiftObj.template) {
 	} else {
-		if (inputTodo.value) {
-			tasks.push(new Task(inputTodo.value));
-			selectedTodoValue = tasks;
-			inputTodo.value = "";
-
-			setAttrCurCell(targetItemInTable, tasks);
-			pushObjInArr();
-			filterArr(arrForUserNotes);
-			shiftObj.userNotes = arrForUserNotes;
-			updateLocalStorage("userShift", shiftObj);
-			replaceShiftObjInChoiceShifts();
-
-			updateLocalStorage("choiceShifts", choiceShifts);
-			removeClassDescEventListener();
-		}
+		// if (inputTodo.value) {
+		// 	console.log(inputTodo.value);
+		// 	tasks.push(new Task(inputTodo.value));
+		// 	selectedTodoValue = tasks;
+		// 	inputTodo.value = "";
+		// }
+		setAttrCurCell(targetItemInTable, tasks);
+		pushObjInArr();
+		filterArr(arrForUserNotes);
+		shiftObj.userNotes = arrForUserNotes;
+		updateLocalStorage("userShift", shiftObj);
+		replaceShiftObjInChoiceShifts();
+		updateLocalStorage("choiceShifts", choiceShifts);
+		removeClassDescEventListener();
 	}
 	location.hash = "";
 };
@@ -2413,9 +2566,10 @@ popup.addEventListener("click", (e) => {
 		popupClose();
 	}
 	if (
-		shiftObj.template &&
-		((addShiftInputs[0].value && e.target.closest(".add-task-btn")) ||
-			e.target.closest(".popup__add-shift-btn"))
+		(shiftObj.template &&
+			((addShiftInputs[0].value && e.target.closest(".add-task-btn")) ||
+				e.target.closest(".popup__add-shift-btn"))) ||
+		e.target.closest(".popup__content-item .delete-task-btn")
 	) {
 		let myShiftsNodeList = document.querySelectorAll(
 			".calendar-day-create-shift"
@@ -2434,8 +2588,8 @@ popup.addEventListener("click", (e) => {
 		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
 		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
 
-		console.log(firstElemIndex);
-		console.log(lastElemIndex);
+		// console.log(firstElemIndex);
+		// console.log(lastElemIndex);
 
 		myShiftsForLocalStorage = [];
 
