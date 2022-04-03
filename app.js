@@ -1142,7 +1142,8 @@ monthNames.forEach((e, index) => {
 		body.style.paddingRight = 0;
 		currMonth.value = index;
 		generateCalendar(index, currYear.value);
-		location.hash = "";
+		// location.hash = "";
+		window.history.back();
 	};
 	monthList.appendChild(month);
 });
@@ -1233,6 +1234,7 @@ calendar.addEventListener("click", (e) => {
 			location.hash = "menu";
 		} else {
 			location.hash = "";
+			// window.history.back();
 		}
 	}
 });
@@ -1374,6 +1376,9 @@ burgerMenu.addEventListener("click", (e) => {
 		updateLocalStorage("userShift", shiftObj);
 		updateLocalStorage("choiceShifts", choiceShifts);
 		// location.reload();
+		window.history.back();
+		location.hash = "";
+		location.reload();
 	}
 
 	if (target.closest(".burger__menu-color")) {
@@ -1420,13 +1425,17 @@ burgerMenu.addEventListener("click", (e) => {
 						e.target.closest(".burger__menu-item-cross") ||
 						e.target.closest(".burger__menu-add-new-shift-btn") ||
 						e.target.closest(".burger__menu-delete-shift-btn") ||
-						e.target.closest(".burger__menu-edit-shift-btn")
-						// ||
-						// e.target.closest(".burger__menu-reserve-shift-btn")
+						e.target.closest(".burger__menu-edit-shift-btn") ||
+						e.target.closest(".burger__menu-reserve-shift-btn")
 					) {
 					} else {
 						shiftObj = choiceShifts[index];
 						updateLocalStorage("userShift", shiftObj);
+
+						// window.history.back();
+						// location.hash = "";
+						// location.reload();
+						window.history.back();
 						location.hash = "";
 						location.reload();
 					}
@@ -1499,6 +1508,9 @@ burgerMenu.addEventListener("click", (e) => {
 		shiftObj.activeTemplate.push(true);
 		shiftObj.root.push([""]);
 		updateLocalStorage("userShift", shiftObj);
+		// location.hash = "";
+		// location.reload();
+		window.history.back();
 		location.hash = "";
 		location.reload();
 	}
@@ -1543,6 +1555,9 @@ burgerMenu.addEventListener("click", (e) => {
 		replaceShiftObjInChoiceShifts();
 		updateLocalStorage("userShift", shiftObj);
 		updateLocalStorage("choiceShifts", choiceShifts);
+		// location.hash = "";
+		// location.reload();
+		window.history.back();
 		location.hash = "";
 		location.reload();
 	}
@@ -1571,6 +1586,9 @@ burgerMenu.addEventListener("click", (e) => {
 			replaceShiftObjInChoiceShifts();
 			updateLocalStorage("userShift", shiftObj);
 			updateLocalStorage("choiceShifts", choiceShifts);
+			// location.reload();
+			window.history.back();
+			location.hash = "";
 			location.reload();
 		});
 	}
@@ -1635,6 +1653,9 @@ burgerMenu.addEventListener("click", (e) => {
 
 		shiftObj = shiftTemplate;
 		updateLocalStorage("userShift", shiftObj);
+		// location.hash = "";
+		// location.reload();
+		window.history.back();
 		location.hash = "";
 		location.reload();
 	}
@@ -1647,6 +1668,8 @@ burgerMenu.addEventListener("click", (e) => {
 			if (obj.name == currentLanguage) {
 				userSettings.language = currentLanguage;
 				updateLocalStorage("userSettings", userSettings);
+				window.history.back();
+				location.hash = "";
 				location.reload();
 			}
 		});
@@ -2311,7 +2334,7 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		removeClassDescEventListener();
 
 		addTask(rightClickMenuItemBtn);
-
+		window.history.back();
 		location.hash = "";
 
 		//пересчитываем количество смен и вставляем в конец таблицы
@@ -2504,6 +2527,7 @@ const popupClose = () => {
 		updateLocalStorage("choiceShifts", choiceShifts);
 		removeClassDescEventListener();
 	}
+	window.history.back();
 	location.hash = "";
 };
 
@@ -2647,6 +2671,7 @@ let controller = {
 		calendarHeaderDays.forEach((item) => {
 			item.style.position = "fixed";
 		});
+		// window.history.back();
 	},
 	menuRoute() {
 		burgerBtn.classList.add("active");
