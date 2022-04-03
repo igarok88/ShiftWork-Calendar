@@ -365,7 +365,7 @@ const createEndCicleBtn = () => {
 
 const replaceShiftObjInChoiceShifts = () => {
 	choiceShifts.forEach((obj, index) => {
-		if (obj.name == shiftObj.name) {
+		if (obj.key == shiftObj.key) {
 			choiceShifts[index] = shiftObj;
 		}
 	});
@@ -411,6 +411,7 @@ const generalContextMenu = [
 let choiceShifts = [
 	{
 		name: otherWords.zaporizhzhiaNPP,
+		key: "zaporizhzhiaNPP",
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
 		options: {
 			reserveShift: { name: "E", status: false },
@@ -527,6 +528,7 @@ let choiceShifts = [
 	},
 	{
 		name: otherWords.zaporizhzhiaTPP,
+		key: "zaporizhzhiaTPP",
 		shiftsName: ["А", "Б", "В", "Г"],
 		options: {
 			reserveShift: { name: "Д", status: false },
@@ -561,6 +563,7 @@ let choiceShifts = [
 	},
 	{
 		name: otherWords.rivneNPP,
+		key: "rivneNPP",
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
 		options: {
 			reserveShift: { name: "E", status: false },
@@ -596,6 +599,7 @@ let choiceShifts = [
 	},
 	{
 		name: otherWords.khmelnytskyiNPP,
+		key: "khmelnytskyiNPP",
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
 		options: {
 			reserveShift: { name: "E", status: false },
@@ -711,6 +715,7 @@ let choiceShifts = [
 	},
 	{
 		name: otherWords.southUkraineNPP,
+		key: "southUkraineNPP",
 		shiftsName: ["А", "Б", "В", "Г", "Д"],
 		options: {
 			reserveShift: { name: "E", status: false },
@@ -745,13 +750,12 @@ let choiceShifts = [
 		startDate: "2022-01-01",
 	},
 ];
-const choiceShifts2 = choiceShifts.slice();
+const choiceShiftsClone = choiceShifts.slice();
 //шаблон объекта смен
 let shiftObj;
 
 if (localStorage.userShift) {
 	shiftObj = JSON.parse(localStorage.getItem("userShift"));
-	console.log(shiftObj);
 } else {
 	shiftObj = choiceShifts[0];
 }
@@ -767,15 +771,14 @@ if (shiftObj.userNotes) {
 }
 
 let { shiftsName, namesContextMenu, root } = shiftObj;
-console.log(namesContextMenu);
+
 choiceShifts.forEach((obj, index) => {
 	let burgerMenuChoiceShifts = document.querySelector(
 		".burger__menu-choice-shift"
 	);
-
-	if (obj.name == shiftObj.name && obj.options) {
+	if (obj.key == shiftObj.key && obj.options) {
 		burgerMenuChoiceShifts.innerHTML += `
-			<div class="burger__submenu-item burger__menu-shift">
+			<div class="burger__submenu-item burger__menu-shift" data-shift-key="${obj.key}">
 				<div class="burger__submenu-title">
 					<div class='burger__submenu-name'>${obj.name}</div>
 					<div class="burger__menu-item-cross">
@@ -787,7 +790,7 @@ choiceShifts.forEach((obj, index) => {
 		`;
 	} else {
 		burgerMenuChoiceShifts.innerHTML += `
-			<div class="burger__submenu-item burger__menu-shift">
+			<div class="burger__submenu-item burger__menu-shift" data-shift-key="${obj.key}">
 				<div class="burger__submenu-title">
 					<div class='burger__submenu-name'>${obj.name}</div>
 				</div>
@@ -795,13 +798,12 @@ choiceShifts.forEach((obj, index) => {
 			</div>
 		`;
 	}
-	// if (obj.name == shiftObj.name) {
-	// 	shiftObj.namesContextMenu = choiceShifts2[index].namesContextMenu;
-	// 	console.log(shiftObj.namesContextMenu);
-	// }
+	if (obj.key == shiftObj.key && !shiftObj.arrDifferenceDays) {
+		namesContextMenu = choiceShiftsClone[index].namesContextMenu;
+	}
 });
+
 namesContextMenu = namesContextMenu.concat(generalContextMenu);
-console.log(namesContextMenu);
 
 let countGridColumns = [];
 shiftsName.forEach((item, index) => {
@@ -1256,15 +1258,15 @@ burgerMenu.addEventListener("click", (e) => {
 
 		if (localStorage.userShift) {
 			shiftObj = JSON.parse(localStorage.getItem("userShift"));
-			let burgerSubmenuItems = document.querySelectorAll(
-				".burger__submenu-item"
-			);
-			burgerSubmenuItems.forEach((item, index) => {
-				if (item.textContent.trim() == shiftObj.name) {
-					burgerSubmenuItems[index].classList.add("focus");
-				}
-			});
 		}
+		const burgerSubmenuItems = document.querySelectorAll(
+			".burger__submenu-item"
+		);
+		burgerSubmenuItems.forEach((item, index) => {
+			if (item.getAttribute("data-shift-key") == shiftObj.key) {
+				burgerSubmenuItems[index].classList.add("focus");
+			}
+		});
 
 		const burgerMenuColors = document.querySelectorAll(".burger__menu-color");
 		if (localStorage.userSettings) {
@@ -1406,7 +1408,12 @@ burgerMenu.addEventListener("click", (e) => {
 		if (target.closest(".burger__menu-item-cross")) {
 		} else {
 			burgerMenuShifts.forEach((item, index) => {
-				if (item == currentBurgerSubmenuItem) {
+				if (
+					item.getAttribute("data-shift-key") ==
+					currentBurgerSubmenuItem.getAttribute("data-shift-key")
+				) {
+					// console.log(item.getAttribute("data-shift-key"));
+					// console.log(currentBurgerSubmenuItem.getAttribute("data-shift-key"));
 					item.classList.add("focus");
 
 					if (
@@ -1570,7 +1577,10 @@ burgerMenu.addEventListener("click", (e) => {
 
 	if (target.closest(".burger__menu-delete-shedule-btn")) {
 		burgerMenuShifts.forEach((item, index) => {
-			if (item == currentBurgerSubmenuItem) {
+			if (
+				item.getAttribute("data-shift-key") ==
+				currentBurgerSubmenuItem.getAttribute("data-shift-key")
+			) {
 				choiceShifts.splice(index, 1);
 				shiftObj = choiceShifts[0];
 				updateLocalStorage("userShift", shiftObj);
@@ -1585,6 +1595,7 @@ burgerMenu.addEventListener("click", (e) => {
 		);
 
 		shiftTemplate.name = burgerMenuAddShiftInputs[0].value;
+
 		shiftTemplate.shiftsName = [burgerMenuAddShiftInputs[1].value];
 		shiftTemplate.activeTemplate = [true];
 
@@ -1612,8 +1623,10 @@ burgerMenu.addEventListener("click", (e) => {
 		});
 		if (counter == 1) {
 			shiftTemplate.name = shiftTemplate.name;
+			shiftTemplate.key = shiftTemplate.name;
 		} else {
 			shiftTemplate.name = `${shiftTemplate.name} ${counter}`;
+			shiftTemplate.key = `${shiftTemplate.name} ${counter}`;
 		}
 
 		if (shiftTemplate.shiftsName == "") {
