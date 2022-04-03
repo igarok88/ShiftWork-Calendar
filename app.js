@@ -1689,6 +1689,7 @@ burgerMenu.addEventListener("click", (e) => {
 	selectTheme(target, "theme-dark-2");
 	selectTheme(target, "theme-light");
 	selectTheme(target, "theme-light-2");
+	selectTheme(target, "theme-blue");
 });
 const fillTheme = (nameTheme) => {
 	const burgerMenuChoiceTheme = document.querySelector(
@@ -1713,6 +1714,7 @@ fillTheme("theme-dark");
 fillTheme("theme-dark-2");
 fillTheme("theme-light");
 fillTheme("theme-light-2");
+fillTheme("theme-blue");
 
 //Контекстное меню
 

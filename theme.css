@@ -68,6 +68,20 @@
 	--light-2-focus-in-template: #ea5c2b;
 	--light-2-selected: #54bab9;
 
+	--blue-body: #f3f8fe;
+	--blue-main: #0093ab;
+	--blue-second: #fff;
+	--blue-hover: #d0d6e2;
+	--blue-text: #fff;
+	--blue-bg-div: #00afc1;
+	--blue-day-off: #9fb4ff;
+	--blue-curr-day: #0e3eda;
+	--blue-curr-day-text-color: #fff;
+	--blue-desc: #65c18c;
+	--blue-focus: #4d96ff;
+	--blue-focus-in-template: #ea5c2b;
+	--blue-selected: #4d96ff;
+
 	--font-family: "San-Francisco-Display-Regular";
 }
 
@@ -129,6 +143,21 @@
 	--desc: var(--light-2-desc);
 	--focus: var(--light-2-focus);
 	--selected: var(--light-2-selected);
+}
+
+.theme-blue {
+	--bg-body: var(--blue-body);
+	--bg-div: var(--blue-bg-div);
+	--bg-main: var(--blue-main);
+	--bg-second: var(--blue-second);
+	--color-hover: var(--blue-hover);
+	--color-txt: var(--blue-text);
+	--day-off: var(--blue-day-off);
+	--curr-day: var(--blue-curr-day);
+	--curr-day-text-color: var(--blue-curr-day-text-color);
+	--desc: var(--blue-desc);
+	--focus: var(--blue-focus);
+	--selected: var(--blue-selected);
 }
 
 .burger__menu-color {
@@ -266,4 +295,35 @@
 }
 #theme-light-2 .color-10 {
 	background-color: var(--light-2-desc);
+}
+
+#theme-blue .color-1 {
+	background-color: var(--blue-body);
+}
+#theme-blue .color-2 {
+	background-color: var(--blue-main);
+}
+#theme-blue .color-3 {
+	background-color: var(--blue-second);
+}
+#theme-blue .color-4 {
+	background-color: var(--blue-hover);
+}
+#theme-blue .color-5 {
+	background-color: var(--blue-text);
+}
+#theme-blue .color-6 {
+	background-color: var(--blue-bg-div);
+}
+#theme-blue .color-7 {
+	background-color: var(--blue-day-off);
+}
+#theme-blue .color-8 {
+	background-color: var(--blue-curr-day);
+}
+#theme-blue .color-9 {
+	background-color: var(--blue-curr-day-text-color);
+}
+#theme-blue .color-10 {
+	background-color: var(--blue-desc);
 }

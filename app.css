@@ -903,6 +903,9 @@ body.lock {
 	background-color: inherit;
 	color: var(--color-txt);
 }
+.input-wrapper input::-webkit-input-placeholder {
+	color: var(--color-hover);
+}
 
 .btn-complete,
 .description,
