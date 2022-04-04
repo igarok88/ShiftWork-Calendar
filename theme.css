@@ -12,6 +12,7 @@
 	--dark-second: rgba(255, 255, 255, 0.6);
 	--dark-hover: #323048;
 	--dark-text: #f8fbff;
+	--dark-text-2: #f3f8fe;
 	--dark-bg-div: #21223f69;
 	--dark-day-off: #44535e;
 	--dark-curr-day: #d1d0cc;
@@ -27,6 +28,7 @@
 	--dark-2-second: rgba(255, 255, 255, 0.6);
 	--dark-2-hover: #323048;
 	--dark-2-text: #d9ebe9;
+	--dark-2-text-2: #f3f8fe;
 	--dark-2-bg-div: #0e1821;
 	--dark-2-day-off: #44535e;
 	--dark-2-curr-day: #d9ebe9;
@@ -39,32 +41,29 @@
 	--light-body: #f3f8fe;
 	--light-main: #fdfdfd;
 	--light-second: rgba(0, 0, 0, 0.7);
-	--light-hover: #edf0f5;
+	--light-hover: #374258;
 	--light-text: #151426;
-	/* --light-bg-div: #c8d9e9; */
-	/* --light-bg-div: #effffd; */
+	--light-text-2: #f3f8fe;
 	--light-bg-div: #f3f7fa;
 	--light-day-off: #85f4ff;
 	--light-curr-day: #42c2ff;
 	--light-curr-day-text-color: #fff;
 	--light-desc: rgb(55, 98, 163);
-	--light-focus: rgba(139, 145, 145, 0.384);
-	--light-focus-in-template: #ea5c2b;
+	--light-focus: #42c2ff;
+	--light-focus-in-template: #4065dd;
 	--light-selected: #61a4bc;
 
 	--light-2-body: #f3f8fe;
 	--light-2-main: #f2f5c8;
 	--light-2-second: rgba(0, 0, 0, 0.7);
-	--light-2-hover: #edf0f5;
+	--light-2-hover: #4d4c5ab2;
 	--light-2-text: #151426;
-	/* --light-bg-div: #c8d9e9; */
-	/* --light-bg-div: #effffd; */
 	--light-2-bg-div: #e8e8a6;
 	--light-2-day-off: #c1deae;
 	--light-2-curr-day: #219f94;
 	--light-2-curr-day-text-color: #fff;
 	--light-2-desc: #65c18c;
-	--light-2-focus: rgba(139, 145, 145, 0.384);
+	--light-2-focus: #c1deae;
 	--light-2-focus-in-template: #ea5c2b;
 	--light-2-selected: #54bab9;
 
@@ -73,9 +72,10 @@
 	--blue-second: #fff;
 	--blue-hover: #d0d6e2;
 	--blue-text: #fff;
+	--blue-text-2: #f3f8fe;
 	--blue-bg-div: #00afc1;
 	--blue-day-off: #9fb4ff;
-	--blue-curr-day: #0e3eda;
+	--blue-curr-day: #3256ce;
 	--blue-curr-day-text-color: #fff;
 	--blue-desc: #65c18c;
 	--blue-focus: #4d96ff;
@@ -92,6 +92,7 @@
 	--bg-second: var(--dark-second);
 	--color-hover: var(--dark-hover);
 	--color-txt: var(--dark-text);
+	--color-txt-2: var(--dark-text);
 	--day-off: var(--dark-day-off);
 	--curr-day: var(--dark-curr-day);
 	--curr-day-text-color: var(--dark-curr-day-text-color);
@@ -99,6 +100,7 @@
 	--focus: var(--dark-focus);
 	--selected: var(--dark-selected);
 	--focus-in-template: var(--dark-focus-in-template);
+	--bgc-social: var(--dark-text);
 }
 .theme-dark-2 {
 	--bg-body: var(--dark-2-body);
@@ -107,12 +109,15 @@
 	--bg-second: var(--dark-2-second);
 	--color-hover: var(--dark-2-hover);
 	--color-txt: var(--dark-2-text);
+	--color-txt-2: var(--dark-2-text);
 	--day-off: var(--dark-2-day-off);
 	--curr-day: var(--dark-2-curr-day);
 	--curr-day-text-color: var(--dark-2-curr-day-text-color);
 	--desc: var(--dark-2-desc);
 	--focus: var(--dark-2-focus);
 	--selected: var(--dark-2-selected);
+	--focus-in-template: var(--dark-2-focus-in-template);
+	--bgc-social: var(--dark-2-text);
 }
 
 .theme-light {
@@ -122,12 +127,15 @@
 	--bg-second: var(--light-second);
 	--color-hover: var(--light-hover);
 	--color-txt: var(--light-text);
+	--color-txt-2: var(--light-text-2);
 	--day-off: var(--light-day-off);
 	--curr-day: var(--light-curr-day);
 	--curr-day-text-color: var(--light-curr-day-text-color);
 	--desc: var(--light-desc);
 	--focus: var(--light-focus);
 	--selected: var(--light-selected);
+	--focus-in-template: var(--light-focus-in-template);
+	--bgc-social: var(--light-main);
 }
 
 .theme-light-2 {
@@ -137,12 +145,15 @@
 	--bg-second: var(--light-2-second);
 	--color-hover: var(--light-2-hover);
 	--color-txt: var(--light-2-text);
+	--color-txt-2: var(--light-2-text);
 	--day-off: var(--light-2-day-off);
 	--curr-day: var(--light-2-curr-day);
 	--curr-day-text-color: var(--light-2-curr-day-text-color);
 	--desc: var(--light-2-desc);
 	--focus: var(--light-2-focus);
 	--selected: var(--light-2-selected);
+	--focus-in-template: var(--light-2-focus-in-template);
+	--bgc-social: var(--light-2-main);
 }
 
 .theme-blue {
@@ -152,12 +163,15 @@
 	--bg-second: var(--blue-second);
 	--color-hover: var(--blue-hover);
 	--color-txt: var(--blue-text);
+	--color-txt-2: var(--blue-text);
 	--day-off: var(--blue-day-off);
 	--curr-day: var(--blue-curr-day);
 	--curr-day-text-color: var(--blue-curr-day-text-color);
 	--desc: var(--blue-desc);
 	--focus: var(--blue-focus);
 	--selected: var(--blue-selected);
+	--focus-in-template: var(--blue-curr-day);
+	--bgc-social: var(--blue-text);
 }
 
 .burger__menu-color {

@@ -29,7 +29,7 @@ const languageApp = [
 			editShift: "Замінити зміну",
 			deleteShift: "Видалити зміну",
 			deleteShedule: "Видалити графік",
-			setNameShift: "Вкажіть назву зміни",
+			setNameShift: "Вкажіть назву зміни:",
 			myShift: "Моя зміна",
 			whatShiftRemove: "Яку зміну бажаєте видалити?",
 			whatShiftEdit: "Яку зміну бажаєте замінити?",
@@ -45,8 +45,8 @@ const languageApp = [
 			dayOff: "Вихідний",
 			selectSchedule: "Обрати графік",
 			createSchedule: "Створити графік",
-			enterCompanyName: "Вкажіть назву підприємства",
-			enterShiftName: "Вкажіть назву зміни",
+			enterCompanyName: "Вкажіть назву підприємства:",
+			enterShiftName: "Вкажіть назву зміни:",
 			exampleNPP: "приклад: 'Запорізька АЕС'",
 			exampleShift: "приклад: 'зм. А'",
 			selectLanguage: "Обрати мову",
@@ -100,7 +100,7 @@ const languageApp = [
 			editShift: "Edit shift",
 			deleteShift: "Delete shift",
 			deleteShedule: "Delete shedule",
-			setNameShift: "Set name shift",
+			setNameShift: "Set name shift:",
 			myShift: "My shift",
 			whatShiftRemove: "What shift do you want to remove?",
 			whatShiftEdit: "What shift to change?",
@@ -116,8 +116,8 @@ const languageApp = [
 			dayOff: "Day off",
 			selectSchedule: "Select shedule",
 			createSchedule: "Сreate a schedule",
-			enterCompanyName: "Enter company name",
-			enterShiftName: "Enter shift name",
+			enterCompanyName: "Enter company name:",
+			enterShiftName: "Enter shift name:",
 			exampleNPP: "example: 'Heysham nuclear power station'",
 			exampleShift: "example: 'А'",
 			selectLanguage: "Select language",
@@ -171,7 +171,7 @@ const languageApp = [
 			editShift: "Изменить смену",
 			deleteShift: "Удалить смену",
 			deleteShedule: "Удалить график",
-			setNameShift: "Укажите название смены",
+			setNameShift: "Укажите название смены:",
 			myShift: "Моя смена",
 			whatShiftRemove: "Какую смену хотите удалить?",
 			whatShiftEdit: "Какую смену хотите изменить?",
@@ -187,8 +187,8 @@ const languageApp = [
 			dayOff: "Выходной",
 			selectSchedule: "Выбрать график",
 			createSchedule: "Создать график",
-			enterCompanyName: "Укажите название предприятия",
-			enterShiftName: "Укажите название смены",
+			enterCompanyName: "Укажите название предприятия:",
+			enterShiftName: "Укажите название смены:",
 			exampleNPP: "пример: 'Запорожская АЭС'",
 			exampleShift: "пример: 'см. А'",
 			selectLanguage: "Выбрать язык",
@@ -1233,8 +1233,8 @@ calendar.addEventListener("click", (e) => {
 		if (burgerBtn.className.includes("active")) {
 			location.hash = "menu";
 		} else {
+			window.history.back();
 			location.hash = "";
-			// window.history.back();
 		}
 	}
 });
@@ -2713,3 +2713,7 @@ const currDateForScroll = document.querySelector(".curr-date");
 if (currDateForScroll) {
 	currDateForScroll.scrollIntoView({ block: "center", behavior: "smooth" });
 }
+
+//если контент не помещается в контейнер, то добавить многоточие
+
+const calendarDays = document.querySelectorAll(".calendar-day");
