@@ -91,6 +91,8 @@ body.lock {
 .calendar-day,
 .calendar-header-day {
 	height: 30px;
+	/* white-space: nowrap;
+	width: 50px; */
 }
 .calendar-day,
 .menu-header div,
@@ -670,9 +672,16 @@ body.lock {
 .right-click-menu-item__value,
 .right-click-menu-item__name {
 	display: flex;
-	justify-content: center;
-	padding: 15px;
+	justify-content: space-evenly;
+	margin: 15px;
 	width: 85px;
+}
+.right-click-menu-item__value {
+	white-space: nowrap;
+	overflow: hidden;
+}
+.right-click-menu-item__value div {
+	align-self: flex-start;
 }
 .right-click-menu-item__name {
 	width: 100%;

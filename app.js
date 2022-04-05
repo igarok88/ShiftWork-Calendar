@@ -908,9 +908,9 @@ const generateCalendar = (month, year) => {
 		calendarNav.style.position = "fixed";
 	};
 	const setWidthHeaderDay = () => {
-		let calendarShiftName = document.querySelectorAll(".calendar-header-day");
+		let calendarShiftsName = document.querySelectorAll(".calendar-header-day");
 		let calendarDay = document.querySelector(".calendar-day");
-		calendarShiftName.forEach((item) => {
+		calendarShiftsName.forEach((item) => {
 			item.style.width = calendarDay.offsetWidth + 3 + "px";
 		});
 	};
@@ -1746,7 +1746,7 @@ namesContextMenu.forEach((obj) => {
 	let btnValue = document.createElement("div");
 	btnValue.classList.add("right-click-menu-item__value");
 	btnValue.setAttribute("data-value", obj.key);
-	btnValue.innerHTML = `"${obj.key}"`;
+	btnValue.innerHTML = `"<div>${obj.key}</div>"`;
 	btn.appendChild(btnValue);
 
 	let btnName = document.createElement("div");
@@ -2716,4 +2716,21 @@ if (currDateForScroll) {
 
 //если контент не помещается в контейнер, то добавить многоточие
 
-const calendarDays = document.querySelectorAll(".calendar-day");
+// const calendarDays = document.querySelectorAll(".calendar-day");
+
+// calendarDays.forEach((day) => {
+// 	day.insertAdjacentHTML("beforeend", `<div>${day.innerHTML}</div>`);
+// });
+
+// const calendarDaysDiv = document.querySelectorAll(".calendar-day div");
+
+// let arrWithDivsWidth = [];
+// calendarDaysDiv.forEach((dayDiv) => {
+// 	arrWithDivsWidth.push(dayDiv.clientWidth);
+// 	// dayDiv.style.display = "none";
+// });
+// console.log(arrWithDivsWidth);
+// let calendarDays = document.querySelectorAll(".calendar-day");
+// calendarDays.forEach((day) => {
+// 	shave(".calendar-day", 0);
+// });
