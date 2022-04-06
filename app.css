@@ -91,6 +91,15 @@ body.lock {
 .calendar-day,
 .calendar-header-day {
 	height: 30px;
+	/* width: 80px; */
+	/* white-space: nowrap; */
+	/* display: block;
+	display: -webkit-box;
+	text-align: justify;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis; */
 }
 .calendar-day,
 .menu-header div,
