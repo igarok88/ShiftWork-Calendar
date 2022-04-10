@@ -70,6 +70,7 @@ body.lock {
 
 .calendar-days {
 	color: var(--color-txt);
+	overflow-wrap: break-word;
 }
 
 .calendar-day,
@@ -87,19 +88,14 @@ body.lock {
 	border-radius: 3px;
 	margin: 3px 2px;
 	overflow: hidden;
+
+	overflow-wrap: break-word;
 }
 .calendar-day,
 .calendar-header-day {
 	height: 30px;
-	/* width: 80px; */
-	/* white-space: nowrap; */
-	/* display: block;
-	display: -webkit-box;
-	text-align: justify;
-	-webkit-line-clamp: 1;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis; */
+	min-width: 30px;
+	/* max-width: 180px; */
 }
 .calendar-day,
 .menu-header div,
@@ -406,7 +402,12 @@ body.lock {
 .burger__btn:after {
 	bottom: 0;
 }
+.burger__menu-wrapper {
+}
 .burger__menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	padding: 42px 20px 20px;
 	position: fixed;
 	top: 0;
@@ -521,6 +522,7 @@ body.lock {
 .burger__submenu-name {
 	width: 250px;
 	overflow: hidden;
+	overflow-wrap: break-word;
 }
 .burger__menu-create-shift .burger__submenu-item {
 	padding: 0 25px 25px 25px;
@@ -544,6 +546,7 @@ body.lock {
 	bottom: 9px;
 }
 .burger__menu-btn {
+	overflow: hidden;
 	padding: 25px;
 	margin-top: 15px;
 	background-color: var(--bg-main);
@@ -561,6 +564,19 @@ body.lock {
 .burger__submenu-language-item:first-child {
 	margin-top: 0;
 }
+
+.burger__menu-footer {
+	display: flex;
+	justify-content: space-between;
+}
+
+.burger__menu-footer .remove-local-storage {
+	margin: 0;
+	padding: 0;
+}
+.burger__menu-footer .remove-local-storage h2 {
+	font-size: 14px;
+}
 .burger__social-container .burger__menu-btn {
 	display: block;
 	color: var(--color-txt);
@@ -573,13 +589,16 @@ body.lock {
 .burger__social-container {
 	display: flex;
 	justify-content: space-around;
+	/* border: 2px solid var(--color-txt); */
+	border-radius: 10px;
+	background-color: var(--bg-social);
 }
 .burger__social-container img {
 	width: 30px;
 	height: 30px;
 }
 .burger__social-container .burger__social {
-	padding: 13px;
+	padding: 15px;
 }
 /* .burger__date {
 	display: flex;
@@ -679,9 +698,17 @@ body.lock {
 .right-click-menu-item__value,
 .right-click-menu-item__name {
 	display: flex;
-	justify-content: center;
-	padding: 15px;
+	justify-content: space-between;
+	margin: 15px;
 	width: 85px;
+	overflow: hidden;
+}
+.right-click-menu-item__value {
+	white-space: nowrap;
+}
+.right-click-menu-item__value .content {
+	align-self: flex-start;
+	overflow: hidden;
 }
 .right-click-menu-item__name {
 	width: 100%;
@@ -842,6 +869,10 @@ body.lock {
 	text-align: center;
 	margin: 0;
 }
+.add-shift-item {
+	margin-top: 20px;
+}
+
 .popup__content-item .cross {
 	top: 13px;
 	left: 23px;
@@ -901,13 +932,14 @@ body.lock {
 	display: flex;
 }
 
-.popup__content .right-click-menu__add-todo-wrapper {
-	margin: 20px 3px;
-	/* width: 100%; */
+.right-click-menu__add-todo-wrapper {
+	/* margin: 20px 3px; */
+	width: 100%;
+	margin-left: 0;
 }
 .input-wrapper input {
 	font-size: 18px;
-	padding: 15px 6px;
+	padding: 15px 0px;
 	margin: 10px 0px;
 	/* margin: 7px; */
 	width: 100%;

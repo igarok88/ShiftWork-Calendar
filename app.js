@@ -118,7 +118,7 @@ const languageApp = [
 			createSchedule: "Сreate a schedule",
 			enterCompanyName: "Enter company name:",
 			enterShiftName: "Enter shift name:",
-			exampleNPP: "example: 'Heysham nuclear power station'",
+			exampleNPP: "example: 'Heysham NPP'",
 			exampleShift: "example: 'А'",
 			selectLanguage: "Select language",
 			colorThemes: "Color themes",
@@ -324,9 +324,9 @@ if (currentLanguage == languageApp[1]) {
 	const burgerMenuFeedbackTitle = document.querySelector(
 		".burger__menu-feedback h2"
 	);
-	burgerMenuFeedbackTitle.innerHTML = otherWords.feedback;
-	const burgerDescription = document.querySelector(".burger__description");
-	burgerDescription.innerHTML = otherWords.feedbackDescription;
+	// burgerMenuFeedbackTitle.innerHTML = otherWords.feedback;
+	// const burgerDescription = document.querySelector(".burger__description");
+	// burgerDescription.innerHTML = otherWords.feedbackDescription;
 }
 removeLocalStorage.addEventListener("click", () => {
 	localStorage.removeItem("userShift");
@@ -386,6 +386,7 @@ let shiftTemplate = {
 };
 
 const generalContextMenu = [
+	{ key: "&nbsp;", title: otherWords.dayOff, color: "" },
 	{
 		key: otherWords.reworkWord,
 		title: otherWords.rework,
@@ -404,7 +405,7 @@ const generalContextMenu = [
 		title: otherWords.compensatoryHoliday,
 		color: "#2a9d8f",
 	},
-	{ key: "&nbsp;", title: otherWords.dayOff, color: "" },
+
 	{ key: otherWords.noteWord, title: otherWords.note, color: "#e9c46a" },
 ];
 
@@ -762,6 +763,10 @@ if (localStorage.userShift) {
 
 if (localStorage.choiceShifts) {
 	choiceShifts = JSON.parse(localStorage.getItem("choiceShifts"));
+
+	const differense = choiceShifts.length - choiceShiftsClone.length;
+	choiceShifts.splice(differense, choiceShifts.length);
+	choiceShifts = choiceShifts.concat(choiceShiftsClone);
 }
 
 if (shiftObj.userNotes) {
@@ -799,9 +804,14 @@ choiceShifts.forEach((obj, index) => {
 		`;
 	}
 	if (obj.key == shiftObj.key && !shiftObj.arrDifferenceDays) {
-		namesContextMenu = choiceShiftsClone[index].namesContextMenu;
+		const differense = choiceShifts.length - choiceShiftsClone.length;
+		namesContextMenu = choiceShiftsClone[index - differense].namesContextMenu;
 	}
 });
+
+if (shiftObj.arrDifferenceDays) {
+	generalContextMenu.shift();
+}
 
 namesContextMenu = namesContextMenu.concat(generalContextMenu);
 
@@ -908,9 +918,9 @@ const generateCalendar = (month, year) => {
 		calendarNav.style.position = "fixed";
 	};
 	const setWidthHeaderDay = () => {
-		let calendarShiftName = document.querySelectorAll(".calendar-header-day");
+		let calendarShiftsName = document.querySelectorAll(".calendar-header-day");
 		let calendarDay = document.querySelector(".calendar-day");
-		calendarShiftName.forEach((item) => {
+		calendarShiftsName.forEach((item) => {
 			item.style.width = calendarDay.offsetWidth + 3 + "px";
 		});
 	};
@@ -1746,7 +1756,7 @@ namesContextMenu.forEach((obj) => {
 	let btnValue = document.createElement("div");
 	btnValue.classList.add("right-click-menu-item__value");
 	btnValue.setAttribute("data-value", obj.key);
-	btnValue.innerHTML = `"${obj.key}"`;
+	btnValue.innerHTML = `"<div>${obj.key}</div>"`;
 	btn.appendChild(btnValue);
 
 	let btnName = document.createElement("div");
@@ -2142,7 +2152,9 @@ calendarBody.addEventListener("click", (e) => {
 				<div class="popup__content-item">
 					<div class="popup__add-shift-btn right-click-menu-item__btn">
 						<div class="right-click-menu-item__value">
-						"${item.key}"
+							<span>"</span>
+							<span class='content'>${item.key}</span>
+							<span>"</span>
 						</div>
 						<div class="right-click-menu-item__name">
 						${item.title}
@@ -2715,5 +2727,19 @@ if (currDateForScroll) {
 }
 
 //если контент не помещается в контейнер, то добавить многоточие
-
+const calendarHeaderDays = document.querySelectorAll(".calendar-header-day");
+calendarHeaderDays.forEach((day) => {
+	shave(day, 30);
+});
 const calendarDays = document.querySelectorAll(".calendar-day");
+calendarDays.forEach((day) => {
+	shave(day, 30);
+});
+const rightClickMenuItemValueDiv = document.querySelectorAll(
+	".right-click-menu-item__value .content"
+);
+rightClickMenuItemValueDiv.forEach((day) => {
+	shave(day, 30);
+});
+
+//если есть интернет, то добавить внизу отступ для банера
