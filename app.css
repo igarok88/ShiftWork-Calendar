@@ -51,9 +51,9 @@ body.lock {
 	grid-template-rows: 1fr;
 	gap: 0px 0px;
 }
-.calendar-body {
+/* .calendar-body {
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-}
+} */
 .calendar-body .curr-date {
 	background-color: var(--curr-day);
 	color: var(--curr-day-text-color);
@@ -62,7 +62,8 @@ body.lock {
 	background-color: var(--selected);
 }
 .calendar-body,
-.calendar-count {
+.calendar-count,
+.calendar-body-for-size {
 	display: grid;
 	grid-template-rows: 1fr;
 	gap: 0px 0px;
@@ -96,6 +97,11 @@ body.lock {
 	height: 30px;
 	min-width: 30px;
 	/* max-width: 180px; */
+}
+.calendar-day span {
+	margin: 0 5px;
+	overflow: hidden;
+	word-wrap: normal;
 }
 .calendar-day,
 .menu-header div,
@@ -132,6 +138,12 @@ body.lock {
 .calendar-week-day .calendar-header-day {
 	width: 100%;
 	position: fixed;
+}
+
+.calendar-column-for-size {
+	background-color: #fff;
+	visibility: hidden;
+	opacity: 0;
 }
 
 .calendar-column-create-shift {
@@ -421,6 +433,12 @@ body.lock {
 	overflow: auto;
 	z-index: 3;
 }
+
+@media (min-width: 700px) {
+	.burger__menu {
+		width: 600px;
+	}
+}
 .burger__menu h2 {
 	font-size: 18px;
 }
@@ -675,7 +693,9 @@ body.lock {
 }
 .menu-header div {
 	padding: 7px;
+	max-width: 150px;
 }
+
 .right-click-menu ul {
 	margin-top: 5px;
 }

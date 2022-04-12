@@ -53,9 +53,9 @@ const languageApp = [
 			colorThemes: "Кольорові теми",
 			resetUserSettings: "Скинути налаштування",
 			total: "Усього:",
-			feedback: "Зворотній зв'язок",
-			feedbackDescription:
-				"Спасибі за користування цією програмою. Пишіть ваші пропозиції:",
+			// feedback: "Зворотній зв'язок",
+			// feedbackDescription:
+			// 	"Спасибі за користування цією програмою. Пишіть ваші пропозиції:",
 			reset: "Скинути",
 			zaporizhzhiaNPP: "Запорізька АЕС",
 			zaporizhzhiaTPP: "Запорізька ТЕС",
@@ -124,9 +124,9 @@ const languageApp = [
 			colorThemes: "Color themes",
 			resetUserSettings: "Reset user settings",
 			total: "Total:",
-			feedback: "Feedback",
-			feedbackDescription:
-				"Thank you for using this program. Write your suggestions:",
+			// feedback: "Feedback",
+			// feedbackDescription:
+			// 	"Thank you for using this program. Write your suggestions:",
 			reset: "Reset",
 			zaporizhzhiaNPP: "Zaporizhzhia NPP",
 			zaporizhzhiaTPP: "Zaporizhzhia TPP",
@@ -195,9 +195,9 @@ const languageApp = [
 			colorThemes: "Цветовые темы",
 			resetUserSettings: "Сбросить настройки",
 			total: "Всего:",
-			feedback: "Обратная связь",
-			feedbackDescription:
-				"Спасибо за пользование этой программы. Пишите ваши предложения:",
+			// feedback: "Обратная связь",
+			// feedbackDescription:
+			// 	"Спасибо за пользование этой программы. Пишите ваши предложения:",
 			reset: "Сброс",
 			zaporizhzhiaNPP: "Запорожская АЭС",
 			zaporizhzhiaTPP: "Запорожская ТЭС",
@@ -321,9 +321,9 @@ if (currentLanguage == languageApp[1]) {
 		".popup__content-body input"
 	);
 	popupContentBodyInput.setAttribute("placeholder", otherWords.newTask);
-	const burgerMenuFeedbackTitle = document.querySelector(
-		".burger__menu-feedback h2"
-	);
+	// const burgerMenuFeedbackTitle = document.querySelector(
+	// 	".burger__menu-feedback h2"
+	// );
 	// burgerMenuFeedbackTitle.innerHTML = otherWords.feedback;
 	// const burgerDescription = document.querySelector(".burger__description");
 	// burgerDescription.innerHTML = otherWords.feedbackDescription;
@@ -816,12 +816,22 @@ if (shiftObj.arrDifferenceDays) {
 namesContextMenu = namesContextMenu.concat(generalContextMenu);
 
 let countGridColumns = [];
+
+const calendarBodyForSize = document.querySelector(".calendar-body-for-size");
+
 shiftsName.forEach((item, index) => {
 	let div = document.createElement("div");
 	div.classList.add("calendar-column");
 	div.classList.add("calendar-shift");
 	calendarBody.appendChild(div);
 	calendarBody.style.gridTemplateColumns = `repeat(${
+		shiftsName.length + 2
+	}, 1fr)`;
+
+	div = document.createElement("div");
+	div.classList.add("calendar-column-for-size");
+	calendarBodyForSize.appendChild(div);
+	calendarBodyForSize.style.gridTemplateColumns = `repeat(${
 		shiftsName.length + 2
 	}, 1fr)`;
 
@@ -917,18 +927,25 @@ const generateCalendar = (month, year) => {
 		calendarNav.style.width = body.offsetWidth + "px";
 		calendarNav.style.position = "fixed";
 	};
-	const setWidthHeaderDay = () => {
+	const setWidthDay = () => {
 		let calendarShiftsName = document.querySelectorAll(".calendar-header-day");
-		let calendarDay = document.querySelector(".calendar-day");
+		let calendarColumns = document.querySelectorAll(".calendar-column");
+		let calendarDayForSize = document.querySelector(
+			".calendar-column-for-size"
+		);
 		calendarShiftsName.forEach((item) => {
-			item.style.width = calendarDay.offsetWidth + 3 + "px";
+			item.style.width = calendarDayForSize.offsetWidth + "px";
+		});
+		calendarColumns.forEach((item) => {
+			item.style.width = calendarDayForSize.offsetWidth + "px";
 		});
 	};
 
 	window.addEventListener(`resize`, () => {
 		setWidthFooter();
-		setWidthHeaderDay();
+		setWidthDay();
 	});
+
 	if (shiftObj.template) {
 		calendarCountShift.style.display = "none";
 	}
@@ -1139,6 +1156,7 @@ const generateCalendar = (month, year) => {
 			}
 		}
 	}
+	setWidthDay();
 };
 
 let monthList = calendar.querySelector(".month-list");
