@@ -53,9 +53,9 @@ const languageApp = [
 			colorThemes: "Кольорові теми",
 			resetUserSettings: "Скинути налаштування",
 			total: "Усього:",
-			// feedback: "Зворотній зв'язок",
-			// feedbackDescription:
-			// 	"Спасибі за користування цією програмою. Пишіть ваші пропозиції:",
+			feedback: "Зворотній зв'язок",
+			feedbackDescription:
+				"Спасибі за користування цією програмою. Пишіть ваші пропозиції:",
 			reset: "Скинути",
 			zaporizhzhiaNPP: "Запорізька АЕС",
 			zaporizhzhiaTPP: "Запорізька ТЕС",
@@ -124,9 +124,9 @@ const languageApp = [
 			colorThemes: "Color themes",
 			resetUserSettings: "Reset user settings",
 			total: "Total:",
-			// feedback: "Feedback",
-			// feedbackDescription:
-			// 	"Thank you for using this program. Write your suggestions:",
+			feedback: "Feedback",
+			feedbackDescription:
+				"Thank you for using this program. Write your suggestions:",
 			reset: "Reset",
 			zaporizhzhiaNPP: "Zaporizhzhia NPP",
 			zaporizhzhiaTPP: "Zaporizhzhia TPP",
@@ -195,9 +195,9 @@ const languageApp = [
 			colorThemes: "Цветовые темы",
 			resetUserSettings: "Сбросить настройки",
 			total: "Всего:",
-			// feedback: "Обратная связь",
-			// feedbackDescription:
-			// 	"Спасибо за пользование этой программы. Пишите ваши предложения:",
+			feedback: "Обратная связь",
+			feedbackDescription:
+				"Спасибо за пользование этой программы. Пишите ваши предложения:",
 			reset: "Сброс",
 			zaporizhzhiaNPP: "Запорожская АЭС",
 			zaporizhzhiaTPP: "Запорожская ТЭС",
@@ -765,8 +765,20 @@ if (localStorage.choiceShifts) {
 	choiceShifts = JSON.parse(localStorage.getItem("choiceShifts"));
 
 	const differense = choiceShifts.length - choiceShiftsClone.length;
-	choiceShifts.splice(differense, choiceShifts.length);
-	choiceShifts = choiceShifts.concat(choiceShiftsClone);
+
+	choiceShifts.forEach((obj, index) => {
+		let arrContextMenuClone;
+		if (index >= differense) {
+			obj.name = choiceShiftsClone[index - differense].name;
+			arrContextMenuClone =
+				choiceShiftsClone[index - differense].namesContextMenu.slice();
+			obj.namesContextMenu = arrContextMenuClone.slice();
+
+			if (obj.key == shiftObj.key) {
+				shiftObj.namesContextMenu = arrContextMenuClone;
+			}
+		}
+	});
 }
 
 if (shiftObj.userNotes) {
@@ -806,6 +818,7 @@ choiceShifts.forEach((obj, index) => {
 	if (obj.key == shiftObj.key && !shiftObj.arrDifferenceDays) {
 		const differense = choiceShifts.length - choiceShiftsClone.length;
 		namesContextMenu = choiceShiftsClone[index - differense].namesContextMenu;
+		console.log(namesContextMenu);
 	}
 });
 
@@ -930,6 +943,7 @@ const generateCalendar = (month, year) => {
 	const setWidthDay = () => {
 		let calendarShiftsName = document.querySelectorAll(".calendar-header-day");
 		let calendarColumns = document.querySelectorAll(".calendar-column");
+		// let calendarCountShift = document.querySelectorAll(".calendar-count-shift");
 		let calendarDayForSize = document.querySelector(
 			".calendar-column-for-size"
 		);
@@ -939,13 +953,15 @@ const generateCalendar = (month, year) => {
 		calendarColumns.forEach((item) => {
 			item.style.width = calendarDayForSize.offsetWidth + "px";
 		});
+		// calendarCountShift.forEach((item) => {
+		// 	item.style.width = calendarDayForSize.offsetWidth + "px";
+		// });
 	};
 
 	window.addEventListener(`resize`, () => {
 		setWidthFooter();
 		setWidthDay();
 	});
-
 	if (shiftObj.template) {
 		calendarCountShift.style.display = "none";
 	}
@@ -1751,7 +1767,6 @@ const rightClickMenu = document.querySelector(".right-click-menu");
 const rightClickMenuItems = calendar.querySelector(".right-click-menu ul");
 
 //верстка элементов контекстного меню
-
 namesContextMenu.forEach((obj) => {
 	let li = document.createElement("li");
 	li.classList.add("right-click-menu-item");
@@ -2745,19 +2760,19 @@ if (currDateForScroll) {
 }
 
 //если контент не помещается в контейнер, то добавить многоточие
-const calendarHeaderDays = document.querySelectorAll(".calendar-header-day");
-calendarHeaderDays.forEach((day) => {
-	shave(day, 30);
-});
-const calendarDays = document.querySelectorAll(".calendar-day");
-calendarDays.forEach((day) => {
-	shave(day, 30);
-});
-const rightClickMenuItemValueDiv = document.querySelectorAll(
-	".right-click-menu-item__value .content"
-);
-rightClickMenuItemValueDiv.forEach((day) => {
-	shave(day, 30);
-});
+// const calendarHeaderDays = document.querySelectorAll(".calendar-header-day");
+// calendarHeaderDays.forEach((day) => {
+// 	shave(day, 30);
+// });
+// const calendarDays = document.querySelectorAll(".calendar-day");
+// calendarDays.forEach((day) => {
+// 	shave(day, 30);
+// });
+// const rightClickMenuItemValueDiv = document.querySelectorAll(
+// 	".right-click-menu-item__value .content"
+// );
+// rightClickMenuItemValueDiv.forEach((day) => {
+// 	shave(day, 30);
+// });
 
 //если есть интернет, то добавить внизу отступ для банера
