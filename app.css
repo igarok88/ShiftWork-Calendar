@@ -100,6 +100,7 @@ body.lock {
 	height: 30px;
 	min-width: 30px;
 	white-space: nowrap;
+	/* justify-content: flex-start; */
 }
 
 .calendar-day,
@@ -119,15 +120,27 @@ body.lock {
 .calendar-day:nth-child(2) {
 	margin-top: 33px;
 }
-
+.calendar-header-day-wrapper {
+	display: flex;
+	justify-content: center;
+}
+.calendar-header-day-wrapper div {
+	margin: 1px;
+	overflow: hidden;
+	justify-content: flex-start;
+}
+.calendar-header-day-flex {
+	display: flex;
+}
 .calendar-header-day {
 	background-color: var(--bg-main);
 	color: var(--bg-second);
-	z-index: 2;
+	/* z-index: 2; */
 	border-radius: 0px;
 	height: 30px;
-	margin: 0px;
-	/* overflow: hidden; */
+	margin: 0px 5px;
+	overflow: hidden;
+	/* white-space: nowrap; */
 	/* border-bottom: 1px solid var(--bg-second); */
 }
 .calendar-week-day div,

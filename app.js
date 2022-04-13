@@ -72,6 +72,8 @@ const languageApp = [
 			compensatoryHolidayWord: "В",
 			note: "Примітка",
 			noteWord: "П",
+			confirm:
+				"Увага! Всi налаштування користувача, графiки, нотатки будуть видаленi. Підтвердити?",
 		},
 	},
 	{
@@ -143,6 +145,8 @@ const languageApp = [
 			compensatoryHolidayWord: "С",
 			note: "Note",
 			noteWord: "N",
+			confirm:
+				"Attention! All user settings, graphics, notes will be deleted. Continue?",
 		},
 	},
 	{
@@ -214,6 +218,8 @@ const languageApp = [
 			compensatoryHolidayWord: "О",
 			note: "Заметка",
 			noteWord: "З",
+			confirm:
+				"Внимание! Все пользовательские настройки, графики, заметки будут удалены. Продолжить?",
 		},
 	},
 ];
@@ -329,9 +335,12 @@ if (currentLanguage == languageApp[1]) {
 	// burgerDescription.innerHTML = otherWords.feedbackDescription;
 }
 removeLocalStorage.addEventListener("click", () => {
-	localStorage.removeItem("userShift");
-	localStorage.removeItem("choiceShifts");
-	localStorage.removeItem("userSettings");
+	let questConfirm = confirm(otherWords.confirm);
+	if (questConfirm) {
+		localStorage.removeItem("userShift");
+		localStorage.removeItem("choiceShifts");
+		localStorage.removeItem("userSettings");
+	}
 
 	location.reload();
 });
@@ -917,12 +926,26 @@ const generateCalendar = (month, year) => {
 
 	calendarColumns.forEach((column, index) => {
 		column.innerHTML = "";
-		let day = document.createElement("div");
-		column.appendChild(day);
-		day.classList.add("calendar-header-day");
+
+		// let day = document.createElement("div");
+		// day.classList.add("calendar-header-day");
+
+		let wrapper = document.createElement("div");
+		wrapper.classList.add("calendar-header-day-wrapper");
+
+		column.appendChild(wrapper);
+
 		if (index > 1) {
-			day.classList.add("calendar-shift-name");
-			column.appendChild(day);
+			// day.classList.add("calendar-shift-name");
+			// wrapper.appendChild(day);
+			wrapper.innerHTML = `
+				<div></div>
+				<div class="calendar-header-day-flex">
+					<div class="calendar-header-day calendar-shift-name"></div>
+				</div>
+				<div></div>
+			`;
+			column.appendChild(wrapper);
 		}
 		calendarShiftsName = document.querySelectorAll(".calendar-shift-name");
 	});
@@ -941,13 +964,15 @@ const generateCalendar = (month, year) => {
 		calendarNav.style.position = "fixed";
 	};
 	const setWidthDay = () => {
-		let calendarShiftsName = document.querySelectorAll(".calendar-header-day");
+		let calendarHeaderDayWrapper = document.querySelectorAll(
+			".calendar-header-day-wrapper"
+		);
 		let calendarColumns = document.querySelectorAll(".calendar-column");
 		// let calendarCountShift = document.querySelectorAll(".calendar-count-shift");
 		let calendarDayForSize = document.querySelector(
 			".calendar-column-for-size"
 		);
-		calendarShiftsName.forEach((item) => {
+		calendarHeaderDayWrapper.forEach((item) => {
 			item.style.width = calendarDayForSize.offsetWidth - 1 + "px";
 		});
 		calendarColumns.forEach((item) => {
@@ -982,11 +1007,11 @@ const generateCalendar = (month, year) => {
 		}
 		calendarDays.appendChild(day);
 
-		if (i == daysOfMonth[month] - 1) {
-			let headerDay = calendarDays.querySelector(".calendar-header-day");
-			headerDay.style.width = headerDay.offsetWidth + "px";
-			headerDay.style.position = "fixed";
-		}
+		// if (i == daysOfMonth[month] - 1) {
+		// let headerDay = calendarDays.querySelector(".calendar-header-day");
+		// headerDay.style.width = headerDay.offsetWidth + "px";
+		// headerDay.style.position = "fixed";
+		// }
 
 		//заполняем поля для дней недели
 
@@ -1088,13 +1113,11 @@ const generateCalendar = (month, year) => {
 				day.classList.add("calendar-day-off");
 			}
 
-			if (i == daysOfMonth[month] - 1) {
-				let headerDay = shift.querySelector(".calendar-header-day");
-				headerDay.style.width = headerDay.offsetWidth + "px";
-				headerDay.style.position = "fixed";
-
-				setWidthFooter();
-			}
+			// if (i == daysOfMonth[month] - 1) {
+			// let headerDay = shift.querySelector(".calendar-header-day");
+			// headerDay.style.width = headerDay.offsetWidth + "px";
+			// headerDay.style.position = "fixed";
+			// }
 
 			// ищем совпадение в localStorage и заполняем соответствующие ячейки
 			if (arrForUserNotes.length > 0) {
@@ -1175,6 +1198,7 @@ const generateCalendar = (month, year) => {
 	}
 
 	setWidthDay();
+	setWidthFooter();
 };
 
 let monthList = calendar.querySelector(".month-list");
@@ -2716,8 +2740,10 @@ let controller = {
 		popup.classList.remove("show");
 		monthList.classList.remove("show");
 
-		let calendarHeaderDays = document.querySelectorAll(".calendar-header-day");
-		calendarHeaderDays.forEach((item) => {
+		let calendarHeaderDaysWrapper = document.querySelectorAll(
+			".calendar-header-day-wrapper"
+		);
+		calendarHeaderDaysWrapper.forEach((item) => {
 			item.style.position = "fixed";
 		});
 		// window.history.back();
@@ -2761,20 +2787,11 @@ if (currDateForScroll) {
 	currDateForScroll.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
-//если контент не помещается в контейнер, то добавить многоточие
-// const calendarHeaderDays = document.querySelectorAll(".calendar-header-day");
-// calendarHeaderDays.forEach((day) => {
-// 	shave(day, 30);
-// });
-// const calendarDays = document.querySelectorAll(".calendar-day");
-// calendarDays.forEach((day) => {
-// 	shave(day, 30);
-// });
-// const rightClickMenuItemValueDiv = document.querySelectorAll(
-// 	".right-click-menu-item__value .content"
-// );
-// rightClickMenuItemValueDiv.forEach((day) => {
-// 	shave(day, 30);
-// });
+const calendarHeaderDayWrapper = document.querySelector(
+	".calendar-header-day-wrapper"
+);
+console.log(calendarHeaderDayWrapper.getBoundingClientRect());
 
-//если есть интернет, то добавить внизу отступ для банера
+const calendarShiftName = document.querySelector(".calendar-shift-name");
+
+console.log(calendarShiftName.getBoundingClientRect());
