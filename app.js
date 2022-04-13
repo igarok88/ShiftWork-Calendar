@@ -948,10 +948,10 @@ const generateCalendar = (month, year) => {
 			".calendar-column-for-size"
 		);
 		calendarShiftsName.forEach((item) => {
-			item.style.width = calendarDayForSize.offsetWidth + "px";
+			item.style.width = calendarDayForSize.offsetWidth - 1 + "px";
 		});
 		calendarColumns.forEach((item) => {
-			item.style.width = calendarDayForSize.offsetWidth + "px";
+			item.style.width = calendarDayForSize.offsetWidth - 1 + "px";
 		});
 		// calendarCountShift.forEach((item) => {
 		// 	item.style.width = calendarDayForSize.offsetWidth + "px";
@@ -960,6 +960,7 @@ const generateCalendar = (month, year) => {
 
 	window.addEventListener(`resize`, () => {
 		setWidthFooter();
+
 		setWidthDay();
 	});
 	if (shiftObj.template) {
@@ -1172,6 +1173,7 @@ const generateCalendar = (month, year) => {
 			}
 		}
 	}
+
 	setWidthDay();
 };
 
@@ -2048,7 +2050,7 @@ const getInfoFromTable = (
 
 	//заполняем название смены в контекстном меню
 	let shift = target.parentElement.firstChild.innerText;
-	curShift.innerHTML = `"${shift}"`;
+	curShift.innerHTML = `${shift}`;
 
 	//заполняем поле дней недели
 	let dayWeek = new Date(currYear.value, currMonth.value, day).getDay();
