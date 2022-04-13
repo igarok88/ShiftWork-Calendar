@@ -94,11 +94,12 @@ body.lock {
 }
 .calendar .calendar-day {
 	margin: 2px 1px;
+	padding: 0 5px;
 }
 .calendar-day,
 .calendar-header-day {
 	height: 30px;
-	min-width: 30px;
+	/* min-width: 30px; */
 	white-space: nowrap;
 	/* justify-content: flex-start; */
 }
@@ -117,29 +118,35 @@ body.lock {
 	background-color: inherit;
 }
 
+/* .calendar-day-wrapper:nth-child(2) {
+	margin-top: 33px;
+} */
 .calendar-day:nth-child(2) {
 	margin-top: 33px;
 }
 .calendar-header-day-wrapper {
 	display: flex;
 	justify-content: center;
+	z-index: 2;
+	background-color: var(--bg-main);
+	height: 30px;
 }
-.calendar-header-day-wrapper div {
-	margin: 1px;
+/* .calendar-header-day-wrapper div {
+	margin: 0 5px;
 	overflow: hidden;
 	justify-content: flex-start;
-}
-.calendar-header-day-flex {
-	display: flex;
+} */
+.calendar-day-wrapper {
 }
 .calendar-header-day {
-	background-color: var(--bg-main);
+	/* background-color: var(--bg-main); */
 	color: var(--bg-second);
 	/* z-index: 2; */
 	border-radius: 0px;
 	height: 30px;
 	margin: 0px 5px;
 	overflow: hidden;
+	justify-content: flex-start;
 	/* white-space: nowrap; */
 	/* border-bottom: 1px solid var(--bg-second); */
 }

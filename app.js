@@ -2,6 +2,9 @@ const body = document.querySelector("body");
 const calendar = document.querySelector(".calendar");
 const calendarBody = document.querySelector(".calendar-body");
 
+//popup
+let desc;
+
 const languageApp = [
 	{
 		name: "Українська",
@@ -340,9 +343,8 @@ removeLocalStorage.addEventListener("click", () => {
 		localStorage.removeItem("userShift");
 		localStorage.removeItem("choiceShifts");
 		localStorage.removeItem("userSettings");
+		location.reload();
 	}
-
-	location.reload();
 });
 
 let calendarCountShift = calendar.querySelector(".calendar-count");
@@ -896,6 +898,269 @@ document.body.append(div);
 let scrollWidth = div.offsetWidth - div.clientWidth;
 div.remove();
 
+const setWidthFooter = () => {
+	let calendarNav = calendar.querySelector(".calendar-nav");
+	calendarNav.style.width = body.offsetWidth + "px";
+	calendarNav.style.position = "fixed";
+};
+const setWidthDay = () => {
+	let calendarHeaderDayWrapper = document.querySelectorAll(
+		".calendar-header-day-wrapper"
+	);
+	let calendarColumns = document.querySelectorAll(".calendar-column");
+	// let calendarCountShift = document.querySelectorAll(".calendar-count-shift");
+	let calendarDayForSize = document.querySelector(".calendar-column-for-size");
+	calendarHeaderDayWrapper.forEach((item) => {
+		item.style.width = calendarDayForSize.offsetWidth - 1 + "px";
+		item.style.position = "fixed";
+	});
+	calendarColumns.forEach((item) => {
+		item.style.width = calendarDayForSize.offsetWidth - 1 + "px";
+	});
+	// calendarCountShift.forEach((item) => {
+	// 	item.style.width = calendarDayForSize.offsetWidth + "px";
+	// });
+};
+
+//popup
+
+const popup = document.querySelector(".popup");
+// const idPopup = document.querySelector("#popup");
+const popupCloseBtn = document.querySelector(".popup__close");
+// const popupContentWrapper = document.querySelector(".popup__content-wrapper");
+// const popupContentEndCicleWrapper = document.querySelector(
+// 	".popup__content-end-cicle-wrapper"
+// );
+
+// popupContentEndCicleWrapper.innerHTML += `
+// 		<div class="popup__content-item">
+// 			<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
+// 				<div class="right-click-menu-item__value">
+// 				&#10004;
+// 				</div>
+// 				<div class="right-click-menu-item__name">
+// 				"Закончить построение графика?"
+// 				</div>
+// 			</div>
+// 		</div>
+// 	`;
+
+const popupOpen = (e) => {
+	popup.classList.remove("hide");
+	popup.classList.add("show");
+	document.body.style.overflow = "hidden";
+	body.style.paddingRight = scrollWidth + "px";
+
+	const menuHeaderShift = popup.querySelector(".menu-header__shift");
+	const menuHeaderDay = popup.querySelector(".menu-header__day");
+	const menuHeaderMonth = popup.querySelector(".menu-header__month");
+	const menuHeaderYear = popup.querySelector(".menu-header__year");
+	const menuHeaderDayWeek = popup.querySelector(".menu-header__day-week");
+
+	targetItemInTable = e.target;
+
+	getInfoFromTable(
+		targetItemInTable,
+		menuHeaderShift,
+		menuHeaderDay,
+		menuHeaderMonth,
+		menuHeaderYear,
+		menuHeaderDayWeek
+	);
+
+	selectedShift = targetItemInTable.getAttribute("data-shift");
+	selectedColorInContextMenu = targetItemInTable.getAttribute("data-color");
+	selectedItemInContextMenu = targetItemInTable.getAttribute("data-key-note");
+
+	if (shiftObj.template) {
+	} else {
+		tasks = JSON.parse(targetItemInTable.getAttribute("data-desc"));
+		selectedTodoValue = tasks;
+
+		todosWrapper = popup.querySelector(".right-click-menu__todos-wrapper");
+
+		currentTodo = todosWrapper;
+		inputTodo = popup.querySelector(".new-description-task");
+		addTaskBtn = popup.querySelector(".add-task-btn");
+
+		fillHtmlList();
+
+		addTask(addTaskBtn);
+	}
+};
+
+const popupClose = () => {
+	popup.classList.remove("show");
+	popup.classList.add("hide");
+	document.body.style.overflow = "";
+	body.style.paddingRight = 0;
+
+	if (shiftObj.template) {
+	} else {
+		// if (inputTodo.value) {
+		// 	console.log(inputTodo.value);
+		// 	tasks.push(new Task(inputTodo.value));
+		// 	selectedTodoValue = tasks;
+		// 	inputTodo.value = "";
+		// }
+		setAttrCurCell(targetItemInTable, tasks);
+		pushObjInArr();
+		filterArr(arrForUserNotes);
+		shiftObj.userNotes = arrForUserNotes;
+		updateLocalStorage("userShift", shiftObj);
+		replaceShiftObjInChoiceShifts();
+		updateLocalStorage("choiceShifts", choiceShifts);
+		removeClassDescEventListener();
+	}
+	window.history.back();
+	location.hash = "";
+};
+
+popupCloseBtn.addEventListener("click", popupClose);
+
+popup.addEventListener("click", (e) => {
+	if (e.target == popup) {
+		popupClose();
+	}
+	//добавляем смену в календарь в режиме создания графика
+	if (
+		e.target.closest(".popup__add-shift-btn")
+		// &&
+		// !e.target.closest(".popup__add-shift-btn[data-end-cicle]")
+	) {
+		let popupContentItem = e.target.closest(".popup__content-item");
+		let currentBtnKeyNote = popupContentItem.querySelector(
+			".popup__add-shift-btn .right-click-menu-item__value"
+		);
+
+		let currentBtnKeyNoteValue = currentBtnKeyNote.textContent
+			.trim()
+			.replace(/["']/g, "");
+
+		targetItemInTable.innerHTML = currentBtnKeyNoteValue;
+		targetItemInTable.setAttribute("data-key-note", currentBtnKeyNoteValue);
+		targetItemInTable.setAttribute("data-shift", "");
+
+		popupClose();
+
+		createEndCicleBtn();
+	}
+	//добавляем новую смену
+
+	let addShiftInputs = document.querySelectorAll(".popup__content-item input");
+
+	if (e.target.closest(".popup__content-item .add-task-btn")) {
+		if (addShiftInputs[0].value) {
+			shiftObj.namesContextMenu.forEach((obj, index) => {
+				if (obj.key == addShiftInputs[0].value) {
+					shiftObj.namesContextMenu.splice(index, 1);
+				}
+			});
+
+			shiftObj.namesContextMenu.unshift(
+				new UserNameShift(addShiftInputs[0].value, addShiftInputs[1].value)
+			);
+			targetItemInTable.innerHTML = addShiftInputs[0].value;
+			targetItemInTable.setAttribute("data-key-note", addShiftInputs[0].value);
+			targetItemInTable.setAttribute("data-shift", "");
+
+			targetItemInTable.classList.add("create-shift-selected");
+
+			updateLocalStorage("userShift", shiftObj);
+			popupClose();
+
+			createEndCicleBtn();
+		} else {
+			addShiftInputs[0].setAttribute("placeholder", `${otherWords.fillField}`);
+			// addShiftInputs[0].style.boxShadow =
+			// 	"inset 0 0 8px var(--light-2-focus-in-template)";
+			addShiftInputs[0].style.border =
+				"2px solid var(--light-2-focus-in-template)";
+		}
+	}
+
+	if (e.target.closest(".popup__content-item .delete-task-btn")) {
+		targetItemInTable.innerHTML = "";
+		targetItemInTable.removeAttribute("data-key-note");
+		targetItemInTable.removeAttribute("data-shift");
+		targetItemInTable.classList.remove("create-shift-selected");
+
+		popupClose();
+	}
+	if (
+		(shiftObj.template &&
+			((addShiftInputs[0].value && e.target.closest(".add-task-btn")) ||
+				e.target.closest(".popup__add-shift-btn"))) ||
+		e.target.closest(".popup__content-item .delete-task-btn")
+	) {
+		let myShiftsNodeList = document.querySelectorAll(
+			".calendar-day-create-shift"
+		);
+		let myShiftsArr = Array.prototype.slice.call(myShiftsNodeList);
+
+		firstElemIndex = myShiftsArr.findIndex((item) =>
+			item.closest("[data-shift]")
+		);
+		let myShiftsArrReverse = myShiftsArr.slice().reverse();
+
+		let myShiftsArrReverseIndex = myShiftsArrReverse.findIndex((item) =>
+			item.closest("[data-shift]")
+		);
+
+		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
+		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
+
+		// console.log(firstElemIndex);
+		// console.log(lastElemIndex);
+
+		myShiftsForLocalStorage = [];
+
+		myShiftsFinal.forEach((item, index) => {
+			let attr;
+			item.setAttribute("data-shift", "");
+			if (item.closest("[data-key-note]")) {
+				attr = item.getAttribute("data-key-note");
+				item.classList.add("create-shift-selected");
+			} else {
+				item.innerHTML = "";
+
+				item.classList.add("create-shift-selected");
+
+				attr = "";
+			}
+
+			myShiftsForLocalStorage.push(attr);
+		});
+	}
+});
+
+document.addEventListener("keydown", (e) => {
+	if (e.keyCode == 27 && popup.classList.contains("show")) {
+		popupClose();
+	}
+});
+
+const searchBtnsAddFPopupOpen = () => {
+	desc = document.querySelectorAll(".desc");
+	desc.forEach((btn) => {
+		btn.addEventListener("click", popupOpen);
+	});
+};
+
+const removeClassDescEventListener = () => {
+	if (tasks.length > 0) {
+	} else {
+		targetItemInTable.classList.remove("desc");
+		targetItemInTable.removeEventListener("click", popupOpen);
+	}
+};
+
+window.addEventListener(`resize`, () => {
+	setWidthFooter();
+
+	setWidthDay();
+});
+
 const generateCalendar = (month, year) => {
 	let arrForCount = [];
 	shiftsName.forEach((item, index) => {
@@ -936,14 +1201,8 @@ const generateCalendar = (month, year) => {
 		column.appendChild(wrapper);
 
 		if (index > 1) {
-			// day.classList.add("calendar-shift-name");
-			// wrapper.appendChild(day);
 			wrapper.innerHTML = `
-				<div></div>
-				<div class="calendar-header-day-flex">
-					<div class="calendar-header-day calendar-shift-name"></div>
-				</div>
-				<div></div>
+				<div class="calendar-header-day calendar-shift-name"></div>
 			`;
 			column.appendChild(wrapper);
 		}
@@ -958,36 +1217,6 @@ const generateCalendar = (month, year) => {
 	monthPicker.innerHTML = currMonth;
 	calendarFooterYear.innerHTML = year;
 
-	const setWidthFooter = () => {
-		let calendarNav = calendar.querySelector(".calendar-nav");
-		calendarNav.style.width = body.offsetWidth + "px";
-		calendarNav.style.position = "fixed";
-	};
-	const setWidthDay = () => {
-		let calendarHeaderDayWrapper = document.querySelectorAll(
-			".calendar-header-day-wrapper"
-		);
-		let calendarColumns = document.querySelectorAll(".calendar-column");
-		// let calendarCountShift = document.querySelectorAll(".calendar-count-shift");
-		let calendarDayForSize = document.querySelector(
-			".calendar-column-for-size"
-		);
-		calendarHeaderDayWrapper.forEach((item) => {
-			item.style.width = calendarDayForSize.offsetWidth - 1 + "px";
-		});
-		calendarColumns.forEach((item) => {
-			item.style.width = calendarDayForSize.offsetWidth - 1 + "px";
-		});
-		// calendarCountShift.forEach((item) => {
-		// 	item.style.width = calendarDayForSize.offsetWidth + "px";
-		// });
-	};
-
-	window.addEventListener(`resize`, () => {
-		setWidthFooter();
-
-		setWidthDay();
-	});
 	if (shiftObj.template) {
 		calendarCountShift.style.display = "none";
 	}
@@ -1085,11 +1314,10 @@ const generateCalendar = (month, year) => {
 				}
 				day.innerHTML = root[index];
 
-				shift.appendChild(day);
 				if (root[index] == undefined) {
 					day.innerHTML = "";
-					shift.appendChild(day);
 				}
+				shift.appendChild(day);
 			}
 
 			//вешаем класс curr-date на сегодняшнюю дату
@@ -1199,6 +1427,7 @@ const generateCalendar = (month, year) => {
 
 	setWidthDay();
 	setWidthFooter();
+	searchBtnsAddFPopupOpen();
 };
 
 let monthList = calendar.querySelector(".month-list");
@@ -1939,14 +2168,6 @@ const setAttrCurCell = (curСell, tasks) => {
 	curСell.setAttribute("data-desc", JSON.stringify(tasks));
 };
 
-const removeClassDescEventListener = () => {
-	if (tasks.length > 0) {
-	} else {
-		targetItemInTable.classList.remove("desc");
-		targetItemInTable.removeEventListener("click", popupOpen);
-	}
-};
-
 const addTask = (addTaskBtn) => {
 	addTaskBtn.addEventListener("click", () => {
 		if (inputTodo && inputTodo.value) {
@@ -2496,238 +2717,6 @@ rightClickMenu.addEventListener("click", (e) => {
 	}
 });
 
-// if (shiftObj.template) {
-// 	let endCicleBtnHTML = `<div class="end-cicle-btn">&#10004;</div>`;
-// 	calendarBody.insertAdjacentHTML("afterbegin", endCicleBtnHTML);
-// }
-
-//popup
-let btns;
-const popup = document.querySelector(".popup");
-// const idPopup = document.querySelector("#popup");
-const popupCloseBtn = document.querySelector(".popup__close");
-// const popupContentWrapper = document.querySelector(".popup__content-wrapper");
-// const popupContentEndCicleWrapper = document.querySelector(
-// 	".popup__content-end-cicle-wrapper"
-// );
-
-// popupContentEndCicleWrapper.innerHTML += `
-// 		<div class="popup__content-item">
-// 			<div class="popup__add-shift-btn right-click-menu-item__btn" data-end-cicle>
-// 				<div class="right-click-menu-item__value">
-// 				&#10004;
-// 				</div>
-// 				<div class="right-click-menu-item__name">
-// 				"Закончить построение графика?"
-// 				</div>
-// 			</div>
-// 		</div>
-// 	`;
-
-const popupOpen = (e) => {
-	popup.classList.remove("hide");
-	popup.classList.add("show");
-	document.body.style.overflow = "hidden";
-	body.style.paddingRight = scrollWidth + "px";
-
-	const menuHeaderShift = popup.querySelector(".menu-header__shift");
-	const menuHeaderDay = popup.querySelector(".menu-header__day");
-	const menuHeaderMonth = popup.querySelector(".menu-header__month");
-	const menuHeaderYear = popup.querySelector(".menu-header__year");
-	const menuHeaderDayWeek = popup.querySelector(".menu-header__day-week");
-
-	targetItemInTable = e.target;
-
-	getInfoFromTable(
-		targetItemInTable,
-		menuHeaderShift,
-		menuHeaderDay,
-		menuHeaderMonth,
-		menuHeaderYear,
-		menuHeaderDayWeek
-	);
-
-	selectedShift = targetItemInTable.getAttribute("data-shift");
-	selectedColorInContextMenu = targetItemInTable.getAttribute("data-color");
-	selectedItemInContextMenu = targetItemInTable.getAttribute("data-key-note");
-
-	if (shiftObj.template) {
-	} else {
-		tasks = JSON.parse(targetItemInTable.getAttribute("data-desc"));
-		selectedTodoValue = tasks;
-
-		todosWrapper = popup.querySelector(".right-click-menu__todos-wrapper");
-
-		currentTodo = todosWrapper;
-		inputTodo = popup.querySelector(".new-description-task");
-		addTaskBtn = popup.querySelector(".add-task-btn");
-
-		fillHtmlList();
-
-		addTask(addTaskBtn);
-	}
-};
-
-const searchBtnsAddFPopupOpen = () => {
-	btns = document.querySelectorAll(".desc");
-	btns.forEach((btn) => {
-		btn.addEventListener("click", popupOpen);
-	});
-};
-
-searchBtnsAddFPopupOpen();
-
-const popupClose = () => {
-	popup.classList.remove("show");
-	popup.classList.add("hide");
-	document.body.style.overflow = "";
-	body.style.paddingRight = 0;
-
-	if (shiftObj.template) {
-	} else {
-		// if (inputTodo.value) {
-		// 	console.log(inputTodo.value);
-		// 	tasks.push(new Task(inputTodo.value));
-		// 	selectedTodoValue = tasks;
-		// 	inputTodo.value = "";
-		// }
-		setAttrCurCell(targetItemInTable, tasks);
-		pushObjInArr();
-		filterArr(arrForUserNotes);
-		shiftObj.userNotes = arrForUserNotes;
-		updateLocalStorage("userShift", shiftObj);
-		replaceShiftObjInChoiceShifts();
-		updateLocalStorage("choiceShifts", choiceShifts);
-		removeClassDescEventListener();
-	}
-	window.history.back();
-	location.hash = "";
-};
-
-popupCloseBtn.addEventListener("click", popupClose);
-
-popup.addEventListener("click", (e) => {
-	if (e.target == popup) {
-		popupClose();
-	}
-	//добавляем смену в календарь в режиме создания графика
-	if (
-		e.target.closest(".popup__add-shift-btn")
-		// &&
-		// !e.target.closest(".popup__add-shift-btn[data-end-cicle]")
-	) {
-		let popupContentItem = e.target.closest(".popup__content-item");
-		let currentBtnKeyNote = popupContentItem.querySelector(
-			".popup__add-shift-btn .right-click-menu-item__value"
-		);
-
-		let currentBtnKeyNoteValue = currentBtnKeyNote.textContent
-			.trim()
-			.replace(/["']/g, "");
-
-		targetItemInTable.innerHTML = currentBtnKeyNoteValue;
-		targetItemInTable.setAttribute("data-key-note", currentBtnKeyNoteValue);
-		targetItemInTable.setAttribute("data-shift", "");
-
-		popupClose();
-
-		createEndCicleBtn();
-	}
-	//добавляем новую смену
-
-	let addShiftInputs = document.querySelectorAll(".popup__content-item input");
-
-	if (e.target.closest(".popup__content-item .add-task-btn")) {
-		if (addShiftInputs[0].value) {
-			shiftObj.namesContextMenu.forEach((obj, index) => {
-				if (obj.key == addShiftInputs[0].value) {
-					shiftObj.namesContextMenu.splice(index, 1);
-				}
-			});
-
-			shiftObj.namesContextMenu.unshift(
-				new UserNameShift(addShiftInputs[0].value, addShiftInputs[1].value)
-			);
-			targetItemInTable.innerHTML = addShiftInputs[0].value;
-			targetItemInTable.setAttribute("data-key-note", addShiftInputs[0].value);
-			targetItemInTable.setAttribute("data-shift", "");
-
-			targetItemInTable.classList.add("create-shift-selected");
-
-			updateLocalStorage("userShift", shiftObj);
-			popupClose();
-
-			createEndCicleBtn();
-		} else {
-			addShiftInputs[0].setAttribute("placeholder", `${otherWords.fillField}`);
-			// addShiftInputs[0].style.boxShadow =
-			// 	"inset 0 0 8px var(--light-2-focus-in-template)";
-			addShiftInputs[0].style.border =
-				"2px solid var(--light-2-focus-in-template)";
-		}
-	}
-
-	if (e.target.closest(".popup__content-item .delete-task-btn")) {
-		targetItemInTable.innerHTML = "";
-		targetItemInTable.removeAttribute("data-key-note");
-		targetItemInTable.removeAttribute("data-shift");
-		targetItemInTable.classList.remove("create-shift-selected");
-
-		popupClose();
-	}
-	if (
-		(shiftObj.template &&
-			((addShiftInputs[0].value && e.target.closest(".add-task-btn")) ||
-				e.target.closest(".popup__add-shift-btn"))) ||
-		e.target.closest(".popup__content-item .delete-task-btn")
-	) {
-		let myShiftsNodeList = document.querySelectorAll(
-			".calendar-day-create-shift"
-		);
-		let myShiftsArr = Array.prototype.slice.call(myShiftsNodeList);
-
-		firstElemIndex = myShiftsArr.findIndex((item) =>
-			item.closest("[data-shift]")
-		);
-		let myShiftsArrReverse = myShiftsArr.slice().reverse();
-
-		let myShiftsArrReverseIndex = myShiftsArrReverse.findIndex((item) =>
-			item.closest("[data-shift]")
-		);
-
-		let lastElemIndex = myShiftsArr.length - myShiftsArrReverseIndex;
-		let myShiftsFinal = myShiftsArr.slice(firstElemIndex, lastElemIndex);
-
-		// console.log(firstElemIndex);
-		// console.log(lastElemIndex);
-
-		myShiftsForLocalStorage = [];
-
-		myShiftsFinal.forEach((item, index) => {
-			let attr;
-			item.setAttribute("data-shift", "");
-			if (item.closest("[data-key-note]")) {
-				attr = item.getAttribute("data-key-note");
-				item.classList.add("create-shift-selected");
-			} else {
-				item.innerHTML = "";
-
-				item.classList.add("create-shift-selected");
-
-				attr = "";
-			}
-
-			myShiftsForLocalStorage.push(attr);
-		});
-	}
-});
-
-document.addEventListener("keydown", (e) => {
-	if (e.keyCode == 27 && popup.classList.contains("show")) {
-		popupClose();
-	}
-});
-
 //Router
 let controller = {
 	startRoute() {
@@ -2787,11 +2776,11 @@ if (currDateForScroll) {
 	currDateForScroll.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 
-const calendarHeaderDayWrapper = document.querySelector(
-	".calendar-header-day-wrapper"
-);
-console.log(calendarHeaderDayWrapper.getBoundingClientRect());
+// const calendarHeaderDayWrapper = document.querySelector(
+// 	".calendar-header-day-wrapper"
+// );
+// console.log(calendarHeaderDayWrapper.getBoundingClientRect());
 
-const calendarShiftName = document.querySelector(".calendar-shift-name");
+// const calendarShiftName = document.querySelector(".calendar-shift-name");
 
-console.log(calendarShiftName.getBoundingClientRect());
+// console.log(calendarShiftName.getBoundingClientRect());
