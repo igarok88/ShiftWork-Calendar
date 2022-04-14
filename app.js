@@ -37,7 +37,7 @@ const languageApp = [
 			whatShiftRemove: "Яку зміну бажаєте видалити?",
 			whatShiftEdit: "Яку зміну бажаєте замінити?",
 			myCompany: "Моє підприємство",
-			tasksDay: "Завдання на день",
+			tasksDay: "Завдання на день:",
 			newTask: "Новий пункт",
 			shift: "Зміна",
 			shiftFrom: "Зміна з",
@@ -110,7 +110,7 @@ const languageApp = [
 			whatShiftRemove: "What shift do you want to remove?",
 			whatShiftEdit: "What shift to change?",
 			myCompany: "My company",
-			tasksDay: "Tasks for the day",
+			tasksDay: "Tasks for the day:",
 			newTask: "New task",
 			shift: "Shift",
 			shiftFrom: "Shift from",
@@ -183,7 +183,7 @@ const languageApp = [
 			whatShiftRemove: "Какую смену хотите удалить?",
 			whatShiftEdit: "Какую смену хотите изменить?",
 			myCompany: "Мое предприятие",
-			tasksDay: "Задачи на день",
+			tasksDay: "Задачи на день:",
 			newTask: "Новый пункт",
 			shift: "Смена",
 			shiftFrom: "Смена с",
@@ -325,7 +325,7 @@ if (currentLanguage == languageApp[1]) {
 	const popupContentBodyTitle = document.querySelector(
 		".popup__content-body h2"
 	);
-	popupContentBodyTitle.innerHTML = `${otherWords.tasksDay}:`;
+	popupContentBodyTitle.innerHTML = `${otherWords.tasksDay}`;
 	const popupContentBodyInput = document.querySelector(
 		".popup__content-body input"
 	);
@@ -829,7 +829,6 @@ choiceShifts.forEach((obj, index) => {
 	if (obj.key == shiftObj.key && !shiftObj.arrDifferenceDays) {
 		const differense = choiceShifts.length - choiceShiftsClone.length;
 		namesContextMenu = choiceShiftsClone[index - differense].namesContextMenu;
-		console.log(namesContextMenu);
 	}
 });
 
@@ -1430,6 +1429,12 @@ const generateCalendar = (month, year) => {
 	searchBtnsAddFPopupOpen();
 };
 
+//текущая дата в центр экрана
+const currDateForScroll = document.querySelector(".curr-date");
+if (currDateForScroll) {
+	currDateForScroll.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
 let monthList = calendar.querySelector(".month-list");
 
 monthNames.forEach((e, index) => {
@@ -1523,11 +1528,11 @@ calendar.addEventListener("click", (e) => {
 		burgerBtn.classList.toggle("active");
 		burgerMenu.classList.toggle("active");
 		body.classList.toggle("lock");
-		// if (docHeight > winHeight && burgerBtn.className.includes("active")) {
-		// 	body.style.paddingRight = scrollWidth + "px";
-		// } else {
-		// 	body.style.paddingRight = 0;
-		// }
+		if (docHeight > winHeight && burgerBtn.className.includes("active")) {
+			body.style.paddingRight = scrollWidth + "px";
+		} else {
+			body.style.paddingRight = 0;
+		}
 
 		if (burgerBtn.className.includes("active")) {
 			location.hash = "menu";
@@ -2063,7 +2068,7 @@ namesContextMenu.forEach((obj) => {
 	liForTodo.classList.add("right-click-menu__todo");
 
 	liForTodo.innerHTML = `
-			<h2>${otherWords.tasksDay}:</h2>
+			<h2>${otherWords.tasksDay}</h2>
 			
 			<ul class="right-click-menu__todos-wrapper">
 			</ul>
@@ -2668,7 +2673,6 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		});
 		const resetBtn = document.querySelector(".clr-clear");
 		resetBtn.innerHTML = otherWords.reset;
-		console.log(resetBtn);
 	}
 
 	//открываем todo в контекстном меню
@@ -2769,12 +2773,6 @@ function handleHash() {
 window.addEventListener("hashchange", handleHash);
 
 handleHash();
-
-//текущая дата в центр экрана
-const currDateForScroll = document.querySelector(".curr-date");
-if (currDateForScroll) {
-	currDateForScroll.scrollIntoView({ block: "center", behavior: "smooth" });
-}
 
 // const calendarHeaderDayWrapper = document.querySelector(
 // 	".calendar-header-day-wrapper"
