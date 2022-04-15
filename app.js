@@ -2616,11 +2616,16 @@ rightClickMenuItems.addEventListener("click", (e) => {
 
 		//создание объекта с выбранными данными из контекстного меню и сохраняем в массив
 
+		const todoItem = document.querySelector(".todo-item");
+		if (todoItem) {
+		} else {
+			selectedTodoValue = undefined;
+		}
+
 		pushObjInArr();
 
 		filterArr(arrForUserNotes);
 
-		// updateLocalStorage("userNotes", arrForUserNotes);
 		shiftObj.userNotes = arrForUserNotes;
 		updateLocalStorage("userShift", shiftObj);
 		replaceShiftObjInChoiceShifts();
@@ -2775,12 +2780,3 @@ function handleHash() {
 window.addEventListener("hashchange", handleHash);
 
 handleHash();
-
-// const calendarHeaderDayWrapper = document.querySelector(
-// 	".calendar-header-day-wrapper"
-// );
-// console.log(calendarHeaderDayWrapper.getBoundingClientRect());
-
-// const calendarShiftName = document.querySelector(".calendar-shift-name");
-
-// console.log(calendarShiftName.getBoundingClientRect());
