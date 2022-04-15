@@ -2640,8 +2640,6 @@ rightClickMenuItems.addEventListener("click", (e) => {
 		removeClassDescEventListener();
 
 		addTask(rightClickMenuItemBtn);
-		window.history.back();
-		location.hash = "";
 
 		//пересчитываем количество смен и вставляем в конец таблицы
 
@@ -2671,6 +2669,8 @@ rightClickMenuItems.addEventListener("click", (e) => {
 				calendarCountShifts[index].innerHTML = arrForCount.length;
 			}
 		});
+		location.hash = "";
+		window.history.back();
 	}
 
 	if (target.closest(".right-click-menu-item__color input")) {
