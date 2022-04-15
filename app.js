@@ -2044,12 +2044,13 @@ namesContextMenu.forEach((obj) => {
 	let btn = document.createElement("div");
 	btn.classList.add("close-menu");
 	btn.classList.add("right-click-menu-item__btn");
+	btn.setAttribute("data-value", obj.key);
 	li.appendChild(btn);
 
 	let btnValue = document.createElement("div");
 	btnValue.classList.add("right-click-menu-item__value");
 	btnValue.setAttribute("data-value", obj.key);
-	btnValue.innerHTML = `"<div>${obj.key}</div>"`;
+	btnValue.innerHTML = `"<div data-value='${obj.key}'>${obj.key}</div>"`;
 	btn.appendChild(btnValue);
 
 	let btnName = document.createElement("div");
@@ -2518,6 +2519,7 @@ calendarBody.addEventListener("click", (e) => {
 if (shiftObj.template) {
 } else {
 	calendarBody.addEventListener("contextmenu", (e) => {
+		// clearAllTodosWrappers();
 		const menuHeaderShift = rightClickMenu.querySelector(".menu-header__shift");
 		const menuHeaderDay = rightClickMenu.querySelector(".menu-header__day");
 		const menuHeaderMonth = rightClickMenu.querySelector(".menu-header__month");
@@ -2716,7 +2718,7 @@ rightClickMenu.addEventListener("click", (e) => {
 
 		removeActiveArrowsTodos();
 		clearAllTodosWrappers();
-
+		window.history.back();
 		location.hash = "";
 	}
 });
