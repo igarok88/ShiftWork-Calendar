@@ -1458,7 +1458,7 @@ monthPicker.onclick = () => {
 	monthList.classList.add("show");
 	body.classList.add("lock");
 
-	let headerDay = calendar.querySelectorAll(".calendar-header-day");
+	let headerDay = calendar.querySelectorAll(".calendar-header-day-wrapper");
 	headerDay.forEach((item) => {
 		item.style.position = "static";
 	});
