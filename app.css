@@ -927,7 +927,7 @@ body.lock {
 
 .popup__content-item .cross {
 	top: 13px;
-	left: 23px;
+	left: 30px;
 	transform: rotate(45deg);
 }
 .popup__close {

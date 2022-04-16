@@ -21,7 +21,7 @@
 	--dark-desc: #5b7db1;
 	--dark-focus: rgba(255, 255, 255, 0.096);
 	--dark-focus-in-template: #5b7db1;
-	--dark-selected: rgba(109, 97, 97, 0.459);
+	--dark-selected: rgb(231 212 212 / 46%);
 
 	--dark-2-body: #4d4c5a;
 	--dark-2-main: #000000;
@@ -39,7 +39,7 @@
 	--dark-2-focus: rgba(255, 255, 255, 0.096);
 	/* --dark-2-focus-in-template: #395b64; */
 	--dark-2-focus-in-template: #527e6b;
-	--dark-2-selected: rgba(109, 97, 97, 0.459);
+	--dark-2-selected: rgb(231 212 212 / 46%);
 
 	--light-body: #f3f8fe;
 	--light-main: #fdfdfd;
@@ -55,7 +55,7 @@
 	--light-desc: #4d96ff;
 	--light-focus: #42c2ff;
 	--light-focus-in-template: #4d96ff;
-	--light-selected: #61a4bc;
+	--light-selected: #38c6c7;
 
 	--light-2-body: #f3f8fe;
 	--light-2-main: #f2f5c8;
