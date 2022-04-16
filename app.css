@@ -159,8 +159,11 @@ body.lock {
 	position: fixed;
 }
 
-.calendar-column-create-shift {
+/* .calendar-column-create-shift {
 	box-shadow: inset 0 0 100px var(--focus-in-template);
+} */
+.calendar-day-create-shift {
+	border: 2px solid var(--desc);
 }
 .calendar-day-off {
 	background-color: var(--day-off);
@@ -857,7 +860,7 @@ body.lock {
 }
 
 .desc {
-	border: 4px solid var(--desc);
+	border: 3px solid var(--desc);
 }
 .popup {
 	position: fixed;

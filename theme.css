@@ -18,9 +18,9 @@
 	--dark-day-off: #44535e;
 	--dark-curr-day: #d1d0cc;
 	--dark-curr-day-text-color: #0e1821;
-	--dark-desc: #374258;
+	--dark-desc: #5b7db1;
 	--dark-focus: rgba(255, 255, 255, 0.096);
-	--dark-focus-in-template: #ea5c2b;
+	--dark-focus-in-template: #5b7db1;
 	--dark-selected: rgba(109, 97, 97, 0.459);
 
 	--dark-2-body: #4d4c5a;
@@ -35,9 +35,10 @@
 	--dark-2-day-off: #44535e;
 	--dark-2-curr-day: #d9ebe9;
 	--dark-2-curr-day-text-color: #0e1821;
-	--dark-2-desc: #374258;
+	--dark-2-desc: #527e6b;
 	--dark-2-focus: rgba(255, 255, 255, 0.096);
-	--dark-2-focus-in-template: #ea5c2b;
+	/* --dark-2-focus-in-template: #395b64; */
+	--dark-2-focus-in-template: #527e6b;
 	--dark-2-selected: rgba(109, 97, 97, 0.459);
 
 	--light-body: #f3f8fe;
@@ -51,9 +52,9 @@
 	--light-day-off: #85f4ff;
 	--light-curr-day: #42c2ff;
 	--light-curr-day-text-color: #fff;
-	--light-desc: rgb(55, 98, 163);
+	--light-desc: #4d96ff;
 	--light-focus: #42c2ff;
-	--light-focus-in-template: #4065dd;
+	--light-focus-in-template: #4d96ff;
 	--light-selected: #61a4bc;
 
 	--light-2-body: #f3f8fe;
@@ -68,7 +69,7 @@
 	--light-2-curr-day-text-color: #fff;
 	--light-2-desc: #65c18c;
 	--light-2-focus: #c1deae;
-	--light-2-focus-in-template: #ea5c2b;
+	--light-2-focus-in-template: #b6ffce;
 	--light-2-selected: #54bab9;
 
 	--blue-body: #f3f8fe;
@@ -82,9 +83,9 @@
 	--blue-day-off: #9fb4ff;
 	--blue-curr-day: #3256ce;
 	--blue-curr-day-text-color: #fff;
-	--blue-desc: #65c18c;
+	--blue-desc: #035397;
 	--blue-focus: #4d96ff;
-	--blue-focus-in-template: #ea5c2b;
+	--blue-focus-in-template: #035397;
 	--blue-selected: #4d96ff;
 
 	--font-family: "San-Francisco-Display-Regular";
@@ -180,7 +181,7 @@
 	--desc: var(--blue-desc);
 	--focus: var(--blue-focus);
 	--selected: var(--blue-selected);
-	--focus-in-template: var(--blue-curr-day);
+	--focus-in-template: var(--blue-focus-in-template);
 	--bgc-social: var(--blue-text);
 }
 
