@@ -77,6 +77,10 @@ const languageApp = [
 			noteWord: "П",
 			confirm:
 				"Увага! Всi налаштування користувача, графiки, нотатки будуть видаленi. Підтвердити?",
+			tagTitle: "Графiк змiн",
+			tagTitleMenu: "Створити робочий графік. Вибрати готовий змiнний графік.",
+			tagDescription:
+				"Завдяки цьому веб-додатку ви можете створити свій власний унікальний графік роботи",
 		},
 	},
 	{
@@ -150,6 +154,11 @@ const languageApp = [
 			noteWord: "N",
 			confirm:
 				"Attention! All user settings, graphics, notes will be deleted. Continue?",
+			tagTitle: "Shedule Shifts",
+			tagTitleMenu:
+				"Create a work schedule. Choose a ready-made shift schedule.",
+			tagDescription:
+				"Thanks to this web application you can create your own unique work schedule.",
 		},
 	},
 	{
@@ -223,6 +232,10 @@ const languageApp = [
 			noteWord: "З",
 			confirm:
 				"Внимание! Все пользовательские настройки, графики, заметки будут удалены. Продолжить?",
+			tagTitle: "График смен",
+			tagTitleMenu: "Создать рабочий график.  Выбратьготовый сменный график.",
+			tagDescription:
+				"Благодаря этому веб-приложению вы можете создать свой уникальный график работы",
 		},
 	},
 ];
@@ -336,6 +349,8 @@ if (currentLanguage == languageApp[1]) {
 	// burgerMenuFeedbackTitle.innerHTML = otherWords.feedback;
 	// const burgerDescription = document.querySelector(".burger__description");
 	// burgerDescription.innerHTML = otherWords.feedbackDescription;
+	const tagDescription = document.querySelector("meta[name='description']");
+	tagDescription.setAttribute("content", otherWords.tagDescription);
 }
 removeLocalStorage.addEventListener("click", () => {
 	let questConfirm = confirm(otherWords.confirm);
@@ -2729,6 +2744,9 @@ rightClickMenu.addEventListener("click", (e) => {
 });
 
 //Router
+
+let tagTitle = document.querySelector("title");
+
 let controller = {
 	startRoute() {
 		burgerBtn.classList.remove("active");
@@ -2747,11 +2765,13 @@ let controller = {
 			item.style.position = "fixed";
 		});
 		// window.history.back();
+		tagTitle.innerHTML = otherWords.tagTitle;
 	},
 	menuRoute() {
 		burgerBtn.classList.add("active");
 		burgerMenu.classList.add("active");
 		body.classList.add("lock");
+		tagTitle.innerHTML = otherWords.tagTitleMenu;
 	},
 	contextRoute() {},
 	monthlistRoute() {

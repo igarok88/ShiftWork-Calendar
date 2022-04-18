@@ -18,7 +18,7 @@ h6 {
 html,
 body {
 	height: 100vh;
-	font-family: var(--font-family);
+	font-family: var(--font-family), sans-serif;
 	background-color: var(--bg-main);
 }
 ul {

@@ -3,6 +3,7 @@
 	src: url("./fonts/SanFranciscoDisplayRegular.woff") format("truetype");
 	font-style: normal;
 	font-weight: normal;
+	font-display: swap;
 }
 
 :root {
