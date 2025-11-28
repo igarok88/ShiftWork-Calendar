@@ -54,7 +54,7 @@ If you want to run the project locally or contribute:
 
 1. Clone the repository:
     ```bash
-    git clone [https://github.com/igarok88/ShiftWork-Calendar.git](https://github.com/igarok88/ShiftWork-Calendar.git)
+    git clone https://github.com/igarok88/ShiftWork-Calendar.git
     ```
 2. Open the `index.html` file in any modern browser.
 
