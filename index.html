@@ -1,256 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Shedule Shifts</title>
-		<meta name="description" />
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-		<link rel="manifest" href="/site.webmanifest" />
-		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-		<meta name="msapplication-TileColor" content="#da532c" />
-		<meta name="theme-color" content="#ffffff" />
-		<link rel="stylesheet" href="lib/coloris.min.css" />
-		<link rel="stylesheet" href="theme.css" />
-		<link rel="stylesheet" href="app.css" />
-	</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shedule Shifts</title>
+    <meta name="description" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/icons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/icons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="stylesheet" href="lib/coloris.min.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
 
-	<body class="theme-light-2">
-		<div class="container">
-			<div class="calendar">
-				<header>
-					<div class="burger__btn">
-						<span></span>
-					</div>
-					<div class="burger-wrapper"></div>
-					<div class="burger__menu">
-						<nav class="burger__menu-wrapper">
-							<div class="burger__menu-item">
-								<div
-									class="burger__menu-item-title burger__menu-select-shedule"
-								>
-									<h2>Select shedule</h2>
-									<div class="burger__menu-item-cross">
-										<span class="cross"></span>
-									</div>
-								</div>
+  <body class="theme-light-2">
+    <div class="container">
+      <div class="calendar">
+        <header>
+          <div class="burger__btn">
+            <span></span>
+          </div>
+          <div class="burger-wrapper"></div>
+          <div class="burger__menu">
+            <nav class="burger__menu-wrapper">
+              <div class="burger__menu-item">
+                <div
+                  class="burger__menu-item-title burger__menu-select-shedule"
+                >
+                  <h2>Select shedule</h2>
+                  <div class="burger__menu-item-cross">
+                    <span class="cross"></span>
+                  </div>
+                </div>
 
-								<div
-									class="burger__menu-item-more burger__menu-choice-shift"
-								></div>
-							</div>
-							<div class="burger__menu-item burger__menu-create-shift">
-								<div class="burger__menu-item-title">
-									<h2>Сreate a schedule</h2>
-									<div class="burger__menu-item-cross">
-										<span class="cross"></span>
-									</div>
-								</div>
-								<div
-									class="burger__menu-item-more burger__menu-create-shift-more"
-								>
-									<div class="burger__submenu-item burger__menu-add-shift">
-										<div>
-											<h2>Enter company name:</h2>
-											<div class="input-wrapper">
-												<input
-													type="text"
-													placeholder="example: 'Prime Electrical Group'"
-												/>
-											</div>
-											<h2>Enter shift name:</h2>
-											<div class="input-wrapper">
-												<input
-													type="text"
-													placeholder="example: 'Shift schedule No. 1'"
-												/>
-											</div>
-										</div>
-										<div class="burger__menu-btn burger__menu-add-shedule-btn">
-											Сreate a schedule
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="burger__menu-item burger__menu-select-language">
-								<div class="burger__menu-item-title">
-									<h2>Select language</h2>
-									<div class="burger__menu-item-cross">
-										<span class="cross"></span>
-									</div>
-								</div>
-								<div class="burger__menu-item-more">
-									<div
-										class="burger__submenu-item burger__submenu-language"
-									></div>
-								</div>
-							</div>
-							<div class="burger__menu-item burger__menu-theme">
-								<div class="burger__menu-item-title">
-									<h2>Color themes</h2>
-									<div class="burger__menu-item-cross">
-										<span class="cross"></span>
-									</div>
-								</div>
+                <div
+                  class="burger__menu-item-more burger__menu-choice-shift"
+                ></div>
+              </div>
+              <div class="burger__menu-item burger__menu-create-shift">
+                <div class="burger__menu-item-title">
+                  <h2>Сreate a schedule</h2>
+                  <div class="burger__menu-item-cross">
+                    <span class="cross"></span>
+                  </div>
+                </div>
+                <div
+                  class="burger__menu-item-more burger__menu-create-shift-more"
+                >
+                  <div class="burger__submenu-item burger__menu-add-shift">
+                    <div>
+                      <h2>Enter company name:</h2>
+                      <div class="input-wrapper">
+                        <input
+                          type="text"
+                          placeholder="example: 'Prime Electrical Group'"
+                        />
+                      </div>
+                      <h2>Enter shift name:</h2>
+                      <div class="input-wrapper">
+                        <input
+                          type="text"
+                          placeholder="example: 'Shift schedule No. 1'"
+                        />
+                      </div>
+                    </div>
+                    <div class="burger__menu-btn burger__menu-add-shedule-btn">
+                      Сreate a schedule
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="burger__menu-item burger__menu-select-language">
+                <div class="burger__menu-item-title">
+                  <h2>Select language</h2>
+                  <div class="burger__menu-item-cross">
+                    <span class="cross"></span>
+                  </div>
+                </div>
+                <div class="burger__menu-item-more">
+                  <div
+                    class="burger__submenu-item burger__submenu-language"
+                  ></div>
+                </div>
+              </div>
+              <div class="burger__menu-item burger__menu-theme">
+                <div class="burger__menu-item-title">
+                  <h2>Color themes</h2>
+                  <div class="burger__menu-item-cross">
+                    <span class="cross"></span>
+                  </div>
+                </div>
 
-								<div
-									class="burger__menu-item-more burger__menu-choice-theme"
-								></div>
-							</div>
-							<!-- <div class="burger__menu-item burger__menu-feedback">
-							<div class="burger__menu-item-title">
-								<h2>Feedback</h2>
-								<div class="burger__menu-item-cross">
-									<span class="cross"></span>
-								</div>
-							</div>
-							<div class="burger__menu-item-more">
-								<div class="burger__submenu-item">
-									<div class="burger__description">
-										Thank you for using this program. Write your suggestions
-									</div>
-									
-								</div>
-							</div>
-						</div> -->
-						</nav>
-						<div class="burger__menu-footer">
-							<div class="remove-local-storage">
-								<h2>Reset user settings</h2>
-							</div>
+                <div
+                  class="burger__menu-item-more burger__menu-choice-theme"
+                ></div>
+              </div>
+            </nav>
+            <div class="burger__menu-footer">
+              <div class="remove-local-storage">
+                <h2>Reset user settings</h2>
+              </div>
 
-							<div class="burger__social-container">
-								<a href="https://t.me/igarok88" class="burger__social"
-									><img src="./svg/telegram.svg" alt="" />
-								</a>
-								<a
-									href="https://www.facebook.com/usd.wmz"
-									class="burger__social"
-								>
-									<img src="./svg/facebook.svg" alt="" />
-								</a>
-							</div>
-						</div>
-					</div>
-				</header>
-				<div class="right-click">
-					<div class="right-click-menu">
-						<div class="menu-close close-menu"></div>
-						<div class="menu-header">
-							<div class="menu-header__day-week"></div>
-							<div class="menu-header__date">
-								<span class="menu-header__day"></span>.
-								<span class="menu-header__month"></span>.
-								<span class="menu-header__year"></span>
-							</div>
-							<div class="menu-header__shift-container">
-								<span>"</span>
-								<span class="menu-header__shift"></span>
-								<span>"</span>
-							</div>
-						</div>
-						<ul></ul>
-					</div>
-				</div>
-				<div class="calendar-body-for-size"></div>
-				<div class="calendar-body">
-					<div class="calendar-column calendar-week-day">
-						<div class="calendar-header-day"></div>
-					</div>
-					<div class="calendar-column calendar-days">
-						<div class="calendar-header-day"></div>
-					</div>
-				</div>
-				<div class="calendar-count">
-					<div class="calendar-day calendar-count-total">Total:</div>
-				</div>
-				<div class="calendar-nav">
-					<div class="month-list"></div>
-					<div class="month-picker">
-						<span class="arrow" id="prev-month">
-							<div class="arrow-wrapper">
-								<div class="arrow-sign arrow-part-1"></div>
-								<div class="arrow-sign arrow-part-2"></div>
-							</div>
-						</span>
-						<span class="month-name" id="month-picker"></span>
-						<span class="arrow" id="next-month">
-							<div class="arrow-wrapper right">
-								<div class="arrow-sign arrow-part-1"></div>
-								<div class="arrow-sign arrow-part-2"></div>
-							</div>
-						</span>
-					</div>
+              <div class="burger__social-container">
+                <a href="https://t.me/igarok88" class="burger__social"
+                  ><img src="./svg/telegram.svg" alt="" />
+                </a>
+                <a
+                  href="https://www.facebook.com/usd.wmz"
+                  class="burger__social"
+                >
+                  <img src="./svg/facebook.svg" alt="" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </header>
+        <div class="right-click">
+          <div class="right-click-menu">
+            <div class="menu-close close-menu"></div>
+            <div class="menu-header">
+              <div class="menu-header__day-week"></div>
+              <div class="menu-header__date">
+                <span class="menu-header__day"></span>.
+                <span class="menu-header__month"></span>.
+                <span class="menu-header__year"></span>
+              </div>
+              <div class="menu-header__shift-container">
+                <span>"</span>
+                <span class="menu-header__shift"></span>
+                <span>"</span>
+              </div>
+            </div>
+            <ul></ul>
+          </div>
+        </div>
+        <div class="calendar-body-for-size"></div>
+        <div class="calendar-body">
+          <div class="calendar-column calendar-week-day">
+            <div class="calendar-header-day"></div>
+          </div>
+          <div class="calendar-column calendar-days">
+            <div class="calendar-header-day"></div>
+          </div>
+        </div>
+        <div class="calendar-count">
+          <div class="calendar-day calendar-count-total">Total:</div>
+        </div>
+        <div class="calendar-nav">
+          <div class="month-list"></div>
+          <div class="month-picker">
+            <span class="arrow" id="prev-month">
+              <div class="arrow-wrapper">
+                <div class="arrow-sign arrow-part-1"></div>
+                <div class="arrow-sign arrow-part-2"></div>
+              </div>
+            </span>
+            <span class="month-name" id="month-picker"></span>
+            <span class="arrow" id="next-month">
+              <div class="arrow-wrapper right">
+                <div class="arrow-sign arrow-part-1"></div>
+                <div class="arrow-sign arrow-part-2"></div>
+              </div>
+            </span>
+          </div>
 
-					<div class="year-picker">
-						<span class="arrow" id="prev-year">
-							<div class="arrow-wrapper">
-								<div class="arrow-sign arrow-part-1"></div>
-								<div class="arrow-sign arrow-part-2"></div>
-							</div>
-						</span>
-						<span id="year"></span>
-						<span class="arrow" id="next-year">
-							<div class="arrow-wrapper right">
-								<div class="arrow-sign arrow-part-1"></div>
-								<div class="arrow-sign arrow-part-2"></div>
-							</div>
-						</span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="popup" id="popup">
-			<div class="popup__window">
-				<div class="popup__close">&times;</div>
-				<div class="popup__content">
-					<div
-						class="popup__content-wrapper right-click-menu-item right-click-menu__todo active"
-					>
-						<div class="menu-header">
-							<div class="menu-header__day-week"></div>
-							<div class="menu-header__date">
-								<span class="menu-header__day"></span>.
-								<span class="menu-header__month"></span>.
-								<span class="menu-header__year"></span>
-							</div>
-							<div class="menu-header__shift-container">
-								<span>"</span>
-								<span class="menu-header__shift"></span>
-								<span>"</span>
-							</div>
-						</div>
-						<div class="popup__content-body">
-							<h2>Tasks for the day:</h2>
+          <div class="year-picker">
+            <span class="arrow" id="prev-year">
+              <div class="arrow-wrapper">
+                <div class="arrow-sign arrow-part-1"></div>
+                <div class="arrow-sign arrow-part-2"></div>
+              </div>
+            </span>
+            <span id="year"></span>
+            <span class="arrow" id="next-year">
+              <div class="arrow-wrapper right">
+                <div class="arrow-sign arrow-part-1"></div>
+                <div class="arrow-sign arrow-part-2"></div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="popup" id="popup">
+      <div class="popup__window">
+        <div class="popup__close">&times;</div>
+        <div class="popup__content">
+          <div
+            class="popup__content-wrapper right-click-menu-item right-click-menu__todo active"
+          >
+            <div class="menu-header">
+              <div class="menu-header__day-week"></div>
+              <div class="menu-header__date">
+                <span class="menu-header__day"></span>.
+                <span class="menu-header__month"></span>.
+                <span class="menu-header__year"></span>
+              </div>
+              <div class="menu-header__shift-container">
+                <span>"</span>
+                <span class="menu-header__shift"></span>
+                <span>"</span>
+              </div>
+            </div>
+            <div class="popup__content-body">
+              <h2>Tasks for the day:</h2>
 
-							<ul class="right-click-menu__todos-wrapper"></ul>
+              <ul class="right-click-menu__todos-wrapper"></ul>
 
-							<div
-								class="right-click-menu__add-todo-wrapper right-click-menu-item"
-							>
-								<div class="input-wrapper for-create-shift"></div>
-								<div class="input-wrapper">
-									<input
-										placeholder="New task"
-										type="text"
-										class="new-description-task"
-									/>
-								</div>
-								<div class="button-wrapper add-task-btn">
-									<span class="cross"></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- <script src="lib/shave.min.js"></script> -->
-		<!-- <script src="lib/offline.js"></script> -->
-		<script src="lib/coloris.min.js"></script>
-		<script src="coloriesOption.js"></script>
-		<script src="app.js"></script>
-	</body>
+              <div
+                class="right-click-menu__add-todo-wrapper right-click-menu-item"
+              >
+                <div class="input-wrapper for-create-shift"></div>
+                <div class="input-wrapper">
+                  <input
+                    placeholder="New task"
+                    type="text"
+                    class="new-description-task"
+                  />
+                </div>
+                <div class="button-wrapper add-task-btn">
+                  <span class="cross"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="lib/coloris.min.js"></script>
+    <script src="lib/coloriesOption.js"></script>
+    <script src="js/app.js"></script>
+  </body>
 </html>
