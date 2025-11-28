@@ -25,9 +25,12 @@ The application is ready to use. No download required.
 
 ## 📸 Screenshots
 
-![Screenshot_93](https://github.com/user-attachments/assets/be3b8cad-c365-407d-b235-10d54b0063b4)
-![Screenshot_94](https://github.com/user-attachments/assets/216dd4c2-4338-4ae7-bae3-fef76fdfe499)
-![Screenshot_95](https://github.com/user-attachments/assets/0739e4ee-b213-464d-b98b-b9918291779a)
+![Screenshot_93](https://github.com/user-attachments/assets/c6ff448a-7eed-4b51-b312-53799a7c1002)
+![Screenshot_94](https://github.com/user-attachments/assets/d3dddc64-861f-40ac-9a98-cc5b04e47890)
+![Screenshot_95](https://github.com/user-attachments/assets/462458b9-5de4-47c0-93ed-82be864c9919)
+![Screenshot_97](https://github.com/user-attachments/assets/c1ddc2cd-6f7e-4ef2-9f02-12f317ef88f6)
+
+
 
 ## 🛠 Tech Stack
 
